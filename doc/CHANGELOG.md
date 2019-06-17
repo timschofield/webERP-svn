@@ -16,10 +16,11 @@ For changelogs earlier than v4.14.1, please refer to [CHANGELOG_ARCHIVE.md].
 | Description | Type | Author | Date | Details | Ref |
 |:-----------:|:----:|:------:|:----:|:-------:|:---:|
 
-## [v4.15.1] - 2019-06-09
+## [v4.15.1] - 2019-06-16
 
 | Description | Type | Author | Date | Details | Ref |
 |:-----------:|:----:|:------:|:----:|:-------:|:---:|
+| index.php: Properly check return from database before showing report links | Fixed | Tim Schofield | 2019-06-09 | [View](https://github.com/webERP-team/webERP/commit/44f680c34d76e2ae794e678335e5310ebad37aad) | [Forum](http://www.weberp.org/forum/showthread.php?tid=8345) |
 | GLTransInquiry.php: Fix to previous commit - ovdiscount is not a field in supptrans table, only debtotrans | Fixed | Tim Schofield | 2019-05-25 | [View](https://github.com/webERP-team/webERP/commit/71db91d6f4fd67b65025a713c3d5c30ab99e59a3) |   |
 | Credit_Invoice.php: Enable the shipping to be reduced to zero in case where the original invoice included a value for shipping costs. (reported in the forums by HDeriauFF) | Changed | Tim Schofield | 2019-05-04 | [View](https://github.com/webERP-team/webERP/commit/20f24e86d43d90bf584e6c205e548bffab287711) | [Forum](http://www.weberp.org/forum/showthread.php?tid=8339&pid=15697#pid15697) |
 | CustomerAllocations.php: Allow user to perform allocation on receipts with amount zero but discount is non zero | Changed | express achiever | 2019-04-18 | [View](https://github.com/webERP-team/webERP/commit/c3498d37f2da76238cc9113f61ff9992c6be9956) |   |

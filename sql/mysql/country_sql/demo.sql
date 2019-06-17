@@ -3631,7 +3631,7 @@ CREATE TABLE `www_users` (
 /*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-06-09  0:56:13
+-- Dump completed on 2019-06-16 23:14:16
 -- MySQL dump 10.15  Distrib 10.0.38-MariaDB, for debian-linux-gnu (i686)
 --
 -- Host: localhost    Database: weberpdemo
@@ -4015,7 +4015,7 @@ INSERT INTO `config` VALUES ('SmtpSetting','0');
 INSERT INTO `config` VALUES ('SO_AllowSameItemMultipleTimes','1');
 INSERT INTO `config` VALUES ('StandardCostDecimalPlaces','2');
 INSERT INTO `config` VALUES ('TaxAuthorityReferenceName','');
-INSERT INTO `config` VALUES ('UpdateCurrencyRatesDaily','2019-06-08');
+INSERT INTO `config` VALUES ('UpdateCurrencyRatesDaily','2019-06-09');
 INSERT INTO `config` VALUES ('VersionNumber','4.15.1');
 INSERT INTO `config` VALUES ('WeightedAverageCosting','0');
 INSERT INTO `config` VALUES ('WikiApp','DokuWiki');
@@ -8216,7 +8216,7 @@ INSERT INTO `unitsofmeasure` VALUES (7,'feet');
 -- Dumping data for table `www_users`
 --
 
-INSERT INTO `www_users` VALUES ('admin','$2y$10$0BxflkI7KAZXXDE7f5p/..vU46aQjAsT36C3p8CTbvrM2UGZI.6qC','Demonstration user','','','','','admin@weberp.org','MEL',8,1,'2019-06-08 21:42:57','','A4','1,1,1,1,1,1,1,1,1,1,1',0,1,1,0,50,'professional','en_US.utf8',0,0);
+INSERT INTO `www_users` VALUES ('admin','$2y$10$ylhVMrIsvAGXJUZw19E02.kRCMBmR4zXEr7v6N9pVDkk.VDk/gc1G','Demonstration user','','','','','admin@weberp.org','MEL',8,1,'2019-06-09 21:13:48','','A4','1,1,1,1,1,1,1,1,1,1,1',0,1,1,0,50,'professional','en_US.utf8',0,0);
 INSERT INTO `www_users` VALUES ('WEB0000021','$2y$10$aTt/treAhiVVd0mPw1Ums.GcOxBtX/3cIsD1RL//0iT3QUYjvIDlS','Phil Daintree','WEB0000021','','','1234564','phil@logicworks.co.nz','TOR',7,0,NULL,'WEB0000021','A4','1,0,0,0,0,0,0,0,0,0,0',0,1,1,0,30,'','en_GB.utf8',0,0);
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -8224,5 +8224,5 @@ INSERT INTO `www_users` VALUES ('WEB0000021','$2y$10$aTt/treAhiVVd0mPw1Ums.GcOxB
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-06-09  0:56:14
+-- Dump completed on 2019-06-16 23:14:16
 SET FOREIGN_KEY_CHECKS = 1;
