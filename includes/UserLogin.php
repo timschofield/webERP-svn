@@ -251,6 +251,7 @@ function userLogin($Name, $Password, $SysAdminEmail = '') {
 			}
 		} else {     // Incorrect password
 			// 5 login attempts, show failed login screen
+
 			if (!isset($_SESSION['AttemptsCounter'])) {
 				$_SESSION['AttemptsCounter'] = 0;
 			} elseif ($_SESSION['AttemptsCounter'] >= 5 AND isset($Name)) {
