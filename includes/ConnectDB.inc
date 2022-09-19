@@ -10,7 +10,7 @@ if (!isset($_SESSION['DatabaseName'])){
 	if (isset($_POST['CompanyNameField'])){
 		if (isset($CompanyList) AND is_array($CompanyList)) {
 			foreach ($CompanyList as $CompanyEntryKey => $CompanyEntry){
-				if (is_dir('./companies/'. $CompanyEntry['database']) AND ($CompanyEntryKey == $_POST['CompanyNameField']) ) {
+				if (is_dir('./companies/'. $CompanyEntry['database']) AND ($CompanyEntry['database'] == $_POST['CompanyNameField']) ) {
 					$_SESSION['DatabaseName'] = $CompanyEntry['database'];
 					$_SESSION['CompanyName'] = $CompanyEntry['company'];
 					break;
