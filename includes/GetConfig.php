@@ -3,15 +3,15 @@
 // $ForceConfigReload to true
 
 if(isset($ForceConfigReload) AND $ForceConfigReload==true OR !isset($_SESSION['CompanyDefaultsLoaded'])) {
-	$sql = "SELECT confname, confvalue FROM config";
+	$SQL = "SELECT confname, confvalue FROM config";
 	$ErrMsg = _('Could not get the configuration parameters from the database because');
-	$ConfigResult = DB_query($sql,$ErrMsg);
-	while( $myrow = DB_fetch_array($ConfigResult) ) {
-		if (is_numeric($myrow['confvalue']) AND $myrow['confname']!='DefaultPriceList' AND $myrow['confname']!='VersionNumber'){
-			//the variable name is given by $myrow[0]
-			$_SESSION[$myrow['confname']] = (double) $myrow['confvalue'];
+	$ConfigResult = DB_query($SQL,$ErrMsg);
+	while( $MyRow = DB_fetch_array($ConfigResult) ) {
+		if (is_numeric($MyRow['confvalue']) AND $MyRow['confname']!='DefaultPriceList' AND $MyRow['confname']!='VersionNumber'){
+			//the variable name is given by $MyRow[0]
+			$_SESSION[$MyRow['confname']] = (double) $MyRow['confvalue'];
 		} else {
-			$_SESSION[$myrow['confname']] =  $myrow['confvalue'];
+			$_SESSION[$MyRow['confname']] =  $MyRow['confvalue'];
 		}
 	} //end loop through all config variables
 	$_SESSION['CompanyDefaultsLoaded'] = true;
@@ -24,8 +24,8 @@ if(isset($ForceConfigReload) AND $ForceConfigReload==true OR !isset($_SESSION['C
 	}
 
 	/*Load the pagesecurity settings from the database */
-	$sql="SELECT script, pagesecurity FROM scripts";
-	$result=DB_query($sql,'','',false,false);
+	$SQL="SELECT script, pagesecurity FROM scripts";
+	$Result=DB_query($SQL,'','',false,false);
 	if (DB_error_no()!=0){
 		/* the table may not exist with the pagesecurity field in it if it is an older webERP database
 		 * divert to the db upgrade if the VersionNumber is not in the config table
@@ -33,21 +33,21 @@ if(isset($ForceConfigReload) AND $ForceConfigReload==true OR !isset($_SESSION['C
 		header('Location: UpgradeDatabase.php');
 	}
 	//Populate the PageSecurityArray array for each script's  PageSecurity value
-	while ($myrow=DB_fetch_array($result)) {
-		$_SESSION['PageSecurityArray'][$myrow['script']]=$myrow['pagesecurity'];
+	while ($MyRow=DB_fetch_array($Result)) {
+		$_SESSION['PageSecurityArray'][$MyRow['script']]=$MyRow['pagesecurity'];
 	}
 
 	/*
 	 check the decimalplaces field exists in currencies - this was added in 4.0 but is required in 4.04 as it is used everywhere as the default decimal places to show on all home currency amounts
 	*/
-	$result = DB_query("SELECT decimalplaces FROM currencies",'','',false,false);
+	$Result = DB_query("SELECT decimalplaces FROM currencies",'','',false,false);
 	if (DB_error_no()!=0) { //then decimalplaces not already a field in currencies
-		$result = DB_query("ALTER TABLE `currencies`
+		$Result = DB_query("ALTER TABLE `currencies`
 							ADD COLUMN `decimalplaces` tinyint(3) NOT NULL DEFAULT 2 AFTER `hundredsname`");
 	}
 /* Also reads all the company data set up in the company record and returns an array */
 
-	$sql=	"SELECT	coyname,
+	$SQL=	"SELECT	coyname,
 					gstno,
 					regoffice1,
 					regoffice2,
@@ -77,7 +77,7 @@ if(isset($ForceConfigReload) AND $ForceConfigReload==true OR !isset($_SESSION['C
 				WHERE coycode=1";
 
 	$ErrMsg = _('An error occurred accessing the database to retrieve the company information');
-	$ReadCoyResult = DB_query($sql,$ErrMsg);
+	$ReadCoyResult = DB_query($SQL,$ErrMsg);
 
 	if (DB_num_rows($ReadCoyResult)==0) {
       		echo '<br /><b>';
@@ -89,7 +89,7 @@ if(isset($ForceConfigReload) AND $ForceConfigReload==true OR !isset($_SESSION['C
 
 	/*Now read in smtp email settings - not needed in a properly set up server environment - but helps for those who can't control their server .. I think! */
 
-	$sql="SELECT id,
+	$SQL="SELECT id,
 				host,
 				port,
 				heloaddress,
@@ -98,29 +98,29 @@ if(isset($ForceConfigReload) AND $ForceConfigReload==true OR !isset($_SESSION['C
 				timeout,
 				auth
 			FROM emailsettings";
-	$result=DB_query($sql,'','',false,false);
-	if (DB_error_no()==0 and DB_num_rows($result) > 0) {
+	$Result=DB_query($SQL,'','',false,false);
+	if (DB_error_no()==0 and DB_num_rows($Result) > 0) {
 		/*test to ensure that the emailsettings table exists!!
 		 * if it doesn't exist then we are into an UpgradeDatabase scenario anyway
 		*/
-		$myrow=DB_fetch_array($result);
+		$MyRow=DB_fetch_array($Result);
 
-		$_SESSION['SMTPSettings']['host']=$myrow['host'];
-		$_SESSION['SMTPSettings']['port']=$myrow['port'];
-		$_SESSION['SMTPSettings']['heloaddress']=$myrow['heloaddress'];
-		$_SESSION['SMTPSettings']['username']=$myrow['username'];
-		$_SESSION['SMTPSettings']['password']=$myrow['password'];
-		$_SESSION['SMTPSettings']['timeout']=$myrow['timeout'];
-		$_SESSION['SMTPSettings']['auth']=$myrow['auth'];
+		$_SESSION['SMTPSettings']['host']=$MyRow['host'];
+		$_SESSION['SMTPSettings']['port']=$MyRow['port'];
+		$_SESSION['SMTPSettings']['heloaddress']=$MyRow['heloaddress'];
+		$_SESSION['SMTPSettings']['username']=$MyRow['username'];
+		$_SESSION['SMTPSettings']['password']=$MyRow['password'];
+		$_SESSION['SMTPSettings']['timeout']=$MyRow['timeout'];
+		$_SESSION['SMTPSettings']['auth']=$MyRow['auth'];
 	}
 	//Add favorite scripts
 	//Check that the favourites table exists (upgrades will choke otherwise)
 
-	$sql = "SELECT href, caption FROM favourites WHERE userid='" . $_SESSION['UserID'] . "'";
-	$result = DB_query($sql,'','',false,false);
-	if (DB_num_rows($result)>0) {
-		while ($myrow = DB_fetch_array($result)) {
-			$_SESSION['Favourites'][$myrow['href']] = $myrow['caption'];
+	$SQL = "SELECT href, caption FROM favourites WHERE userid='" . $_SESSION['UserID'] . "'";
+	$Result = DB_query($SQL,'','',false,false);
+	if (DB_num_rows($Result)>0) {
+		while ($MyRow = DB_fetch_array($Result)) {
+			$_SESSION['Favourites'][$MyRow['href']] = $MyRow['caption'];
 		}
 	}
 

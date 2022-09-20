@@ -56,7 +56,7 @@ to limit possibility for SQL injection attacks and cross scripting attacks
 */
 
 if (isset($_SESSION['DatabaseName'])) {
-	
+
 	foreach ($_POST as $PostVariableName => $PostVariableValue) {
 		if (gettype($PostVariableValue) != 'array') {
 			/*    if(get_magic_quotes_gpc()) {
@@ -147,7 +147,7 @@ if (basename($_SERVER['SCRIPT_NAME']) == 'Logout.php') {
 	}
 
 	header('Location: index.php'); //go back to the main index/login
-	
+
 } elseif (isset($AllowAnyone)){ /* only do security checks if AllowAnyone is not true */
 	if (!isset($_SESSION['DatabaseName'])){
 
@@ -175,14 +175,14 @@ if (basename($_SERVER['SCRIPT_NAME']) == 'Logout.php') {
 		case UL_OK; //user logged in successfully
 		include ($PathPrefix . 'includes/LanguageSetup.php'); //set up the language
 		break;
-	
+
 		case UL_SHOWLOGIN:
 			include ($PathPrefix . 'includes/Login.php');
 			exit;
-	
+
 		case UL_BLOCKED:
 			die(include ($PathPrefix . 'includes/FailedLogin.php'));
-	
+
 		case UL_CONFIGERR:
 			$Title = _('Account Error Report');
 			include ($PathPrefix . 'includes/header.php');
@@ -190,21 +190,35 @@ if (basename($_SERVER['SCRIPT_NAME']) == 'Logout.php') {
 			prnMsg(_('Your user role does not have any access defined for webERP. There is an error in the security setup for this user account'), 'error');
 			include ($PathPrefix . 'includes/footer.php');
 			exit;
-	
+
 		case UL_NOTVALID:
 			$demo_text = '<font size="3" color="red"><b>' . _('incorrect password') . '</b></font><br /><b>' . _('The user/password combination') . '<br />' . _('is not a valid user of the system') . '</b>';
 			die(include ($PathPrefix . 'includes/Login.php'));
-	
+
 		case UL_MAINTENANCE:
 			$demo_text = '<font size="3" color="red"><b>' . _('system maintenance') . '</b></font><br /><b>' . _('webERP is not available right now') . '<br />' . _('during maintenance of the system') . '</b>';
 			die(include ($PathPrefix . 'includes/Login.php'));
-	
+
 	}
 }
 
-/*If the Code $Version - held in ConnectDB.inc is > than the Database VersionNumber held in config table then do upgrades */
-if (strcmp($Version, $_SESSION['VersionNumber']) > 0 and (basename($_SERVER['SCRIPT_NAME']) != 'UpgradeDatabase.php')) {
-	header('Location: UpgradeDatabase.php');
+if ((in_array($_SESSION['PageSecurityArray']['SystemParameters.php'], $_SESSION['AllowedPageSecurityTokens'])) and $_SESSION['VersionNumber'] == '4.15.2') {
+	// All the old updates have been applied
+	// Use the new system
+	include ($PathPrefix . 'includes/GetConfig.php');
+	if (!isset($_SESSION['DBUpdateNumber'])) {
+		$_SESSION['DBUpdateNumber'] = -1;
+	}
+	/*If the highest of the DB update files is greater than the DBUpdateNumber held in config table then do upgrades */
+	$_SESSION['DBVersion'] = HighestFileName($PathPrefix);
+	if (($_SESSION['DBVersion'] > $_SESSION['DBUpdateNumber']) and (basename($_SERVER['SCRIPT_NAME']) != 'Z_UpgradeDatabase.php')) {
+		header('Location: Z_UpgradeDatabase.php');
+	}
+} else {
+	if (basename($_SERVER['SCRIPT_NAME']) != 'UpgradeDatabase.php') {
+		// There are still old updates to be applied
+		header('Location: UpgradeDatabase.php');
+	}
 }
 
 if (isset($_POST['Theme']) and ($_SESSION['UsersRealName'] == $_POST['RealName'])) {
@@ -321,6 +335,12 @@ if (sizeof($_POST) > 0 and !isset($AllowAnyone)) {
 	}
 }
 
+function HighestFileName($PathPrefix) {
+	$files = glob('sql/updates/*.php');
+	natsort($files);
+	return basename(array_pop($files), ".php");
+}
+
 function quote_smart($value) {
 	// Stripslashes
 	if (phpversion() < "5.3") {
@@ -331,7 +351,7 @@ function quote_smart($value) {
 	// Quote if not integer
 	if (!is_numeric($value)) {
 		$value = "'" . DB_escape_string($value) . "'";
-	} 
+	}
 	return $value;
 }
 
