@@ -1,0 +1,26 @@
+.container{
+display:grid;
+grid-template-columns:repeat(var(--cols), 1fr);
+grid-template-rows:repeat(var(--rows), 0.6fr);
+column-gap: 10px;
+row-gap: 10px;
+margin-bottom:2%;
+margin-right:1%;
+}
+.dashboard_cell {
+overflow:auto;
+background:#B0AEAE;
+border: 0px solid #9E0101;
+padding:3px;
+border-radius:7px;
+box-shadow: 0 4px 8px 0 rgba(104, 104, 104, 0.5), 0 6px 6px 0 rgba(104, 104, 104, 0.5);
+}
+.CloseButton{
+float:right;
+background:#090932;
+color:#ADD8E6;
+padding-left:3px;
+padding-right:3px;
+border-radius:27px;
+cursor:pointer;
+}
