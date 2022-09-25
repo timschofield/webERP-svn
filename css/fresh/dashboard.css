@@ -1,11 +1,14 @@
 .container{
 display:grid;
 grid-template-columns:repeat(var(--cols), 1fr);
-grid-template-rows:repeat(var(--rows), 0.85fr);
+grid-template-rows:repeat(var(--rows), 0.55fr);
 column-gap: 10px;
 row-gap: 10px;
 margin-bottom:2%;
 margin-right:1%;
+}
+.DashboardTable {
+width:100%;
 }
 .dashboard_cell {
 overflow:auto;
