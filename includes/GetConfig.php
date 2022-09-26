@@ -45,6 +45,12 @@ if(isset($ForceConfigReload) AND $ForceConfigReload==true OR !isset($_SESSION['C
 		$Result = DB_query("ALTER TABLE `currencies`
 							ADD COLUMN `decimalplaces` tinyint(3) NOT NULL DEFAULT 2 AFTER `hundredsname`");
 	}
+
+	if ($_SESSION['DBUpdateNumber'] > 1) {
+		$_SESSION['ChartLanguage'] = GetChartLanguage();
+		$_SESSION['InventoryLanguage'] = GetInventoryLanguage();
+	}
+
 /* Also reads all the company data set up in the company record and returns an array */
 
 	$SQL=	"SELECT	coyname,
