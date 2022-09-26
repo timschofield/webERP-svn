@@ -92,7 +92,6 @@ if (isset($_POST['ProcessCustomerChange'])){
 									`typeid`
 					FROM debtorsmaster
 					WHERE debtorno='" . $_POST['OldDebtorNo'] . "'";
-
 	$DbgMsg =_('The SQL that failed was');
 	$ErrMsg = _('The SQL to insert the new debtors master record failed') . ', ' . _('the SQL statement was');
 	$result = DB_query($sql,$ErrMsg,$DbgMsg,true);
@@ -125,6 +124,7 @@ if (isset($_POST['ProcessCustomerChange'])){
 									`brpostaddr5`,
 									`brpostaddr6`,
 									`defaultshipvia`,
+									`specialinstructions`,
 									`custbranchcode`)
 							SELECT branchcode,
 								'" . $_POST['NewDebtorNo'] . "',
@@ -153,6 +153,7 @@ if (isset($_POST['ProcessCustomerChange'])){
 									`brpostaddr5`,
 									`brpostaddr6`,
 									`defaultshipvia`,
+									'',
 									`custbranchcode`
 								FROM custbranch
 								WHERE debtorno='" . $_POST['OldDebtorNo'] . "'";
