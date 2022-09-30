@@ -637,6 +637,50 @@ function fShowPageHelp($HelpText) {
 }
 
 
+function GLSelect($Type, $Name) {
+	/* $Type = 0; : Balance Sheet accounts
+	 * $Type = 1; : Profit and loss accounts
+	 * $Type = 2; : All accounts
+	*/
+	if ($Type == 2) {
+		$ResultSelection = DB_query("SELECT accountcode,
+											accountname,
+											group_
+										FROM chartmaster
+										INNER JOIN accountgroups
+											ON chartmaster.groupcode=accountgroups.groupcode
+											AND chartmaster.language=accountgroups.language
+										WHERE chartmaster.Language='" . $_SESSION['ChartLanguage'] . "'
+										ORDER BY chartmaster.accountcode");
+	} else {
+		$ResultSelection = DB_query("SELECT accountcode,
+											accountname,
+											group_
+										FROM chartmaster
+										INNER JOIN accountgroups
+											ON chartmaster.groupcode=accountgroups.groupcode
+											AND chartmaster.language=accountgroups.language
+										WHERE accountgroups.pandl=" . $Type . "
+											AND chartmaster.Language='" . $_SESSION['ChartLanguage'] . "'
+										ORDER BY chartmaster.accountcode");
+	}
+	$OptGroup = '';
+	echo '<select name="', $Name, '">';
+	echo '<option value="">', _('Select an Account Code'), '</option>';
+	while ($MyRowSelection = DB_fetch_array($ResultSelection)) {
+		if ($OptGroup != $MyRowSelection['group_']) {
+			echo '<optgroup label="', $MyRowSelection['group_'], '">';
+			$OptGroup = $MyRowSelection['group_'];
+		}
+		if (isset($_POST[$Name]) and $_POST[$Name] == $MyRowSelection['accountcode']) {
+			echo '<option selected="selected" value="', $MyRowSelection['accountcode'], '">', $MyRowSelection['accountcode'] . ' - ' . htmlspecialchars($MyRowSelection['accountname'], ENT_QUOTES, 'UTF-8', false), '</option>';
+		} else {
+			echo '<option value="', $MyRowSelection['accountcode'], '">', $MyRowSelection['accountcode'] . ' - ' . htmlspecialchars($MyRowSelection['accountname'], ENT_QUOTES, 'UTF-8', false), '</option>';
+		}
+	}
+	echo '</select>';
+}
+
 /*
  * Improve language check to avoid potential LFI issue.
  * Reported by: https://lyhinslab.org
