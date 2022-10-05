@@ -76,6 +76,7 @@ if (isset($_POST['ProcessCustomerChange'])){
 					`brpostaddr5`,
 					`brpostaddr6`,
 					`defaultshipvia`,
+					`specialinstructions`,
 					`custbranchcode`)
 			SELECT '" . $_POST['NewBranchCode'] . "',
 					`debtorno`,
@@ -104,6 +105,7 @@ if (isset($_POST['ProcessCustomerChange'])){
 					`brpostaddr5`,
 					`brpostaddr6`,
 					`defaultshipvia`,
+					'',
 					`custbranchcode`
 			FROM custbranch
 			WHERE debtorno='" . $_POST['DebtorNo'] . "'
