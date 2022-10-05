@@ -1109,6 +1109,79 @@ if (isset($_POST['ProcessCredit']) and $OKToProcess == true) {
 				$StkMoveNo = DB_Last_Insert_ID('stockmoves', 'stkmoveno');
 			}
 
+			$Commission = CalculateCommission($_SESSION['CreditItems' . $Identifier]->SalesPerson, $_SESSION['CreditItems' . $Identifier]->DebtorNo, $_SESSION['CreditItems' . $Identifier]->Branch, $CreditLine->StockID, $_SESSION['CreditItems' . $Identifier]->DefaultCurrency, ($CreditLine->QtyDispatched * $CreditLine->Price), $PeriodNo);
+			if ($Commission != 0) {
+
+				$TransNo = GetNextTransNo(39);
+				$SQL = "INSERT INTO salescommissions (commissionno,
+													  type,
+													  transno,
+													  stkmoveno,
+													  salespersoncode,
+													  paid,
+													  amount,
+													  currency,
+													  exrate
+													) VALUES (
+													  '" . $TransNo . "',
+													  10,
+													  '" . $CreditNo . "',
+													  '" . $StkMoveNo . "',
+													  '" . $_SESSION['CreditItems' . $Identifier]->SalesPerson . "',
+													  0,
+													  '" . round(-$Commission, $_SESSION['CompanyRecord']['decimalplaces']) . "',
+													  '" . $_SESSION['CreditItems' . $Identifier]->DefaultCurrency . "',
+													  '" . $_SESSION['CurrencyRate'] . "'
+													)";
+				$ErrMsg = _('CRITICAL ERROR') . '! ' . _('NOTE DOWN THIS ERROR AND SEEK ASSISTANCE') . ': ' . _('The sales commission accrual record could not be inserted because');
+				$DbgMsg = _('The following SQL to insert the sales commission accrual record was used');
+				$Result = DB_query($SQL, $ErrMsg, $DbgMsg, true);
+
+				$SalesPersonSQL = "SELECT salesmanname, glaccount FROM salesman WHERE salesmancode='" . $_SESSION['CreditItems' . $Identifier]->SalesPerson . "'";
+				$SalesPersonResult = DB_query($SalesPersonSQL);
+				$SalesPersonRow = DB_fetch_array($SalesPersonResult);
+
+				$SQL = "INSERT INTO gltrans (type,
+											typeno,
+											trandate,
+											periodno,
+											account,
+											narrative,
+											amount)
+									VALUES (
+										39,
+										'" . $TransNo . "',
+										'" . $DefaultDispatchDate . "',
+										'" . $PeriodNo . "',
+										'" . $SalesPersonRow['glaccount'] . "',
+										'" . mb_substr(_('Sales Commission') . " - " . $SalesPersonRow['salesmanname'] . " - " . $_SESSION['CreditItems' . $Identifier]->DebtorNo . " - " . _('Invoice No') . $CreditNo, 0, 200) . "',
+										'" . round(-$Commission / $_SESSION['CurrencyRate'], $_SESSION['CompanyRecord']['decimalplaces']) . "')";
+
+				$ErrMsg = _('CRITICAL ERROR') . '! ' . _('NOTE DOWN THIS ERROR AND SEEK ASSISTANCE') . ': ' . _('The expenses side of the sales commission posting could not be inserted because');
+				$DbgMsg = _('The following SQL to insert the sales commission record was used');
+				$Result = DB_query($SQL, $ErrMsg, $DbgMsg, true);
+
+				$SQL = "INSERT INTO gltrans (type,
+											typeno,
+											trandate,
+											periodno,
+											account,
+											narrative,
+											amount)
+									VALUES (
+										39,
+										'" . $TransNo . "',
+										'" . $DefaultDispatchDate . "',
+										'" . $PeriodNo . "',
+										'" . $_SESSION['CompanyRecord']['commissionsact'] . "',
+										'" . mb_substr(_('Sales Commission') . " - " . $SalesPersonRow['salesmanname'] . " - " . $_SESSION['CreditItems' . $Identifier]->DebtorNo . " - " . _('Invoice No') . $CreditNo, 0, 200) . "',
+										'" . round($Commission / $_SESSION['CurrencyRate'], $_SESSION['CompanyRecord']['decimalplaces']) . "')";
+
+				$ErrMsg = _('CRITICAL ERROR') . '! ' . _('NOTE DOWN THIS ERROR AND SEEK ASSISTANCE') . ': ' . _('The accruals side of the sales commission posting could not be inserted because');
+				$DbgMsg = _('The following SQL to insert the sales commission record was used');
+				$Result = DB_query($SQL, $ErrMsg, $DbgMsg, true);
+			}
+
 			/*Insert the taxes that applied to this line */
 			foreach ($CreditLine->Taxes as $Tax) {
 
