@@ -1,6 +1,6 @@
 # Changelog - Archive
-All notable changes to the webERP project will be documented in this file.  
-The format is based on [Keep a Changelog], and this project adheres to [Semantic Versioning].  
+All notable changes to the webERP project will be documented in this file.
+The format is based on [Keep a Changelog], and this project adheres to [Semantic Versioning].
 For the most recent changelogs, please refer to [CHANGELOG.md].
 
 ## [v4.14] - 2017-06-20
@@ -2261,7 +2261,7 @@ For the most recent changelogs, please refer to [CHANGELOG.md].
 | SelectCustomer.php - Add in facility to search by customer address |  | Gilles Deacur | 2009-11-08 |  |  |
 | New DailySalesInquiry.php - show sales for a selected month - day by day with average sales per billing day and GP% - work sponsored by Manny Neri |  | Phil | 2009-11-08 |  |  |
 | update3.10-3.11.sql - Remove FOI config value as feature not in 3.11 |  | Tim | 2009-11-07 |  |  |
-| PrintCstTransPortrait.php - Correct $pdf->Output() call to show invoice without saving first |  | Tim | 2009-11-07 |  |  |
+| PrintCstTransPortrait.php - Correct $PDF->Output() call to show invoice without saving first |  | Tim | 2009-11-07 |  |  |
 | upgrade3.11-3.12.sql - Remove duplicated line and corrected syntax for consistency |  | Tim | 2009-11-07 |  |  |
 | Login.php - A correction for the svn folder, and minor corrections to HTML. |  | Bogdan Stanciu | 2009-11-06 |  |  |
 | Corrections to Silverwolf login.css |  | Javier | 2009-11-06 |  |  |

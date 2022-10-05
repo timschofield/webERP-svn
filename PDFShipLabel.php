@@ -108,7 +108,7 @@ $PaperSize = $FormDesign->PaperSize;
 $line_height = $FormDesign->LineHeight;
 include('includes/PDFStarter.php');
 $PageNumber = 1;
-$pdf->addInfo('Title', _('FG Label'));
+$PDF->addInfo('Title', _('FG Label'));
 
 if ($SelectedORD == 'Preview') {
 	$NoOfLabels = 1;
@@ -253,80 +253,80 @@ if ($SelectedORD == 'Preview') {
 if ($NoOfLabels > 0) {
 	for ($i = 1; $i < $NoOfLabels; $i++) {
 		if ($PageNumber > 1) {
-			$pdf->newPage();
+			$PDF->newPage();
 		}
 		$PageNumber++;
 		$AddressLine = 0;
-		$pdf->addJpegFromFile($_SESSION['LogoFile'], $FormDesign->logo->x, $Page_Height - $FormDesign->logo->y, $FormDesign->logo->width, $FormDesign->logo->height);
-		$pdf->setFont('', 'B');
-		$pdf->addText($FormDesign->CompanyAddress->CompanyLabel->x, $Page_Height - $FormDesign->CompanyAddress->CompanyLabel->y, $FormDesign->CompanyAddress->CompanyLabel->FontSize, _('Ship From') . ': ');
-		$pdf->setFont('', '');
-		$pdf->addText($FormDesign->CompanyAddress->CompanyName->x, $Page_Height - $FormDesign->CompanyAddress->CompanyName->y, $FormDesign->CompanyAddress->CompanyName->FontSize, $_SESSION['CompanyRecord']['coyname']);
-		$pdf->addText($FormDesign->CompanyAddress->Address->x, $Page_Height - $FormDesign->CompanyAddress->Address->y - ($AddressLine * $FormDesign->CompanyAddress->Address->FontSize), $FormDesign->CompanyAddress->Address->FontSize, $_SESSION['CompanyRecord']['regoffice1']);
+		$PDF->addJpegFromFile($_SESSION['LogoFile'], $FormDesign->logo->x, $Page_Height - $FormDesign->logo->y, $FormDesign->logo->width, $FormDesign->logo->height);
+		$PDF->setFont('', 'B');
+		$PDF->addText($FormDesign->CompanyAddress->CompanyLabel->x, $Page_Height - $FormDesign->CompanyAddress->CompanyLabel->y, $FormDesign->CompanyAddress->CompanyLabel->FontSize, _('Ship From') . ': ');
+		$PDF->setFont('', '');
+		$PDF->addText($FormDesign->CompanyAddress->CompanyName->x, $Page_Height - $FormDesign->CompanyAddress->CompanyName->y, $FormDesign->CompanyAddress->CompanyName->FontSize, $_SESSION['CompanyRecord']['coyname']);
+		$PDF->addText($FormDesign->CompanyAddress->Address->x, $Page_Height - $FormDesign->CompanyAddress->Address->y - ($AddressLine * $FormDesign->CompanyAddress->Address->FontSize), $FormDesign->CompanyAddress->Address->FontSize, $_SESSION['CompanyRecord']['regoffice1']);
 		++$AddressLine;
 		if ($_SESSION['CompanyRecord']['regoffice2'] > '') {
-			$pdf->addText($FormDesign->CompanyAddress->Address->x, $Page_Height - $FormDesign->CompanyAddress->Address->y - ($AddressLine * $FormDesign->CompanyAddress->Address->FontSize), $FormDesign->CompanyAddress->Address->FontSize, $_SESSION['CompanyRecord']['regoffice2']);
+			$PDF->addText($FormDesign->CompanyAddress->Address->x, $Page_Height - $FormDesign->CompanyAddress->Address->y - ($AddressLine * $FormDesign->CompanyAddress->Address->FontSize), $FormDesign->CompanyAddress->Address->FontSize, $_SESSION['CompanyRecord']['regoffice2']);
 			++$AddressLine;
 		}
 		if ($_SESSION['CompanyRecord']['regoffice3'] > '') {
-			$pdf->addText($FormDesign->CompanyAddress->Address->x, $Page_Height - $FormDesign->CompanyAddress->Address->y - ($AddressLine * $FormDesign->CompanyAddress->Address->FontSize), $FormDesign->CompanyAddress->Address->FontSize, $_SESSION['CompanyRecord']['regoffice3']);
+			$PDF->addText($FormDesign->CompanyAddress->Address->x, $Page_Height - $FormDesign->CompanyAddress->Address->y - ($AddressLine * $FormDesign->CompanyAddress->Address->FontSize), $FormDesign->CompanyAddress->Address->FontSize, $_SESSION['CompanyRecord']['regoffice3']);
 			++$AddressLine;
 		}
 		if ($_SESSION['CompanyRecord']['regoffice4'] > '') {
-			$pdf->addText($FormDesign->CompanyAddress->Address->x, $Page_Height - $FormDesign->CompanyAddress->Address->y - ($AddressLine * $FormDesign->CompanyAddress->Address->FontSize), $FormDesign->CompanyAddress->Address->FontSize, $_SESSION['CompanyRecord']['regoffice4']);
+			$PDF->addText($FormDesign->CompanyAddress->Address->x, $Page_Height - $FormDesign->CompanyAddress->Address->y - ($AddressLine * $FormDesign->CompanyAddress->Address->FontSize), $FormDesign->CompanyAddress->Address->FontSize, $_SESSION['CompanyRecord']['regoffice4']);
 			++$AddressLine;
 		}
 		if ($_SESSION['CompanyRecord']['regoffice5'] > '') {
-			$pdf->addText($FormDesign->CompanyAddress->Address->x, $Page_Height - $FormDesign->CompanyAddress->Address->y - ($AddressLine * $FormDesign->CompanyAddress->Address->FontSize), $FormDesign->CompanyAddress->Address->FontSize, $_SESSION['CompanyRecord']['regoffice5']);
+			$PDF->addText($FormDesign->CompanyAddress->Address->x, $Page_Height - $FormDesign->CompanyAddress->Address->y - ($AddressLine * $FormDesign->CompanyAddress->Address->FontSize), $FormDesign->CompanyAddress->Address->FontSize, $_SESSION['CompanyRecord']['regoffice5']);
 			++$AddressLine;
 		}
 		if ($_SESSION['CompanyRecord']['regoffice6'] > '') {
-			$pdf->addText($FormDesign->CompanyAddress->Address->x, $Page_Height - $FormDesign->CompanyAddress->Address->y - ($AddressLine * $FormDesign->CompanyAddress->Address->FontSize), $FormDesign->CompanyAddress->Address->FontSize, $_SESSION['CompanyRecord']['regoffice6']);
+			$PDF->addText($FormDesign->CompanyAddress->Address->x, $Page_Height - $FormDesign->CompanyAddress->Address->y - ($AddressLine * $FormDesign->CompanyAddress->Address->FontSize), $FormDesign->CompanyAddress->Address->FontSize, $_SESSION['CompanyRecord']['regoffice6']);
 			++$AddressLine;
 		}
-		$pdf->Line($FormDesign->LabelLine->startx, $Page_Height - $FormDesign->LabelLine->starty, $FormDesign->LabelLine->endx, $Page_Height - $FormDesign->LabelLine->endy);
-		$pdf->setFont('', 'B');
-		$pdf->addText($FormDesign->DeliveryAddress->DelLabel->x, $Page_Height - $FormDesign->DeliveryAddress->DelLabel->y, $FormDesign->DeliveryAddress->DelLabel->FontSize, _('Ship To') . ': ');
-		$pdf->setFont('', '');
-		$pdf->addText($FormDesign->DeliveryAddress->DelName->x, $Page_Height - $FormDesign->DeliveryAddress->DelName->y, $FormDesign->DeliveryAddress->DelName->FontSize, $MyArray[$i]['deliverto']);
+		$PDF->Line($FormDesign->LabelLine->startx, $Page_Height - $FormDesign->LabelLine->starty, $FormDesign->LabelLine->endx, $Page_Height - $FormDesign->LabelLine->endy);
+		$PDF->setFont('', 'B');
+		$PDF->addText($FormDesign->DeliveryAddress->DelLabel->x, $Page_Height - $FormDesign->DeliveryAddress->DelLabel->y, $FormDesign->DeliveryAddress->DelLabel->FontSize, _('Ship To') . ': ');
+		$PDF->setFont('', '');
+		$PDF->addText($FormDesign->DeliveryAddress->DelName->x, $Page_Height - $FormDesign->DeliveryAddress->DelName->y, $FormDesign->DeliveryAddress->DelName->FontSize, $MyArray[$i]['deliverto']);
 		$AddressLine = 0;
-		$pdf->addText($FormDesign->DeliveryAddress->DelAddress->x, $Page_Height - $FormDesign->DeliveryAddress->DelAddress->y - ($AddressLine * $FormDesign->DeliveryAddress->DelAddress->FontSize), $FormDesign->DeliveryAddress->DelAddress->FontSize, $MyArray[$i]['deladd1']);
+		$PDF->addText($FormDesign->DeliveryAddress->DelAddress->x, $Page_Height - $FormDesign->DeliveryAddress->DelAddress->y - ($AddressLine * $FormDesign->DeliveryAddress->DelAddress->FontSize), $FormDesign->DeliveryAddress->DelAddress->FontSize, $MyArray[$i]['deladd1']);
 		++$AddressLine;
 		if ($MyArray[$i]['deladd2'] > '') {
-			$pdf->addText($FormDesign->DeliveryAddress->DelAddress->x, $Page_Height - $FormDesign->DeliveryAddress->DelAddress->y - ($AddressLine * $FormDesign->DeliveryAddress->DelAddress->FontSize), $FormDesign->DeliveryAddress->DelAddress->FontSize, $MyArray[$i]['deladd2']);
+			$PDF->addText($FormDesign->DeliveryAddress->DelAddress->x, $Page_Height - $FormDesign->DeliveryAddress->DelAddress->y - ($AddressLine * $FormDesign->DeliveryAddress->DelAddress->FontSize), $FormDesign->DeliveryAddress->DelAddress->FontSize, $MyArray[$i]['deladd2']);
 			++$AddressLine;
 		}
 		if ($MyArray[$i]['deladd3'] > '') {
-			$pdf->addText($FormDesign->DeliveryAddress->DelAddress->x, $Page_Height - $FormDesign->DeliveryAddress->DelAddress->y - ($AddressLine * $FormDesign->DeliveryAddress->DelAddress->FontSize), $FormDesign->DeliveryAddress->DelAddress->FontSize, $MyArray[$i]['deladd3']);
+			$PDF->addText($FormDesign->DeliveryAddress->DelAddress->x, $Page_Height - $FormDesign->DeliveryAddress->DelAddress->y - ($AddressLine * $FormDesign->DeliveryAddress->DelAddress->FontSize), $FormDesign->DeliveryAddress->DelAddress->FontSize, $MyArray[$i]['deladd3']);
 			++$AddressLine;
 		}
 		if ($MyArray[$i]['deladd4'] > '') {
-			$pdf->addText($FormDesign->DeliveryAddress->DelAddress->x, $Page_Height - $FormDesign->DeliveryAddress->DelAddress->y - ($AddressLine * $FormDesign->DeliveryAddress->DelAddress->FontSize), $FormDesign->DeliveryAddress->DelAddress->FontSize, $MyArray[$i]['deladd4']);
+			$PDF->addText($FormDesign->DeliveryAddress->DelAddress->x, $Page_Height - $FormDesign->DeliveryAddress->DelAddress->y - ($AddressLine * $FormDesign->DeliveryAddress->DelAddress->FontSize), $FormDesign->DeliveryAddress->DelAddress->FontSize, $MyArray[$i]['deladd4']);
 			++$AddressLine;
 		}
 		if ($MyArray[$i]['deladd5'] > '') {
-			$pdf->addText($FormDesign->DeliveryAddress->DelAddress->x, $Page_Height - $FormDesign->DeliveryAddress->DelAddress->y - ($AddressLine * $FormDesign->DeliveryAddress->DelAddress->FontSize), $FormDesign->DeliveryAddress->DelAddress->FontSize, $MyArray[$i]['deladd5']);
+			$PDF->addText($FormDesign->DeliveryAddress->DelAddress->x, $Page_Height - $FormDesign->DeliveryAddress->DelAddress->y - ($AddressLine * $FormDesign->DeliveryAddress->DelAddress->FontSize), $FormDesign->DeliveryAddress->DelAddress->FontSize, $MyArray[$i]['deladd5']);
 			++$AddressLine;
 		}
 		if ($MyArray[$i]['deladd6'] > '') {
-			$pdf->addText($FormDesign->DeliveryAddress->DelAddress->x, $Page_Height - $FormDesign->DeliveryAddress->DelAddress->y - ($AddressLine * $FormDesign->DeliveryAddress->DelAddress->FontSize), $FormDesign->DeliveryAddress->DelAddress->FontSize, $MyArray[$i]['deladd6']);
+			$PDF->addText($FormDesign->DeliveryAddress->DelAddress->x, $Page_Height - $FormDesign->DeliveryAddress->DelAddress->y - ($AddressLine * $FormDesign->DeliveryAddress->DelAddress->FontSize), $FormDesign->DeliveryAddress->DelAddress->FontSize, $MyArray[$i]['deladd6']);
 			++$AddressLine;
 		}
 
-		$pdf->addText($FormDesign->PONbr->x, $Page_Height - $FormDesign->PONbr->y, $FormDesign->PONbr->FontSize, _('Order') . ': ' . $MyArray[$i]['customerref']);
-		$pdf->addText($FormDesign->ItemNbr->x, $Page_Height - $FormDesign->ItemNbr->y, $FormDesign->ItemNbr->FontSize, _('Item') . ': ' . $MyArray[$i]['stockid']);
-		$pdf->addText($FormDesign->CustItem->x, $Page_Height - $FormDesign->CustItem->y, $FormDesign->CustItem->FontSize, _('Customer Item') . ': ' . $MyArray[$i]['custitem']);
+		$PDF->addText($FormDesign->PONbr->x, $Page_Height - $FormDesign->PONbr->y, $FormDesign->PONbr->FontSize, _('Order') . ': ' . $MyArray[$i]['customerref']);
+		$PDF->addText($FormDesign->ItemNbr->x, $Page_Height - $FormDesign->ItemNbr->y, $FormDesign->ItemNbr->FontSize, _('Item') . ': ' . $MyArray[$i]['stockid']);
+		$PDF->addText($FormDesign->CustItem->x, $Page_Height - $FormDesign->CustItem->y, $FormDesign->CustItem->FontSize, _('Customer Item') . ': ' . $MyArray[$i]['custitem']);
 
 	} //end of loop labels
 
 	$Success = 1; //assume the best and email goes - has to be set to 1 to allow update status
 	if ($MakePDFThenDisplayIt) {
-		$pdf->OutputD($_SESSION['DatabaseName'] . '_FGLABEL_' . $SelectedORD . '_' . date('Y-m-d') . '.pdf');
-		$pdf->__destruct();
+		$PDF->OutputD($_SESSION['DatabaseName'] . '_FGLABEL_' . $SelectedORD . '_' . date('Y-m-d') . '.pdf');
+		$PDF->__destruct();
 	} else {
 		$PdfFileName = $_SESSION['DatabaseName'] . '__FGLABEL_' . $SelectedORD . '_' . date('Y-m-d') . '.pdf';
-		$pdf->Output($_SESSION['reports_dir'] . '/' . $PdfFileName, 'F');
-		$pdf->__destruct();
+		$PDF->Output($_SESSION['reports_dir'] . '/' . $PdfFileName, 'F');
+		$PDF->__destruct();
 		include('includes/htmlMimeMail.php');
 		$Mail = new htmlMimeMail();
 		$Attachment = $Mail->getFile($_SESSION['reports_dir'] . '/' . $PdfFileName);

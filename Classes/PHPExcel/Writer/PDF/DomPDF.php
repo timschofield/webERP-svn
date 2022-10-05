@@ -27,9 +27,9 @@
 
 
 /**  Require DomPDF library */
-$pdfRendererClassFile = PHPExcel_Settings::getPdfRendererPath() . '/dompdf_config.inc.php';
-if (file_exists($pdfRendererClassFile)) {
-    require_once $pdfRendererClassFile;
+$PDFRendererClassFile = PHPExcel_Settings::getPdfRendererPath() . '/dompdf_config.inc.php';
+if (file_exists($PDFRendererClassFile)) {
+    require_once $PDFRendererClassFile;
 } else {
     throw new PHPExcel_Writer_Exception('Unable to load PDF Rendering library');
 }
@@ -83,7 +83,7 @@ class PHPExcel_Writer_PDF_DomPDF extends PHPExcel_Writer_PDF_Core implements PHP
             $printMargins = $this->_phpExcel->getSheet($this->getSheetIndex())->getPageMargins();
         }
 
-        
+
         $orientation = ($orientation == 'L') ? 'landscape' : 'portrait';
 
         //  Override Page Orientation
@@ -103,18 +103,18 @@ class PHPExcel_Writer_PDF_DomPDF extends PHPExcel_Writer_PDF_Core implements PHP
 
 
         //  Create PDF
-        $pdf = new DOMPDF();
-        $pdf->set_paper(strtolower($paperSize), $orientation);
+        $PDF = new DOMPDF();
+        $PDF->set_paper(strtolower($paperSize), $orientation);
 
-        $pdf->load_html(
+        $PDF->load_html(
             $this->generateHTMLHeader(FALSE) .
             $this->generateSheetData() .
             $this->generateHTMLFooter()
         );
-        $pdf->render();
+        $PDF->render();
 
         //  Write to file
-        fwrite($fileHandle, $pdf->output());
+        fwrite($fileHandle, $PDF->output());
 
 		parent::restoreStateAfterSave($fileHandle);
     }

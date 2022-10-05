@@ -27,10 +27,10 @@
 
 
 /**  Require tcPDF library */
-$pdfRendererClassFile = PHPExcel_Settings::getPdfRendererPath() . '/tcpdf.php';
-if (file_exists($pdfRendererClassFile)) {
+$PDFRendererClassFile = PHPExcel_Settings::getPdfRendererPath() . '/tcpdf.php';
+if (file_exists($PDFRendererClassFile)) {
     $k_path_url = PHPExcel_Settings::getPdfRendererPath();
-    require_once $pdfRendererClassFile;
+    require_once $PDFRendererClassFile;
 } else {
     throw new PHPExcel_Writer_Exception('Unable to load PDF Rendering library');
 }
@@ -101,34 +101,34 @@ class PHPExcel_Writer_PDF_tcPDF extends PHPExcel_Writer_PDF_Core implements PHPE
 
 
         //  Create PDF
-        $pdf = new TCPDF($orientation, 'pt', $paperSize);
-        $pdf->setFontSubsetting(FALSE);
+        $PDF = new TCPDF($orientation, 'pt', $paperSize);
+        $PDF->setFontSubsetting(FALSE);
         //    Set margins, converting inches to points (using 72 dpi)
-        $pdf->SetMargins($printMargins->getLeft() * 72, $printMargins->getTop() * 72, $printMargins->getRight() * 72);
-        $pdf->SetAutoPageBreak(TRUE, $printMargins->getBottom() * 72);
+        $PDF->SetMargins($printMargins->getLeft() * 72, $printMargins->getTop() * 72, $printMargins->getRight() * 72);
+        $PDF->SetAutoPageBreak(TRUE, $printMargins->getBottom() * 72);
 
-        $pdf->setPrintHeader(FALSE);
-        $pdf->setPrintFooter(FALSE);
+        $PDF->setPrintHeader(FALSE);
+        $PDF->setPrintFooter(FALSE);
 
-        $pdf->AddPage();
+        $PDF->AddPage();
 
         //  Set the appropriate font
-        $pdf->SetFont($this->getFont());
-        $pdf->writeHTML(
+        $PDF->SetFont($this->getFont());
+        $PDF->writeHTML(
             $this->generateHTMLHeader(FALSE) .
             $this->generateSheetData() .
             $this->generateHTMLFooter()
         );
 
         //  Document info
-        $pdf->SetTitle($this->_phpExcel->getProperties()->getTitle());
-        $pdf->SetAuthor($this->_phpExcel->getProperties()->getCreator());
-        $pdf->SetSubject($this->_phpExcel->getProperties()->getSubject());
-        $pdf->SetKeywords($this->_phpExcel->getProperties()->getKeywords());
-        $pdf->SetCreator($this->_phpExcel->getProperties()->getCreator());
+        $PDF->SetTitle($this->_phpExcel->getProperties()->getTitle());
+        $PDF->SetAuthor($this->_phpExcel->getProperties()->getCreator());
+        $PDF->SetSubject($this->_phpExcel->getProperties()->getSubject());
+        $PDF->SetKeywords($this->_phpExcel->getProperties()->getKeywords());
+        $PDF->SetCreator($this->_phpExcel->getProperties()->getCreator());
 
         //  Write to file
-        fwrite($fileHandle, $pdf->output($pFilename, 'S'));
+        fwrite($fileHandle, $PDF->output($pFilename, 'S'));
 
 		parent::restoreStateAfterSave($fileHandle);
     }

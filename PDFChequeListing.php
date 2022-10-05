@@ -122,8 +122,8 @@ include('includes/PDFStarter.php');
 
 /*PDFStarter.php has all the variables for page size and width set up depending on the users default preferences for paper size */
 
-$pdf->addInfo('Title',_('Cheque Listing'));
-$pdf->addInfo('Subject',_('Cheque listing from') . '  ' . $_POST['FromDate'] . ' ' . _('to') . ' ' . $_POST['ToDate']);
+$PDF->addInfo('Title',_('Cheque Listing'));
+$PDF->addInfo('Subject',_('Cheque listing from') . '  ' . $_POST['FromDate'] . ' ' . _('to') . ' ' . $_POST['ToDate']);
 $line_height=12;
 $PageNumber = 1;
 $TotalCheques = 0;
@@ -132,8 +132,8 @@ include ('includes/PDFChequeListingPageHeader.inc');
 
 while ($myrow=DB_fetch_array($Result)){
 
-	$LeftOvers = $pdf->addTextWrap($Left_Margin,$YPos,60,$FontSize,locale_number_format(-$myrow['amount'],$BankCurrDecimalPlaces), 'right');
-	$LeftOvers = $pdf->addTextWrap($Left_Margin+65,$YPos,90,$FontSize,$myrow['ref'], 'left');
+	$LeftOvers = $PDF->addTextWrap($Left_Margin,$YPos,60,$FontSize,locale_number_format(-$myrow['amount'],$BankCurrDecimalPlaces), 'right');
+	$LeftOvers = $PDF->addTextWrap($Left_Margin+65,$YPos,90,$FontSize,$myrow['ref'], 'left');
 
 	$sql = "SELECT accountname,
 					accountcode,
@@ -170,9 +170,9 @@ while ($myrow=DB_fetch_array($Result)){
 		}else{
 			$AccountName = _('Other GL Accounts');
 		}
-		$LeftOvers = $pdf->addTextWrap($Left_Margin+150,$YPos,90,$FontSize,$AccountName, 'left');
-		$LeftOvers = $pdf->addTextWrap($Left_Margin+245,$YPos,60,$FontSize,locale_number_format($GLRow['amount'],$_SESSION['CompanyRecord']['decimalplaces']), 'right');
-		$LeftOvers = $pdf->addTextWrap($Left_Margin+310,$YPos,120,$FontSize,$GLRow['narrative'], 'left');
+		$LeftOvers = $PDF->addTextWrap($Left_Margin+150,$YPos,90,$FontSize,$AccountName, 'left');
+		$LeftOvers = $PDF->addTextWrap($Left_Margin+245,$YPos,60,$FontSize,locale_number_format($GLRow['amount'],$_SESSION['CompanyRecord']['decimalplaces']), 'right');
+		$LeftOvers = $PDF->addTextWrap($Left_Margin+310,$YPos,120,$FontSize,$GLRow['narrative'], 'left');
 		$YPos -= ($line_height);
 		if ($YPos - (2 *$line_height) < $Bottom_Margin){
 		  		/*Then set up a new page */
@@ -194,13 +194,13 @@ while ($myrow=DB_fetch_array($Result)){
 
 
 $YPos-=$line_height;
-$LeftOvers = $pdf->addTextWrap($Left_Margin,$YPos,60,$FontSize,locale_number_format($TotalCheques,2), 'right');
-$LeftOvers = $pdf->addTextWrap($Left_Margin+65,$YPos,300,$FontSize,_('TOTAL') . ' ' . $Currency . ' ' . _('CHEQUES'), 'left');
+$LeftOvers = $PDF->addTextWrap($Left_Margin,$YPos,60,$FontSize,locale_number_format($TotalCheques,2), 'right');
+$LeftOvers = $PDF->addTextWrap($Left_Margin+65,$YPos,300,$FontSize,_('TOTAL') . ' ' . $Currency . ' ' . _('CHEQUES'), 'left');
 
 $ReportFileName = $_SESSION['DatabaseName'] . '_ChequeListing_' . date('Y-m-d').'.pdf';
-$pdf->Output($_SESSION['reports_dir'].'/'.$ReportFileName,'F');
-$pdf->OutputD($ReportFileName);
-$pdf->__destruct();
+$PDF->Output($_SESSION['reports_dir'].'/'.$ReportFileName,'F');
+$PDF->OutputD($ReportFileName);
+$PDF->__destruct();
 if ($_POST['Email']=='Yes'){
 
 	include('includes/htmlMimeMail.php');

@@ -6,8 +6,8 @@ include('includes/session.php');
 If (isset($_POST['PrintPDF']) AND isset($_POST['ReportOrClose'])){
 
 	include('includes/PDFStarter.php');
-	$pdf->addInfo('Title', _('Check Comparison Report') );
-	$pdf->addInfo('Subject', _('Inventory Check Comparison'). ' ' . Date($_SESSION['DefaultDateFormat']));
+	$PDF->addInfo('Title', _('Check Comparison Report') );
+	$PDF->addInfo('Subject', _('Inventory Check Comparison'). ' ' . Date($_SESSION['DefaultDateFormat']));
 	$PageNumber=1;
 	$line_height=15;
 
@@ -232,11 +232,11 @@ If (isset($_POST['PrintPDF']) AND isset($_POST['ReportOrClose'])){
 			$FontSize=14;
 			if ($Location!=''){ /*Then it is NOT the first time round */
 				/*draw a line under the Location*/
-				$pdf->line($Left_Margin, $YPos-2,$Page_Width-$Right_Margin, $YPos-2);
+				$PDF->line($Left_Margin, $YPos-2,$Page_Width-$Right_Margin, $YPos-2);
 				$YPos -=$line_height;
 			}
 
-			$LeftOvers = $pdf->addTextWrap($Left_Margin,$YPos,260-$Left_Margin,$FontSize,$CheckItemRow['loccode'] . ' - ' . $CheckItemRow['locationname'], 'left');
+			$LeftOvers = $PDF->addTextWrap($Left_Margin,$YPos,260-$Left_Margin,$FontSize,$CheckItemRow['loccode'] . ' - ' . $CheckItemRow['locationname'], 'left');
 			$Location = $CheckItemRow['loccode'];
 			$YPos -=$line_height;
 		}
@@ -246,11 +246,11 @@ If (isset($_POST['PrintPDF']) AND isset($_POST['ReportOrClose'])){
 			$FontSize=12;
 			if ($Category!=''){ /*Then it is NOT the first time round */
 				/*draw a line under the CATEGORY TOTAL*/
-				$pdf->line($Left_Margin, $YPos-2,$Page_Width-$Right_Margin, $YPos-2);
+				$PDF->line($Left_Margin, $YPos-2,$Page_Width-$Right_Margin, $YPos-2);
 				$YPos -=$line_height;
 			}
 
-			$LeftOvers = $pdf->addTextWrap($Left_Margin+15,$YPos,260-$Left_Margin,$FontSize,$CheckItemRow['categoryid'] . ' - ' . $CheckItemRow['categorydescription'], 'left');
+			$LeftOvers = $PDF->addTextWrap($Left_Margin+15,$YPos,260-$Left_Margin,$FontSize,$CheckItemRow['categoryid'] . ' - ' . $CheckItemRow['categorydescription'], 'left');
 			$Category = $CheckItemRow['categoryid'];
 			$YPos -=$line_height;
 		}
@@ -280,24 +280,24 @@ If (isset($_POST['PrintPDF']) AND isset($_POST['ReportOrClose'])){
 			$YPos -=$line_height;
 			$FontSize=8;
 			if (mb_strlen($CheckItemRow['bin'])>0){
-				$LeftOvers = $pdf->addTextWrap($Left_Margin,$YPos,120,$FontSize,$CheckItemRow['stockid'] . ' - ' . _('Bin') . ':' . $CheckItemRow['bin'], 'left');
+				$LeftOvers = $PDF->addTextWrap($Left_Margin,$YPos,120,$FontSize,$CheckItemRow['stockid'] . ' - ' . _('Bin') . ':' . $CheckItemRow['bin'], 'left');
 			} else {
-				$LeftOvers = $pdf->addTextWrap($Left_Margin,$YPos,120,$FontSize,$CheckItemRow['stockid'], 'left');
+				$LeftOvers = $PDF->addTextWrap($Left_Margin,$YPos,120,$FontSize,$CheckItemRow['stockid'], 'left');
 			}
-			$LeftOvers = $pdf->addTextWrap(135,$YPos,180,$FontSize,$CheckItemRow['description'], 'left');
-			$LeftOvers = $pdf->addTextWrap(315,$YPos,60,$FontSize,locale_number_format($CheckItemRow['qoh'],$CheckItemRow['decimalplaces']), 'right');
+			$LeftOvers = $PDF->addTextWrap(135,$YPos,180,$FontSize,$CheckItemRow['description'], 'left');
+			$LeftOvers = $PDF->addTextWrap(315,$YPos,60,$FontSize,locale_number_format($CheckItemRow['qoh'],$CheckItemRow['decimalplaces']), 'right');
 		}
 
 		if (DB_num_rows($Counts)==0 AND $CheckItemRow['qoh']!=0){
-			$LeftOvers = $pdf->addTextWrap(380, $YPos,160, $FontSize, _('No counts entered'), 'left');
+			$LeftOvers = $PDF->addTextWrap(380, $YPos,160, $FontSize, _('No counts entered'), 'left');
 			if ($_POST['ZeroCounts']=='Adjust'){
-				$LeftOvers = $pdf->addTextWrap(485, $YPos, 60, $FontSize, locale_number_format(-($CheckItemRow['qoh']),$CheckItemRow['decimalplaces']), 'right');
+				$LeftOvers = $PDF->addTextWrap(485, $YPos, 60, $FontSize, locale_number_format(-($CheckItemRow['qoh']),$CheckItemRow['decimalplaces']), 'right');
 			}
 		} elseif (DB_num_rows($Counts)>0) {
 			$TotalCount =0;
 			while ($CountRow=DB_fetch_array($Counts)){
-				$LeftOvers = $pdf->addTextWrap(375, $YPos, 60, $FontSize, locale_number_format(($CountRow['qtycounted']),$CheckItemRow['decimalplaces']), 'right');
-				$LeftOvers = $pdf->addTextWrap(440, $YPos, 100, $FontSize, $CountRow['reference'], 'left');
+				$LeftOvers = $PDF->addTextWrap(375, $YPos, 60, $FontSize, locale_number_format(($CountRow['qtycounted']),$CheckItemRow['decimalplaces']), 'right');
+				$LeftOvers = $PDF->addTextWrap(440, $YPos, 100, $FontSize, $CountRow['reference'], 'left');
 				$TotalCount += $CountRow['qtycounted'];
 				$YPos -= $line_height;
 
@@ -306,12 +306,12 @@ If (isset($_POST['PrintPDF']) AND isset($_POST['ReportOrClose'])){
 		   			include('includes/PDFStockComparisonPageHeader.inc');
 				}
 			} // end of loop printing count information
-			$LeftOvers = $pdf->addTextWrap($Left_Margin, $YPos, 375-$Left_Margin, $FontSize, _('Total for') . ': ' . $CheckItemRow['stockid'], 'right');
-			$LeftOvers = $pdf->addTextWrap(375, $YPos, 60, $FontSize, locale_number_format($TotalCount,$CheckItemRow['decimalplaces']), 'right');
-			$LeftOvers = $pdf->addTextWrap(485, $YPos, 60, $FontSize, locale_number_format($TotalCount-$CheckItemRow['qoh'],$CheckItemRow['decimalplaces']), 'right');
+			$LeftOvers = $PDF->addTextWrap($Left_Margin, $YPos, 375-$Left_Margin, $FontSize, _('Total for') . ': ' . $CheckItemRow['stockid'], 'right');
+			$LeftOvers = $PDF->addTextWrap(375, $YPos, 60, $FontSize, locale_number_format($TotalCount,$CheckItemRow['decimalplaces']), 'right');
+			$LeftOvers = $PDF->addTextWrap(485, $YPos, 60, $FontSize, locale_number_format($TotalCount-$CheckItemRow['qoh'],$CheckItemRow['decimalplaces']), 'right');
 		} //end of if there are counts to print
 
-		$pdf->line($Left_Margin, $YPos-2,$Page_Width-$Right_Margin, $YPos-2);
+		$PDF->line($Left_Margin, $YPos-2,$Page_Width-$Right_Margin, $YPos-2);
 
 		if ($YPos < $Bottom_Margin + $line_height){
 		   $PageNumber++;
@@ -322,8 +322,8 @@ If (isset($_POST['PrintPDF']) AND isset($_POST['ReportOrClose'])){
 
 	$YPos -= (2*$line_height);
 
-    $pdf->OutputD($_SESSION['DatabaseName'] . '_StockComparison_' . date('Y-m-d') . '.pdf');
-    $pdf->__destruct();
+    $PDF->OutputD($_SESSION['DatabaseName'] . '_StockComparison_' . date('Y-m-d') . '.pdf');
+    $PDF->__destruct();
 
 	if ($_POST['ReportOrClose']=='ReportAndClose'){
 		//need to print the report first before this but don't risk re-adjusting all the stock!!

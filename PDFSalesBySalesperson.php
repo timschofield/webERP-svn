@@ -60,8 +60,8 @@ if (DB_error_no()!=0){
 }
 $PaperSize="Letter_Landscape";
 include('includes/PDFStarter.php');
-$pdf->addInfo('Title',_('Weekly Orders Report'));
-$pdf->addInfo('Subject',_('Orders from') . ' ' . $_POST['FromDate'] . ' ' . _('to') . ' ' . $_POST['ToDate']);
+$PDF->addInfo('Title',_('Weekly Orders Report'));
+$PDF->addInfo('Subject',_('Orders from') . ' ' . $_POST['FromDate'] . ' ' . _('to') . ' ' . $_POST['ToDate']);
 $line_height=12;
 $PageNumber = 1;
 $TotalDiffs = 0;
@@ -78,18 +78,18 @@ $Col9=570;
 $Col10=650;
 $Col11=660;
 
-$LeftOvers = $pdf->addTextWrap($Left_Margin+$Col1,$YPos,$Col2-$Col1-5,$FontSize,_('Order'), 'left');
-$LeftOvers = $pdf->addTextWrap($Left_Margin+$Col2,$YPos,$Col3-$Col2-5,$FontSize,_('Customer'), 'left');
-$LeftOvers = $pdf->addTextWrap($Left_Margin+$Col3,$YPos,$Col4-$Col3-5,$FontSize,_('Order Date'), 'left');
-$LeftOvers = $pdf->addTextWrap($Left_Margin+$Col4,$YPos,$Col5-$Col4-5,$FontSize,_('Item'), 'left');
-$LeftOvers = $pdf->addTextWrap($Left_Margin+$Col5,$YPos,$Col6-$Col5-5,$FontSize,_('Description'), 'left');
-$LeftOvers = $pdf->addTextWrap($Left_Margin+$Col6,$YPos,$Col7-$Col6-5,$FontSize,_('Quantity'), 'right');
-$LeftOvers = $pdf->addTextWrap($Left_Margin+$Col7,$YPos,$Col8-$Col7-5,$FontSize,_('Sales'), 'right');
-$LeftOvers = $pdf->addTextWrap($Left_Margin+$Col8,$YPos,$Col9-$Col8-5,$FontSize,_('Status'), 'Left');
-$LeftOvers = $pdf->addTextWrap($Left_Margin+$Col9,$YPos,$Col10-$Col9-5,$FontSize,_('Salesperson'), 'Left');
+$LeftOvers = $PDF->addTextWrap($Left_Margin+$Col1,$YPos,$Col2-$Col1-5,$FontSize,_('Order'), 'left');
+$LeftOvers = $PDF->addTextWrap($Left_Margin+$Col2,$YPos,$Col3-$Col2-5,$FontSize,_('Customer'), 'left');
+$LeftOvers = $PDF->addTextWrap($Left_Margin+$Col3,$YPos,$Col4-$Col3-5,$FontSize,_('Order Date'), 'left');
+$LeftOvers = $PDF->addTextWrap($Left_Margin+$Col4,$YPos,$Col5-$Col4-5,$FontSize,_('Item'), 'left');
+$LeftOvers = $PDF->addTextWrap($Left_Margin+$Col5,$YPos,$Col6-$Col5-5,$FontSize,_('Description'), 'left');
+$LeftOvers = $PDF->addTextWrap($Left_Margin+$Col6,$YPos,$Col7-$Col6-5,$FontSize,_('Quantity'), 'right');
+$LeftOvers = $PDF->addTextWrap($Left_Margin+$Col7,$YPos,$Col8-$Col7-5,$FontSize,_('Sales'), 'right');
+$LeftOvers = $PDF->addTextWrap($Left_Margin+$Col8,$YPos,$Col9-$Col8-5,$FontSize,_('Status'), 'Left');
+$LeftOvers = $PDF->addTextWrap($Left_Margin+$Col9,$YPos,$Col10-$Col9-5,$FontSize,_('Salesperson'), 'Left');
 
 $YPos-=$line_height;
-$pdf->line($XPos, $YPos,$Page_Width-$Right_Margin, $YPos);
+$PDF->line($XPos, $YPos,$Page_Width-$Right_Margin, $YPos);
 $YPos-=$line_height;
 $Salesman='';
 while ($myrow=DB_fetch_array($Result)){
@@ -119,15 +119,15 @@ while ($myrow=DB_fetch_array($Result)){
 	} /*end of new page header  */
 	$Salesman = $myrow['salesmanname'];
 
-	$LeftOvers = $pdf->addTextWrap($Left_Margin+$Col1,$YPos,$Col2-$Col1-5,$FontSize,$myrow['orderno'], 'left');
-	$LeftOvers = $pdf->addTextWrap($Left_Margin+$Col2,$YPos,$Col3-$Col2-5,$FontSize,html_entity_decode($myrow['name'],ENT_QUOTES,'UTF-8'), 'left');
-	$LeftOvers = $pdf->addTextWrap($Left_Margin+$Col3,$YPos,$Col4-$Col3-5,$FontSize,ConvertSQLDate($myrow['orddate']), 'left');
-	$LeftOvers = $pdf->addTextWrap($Left_Margin+$Col4,$YPos,$Col5-$Col4-5,$FontSize,$myrow['stkcode'], 'left');
-	$LeftOvers = $pdf->addTextWrap($Left_Margin+$Col5,$YPos,$Col6-$Col5-5,$FontSize,$myrow['description'], 'left');
-	$LeftOvers = $pdf->addTextWrap($Left_Margin+$Col6,$YPos,$Col7-$Col6-5,$FontSize,locale_number_format($myrow['quantity'],$_SESSION['CompanyRecord']['decimalplaces']), 'right');
-	$LeftOvers = $pdf->addTextWrap($Left_Margin+$Col7,$YPos,$Col8-$Col7-5,$FontSize,locale_number_format($SalesValue,$_SESSION['CompanyRecord']['decimalplaces']), 'right');
-	$LeftOvers = $pdf->addTextWrap($Left_Margin+$Col8,$YPos,$Col9-$Col8-5,$FontSize,$Status, 'left');
-	$LeftOvers = $pdf->addTextWrap($Left_Margin+$Col9,$YPos,$Col10-$Col9-5,$FontSize,$myrow['salesmanname'], 'left');
+	$LeftOvers = $PDF->addTextWrap($Left_Margin+$Col1,$YPos,$Col2-$Col1-5,$FontSize,$myrow['orderno'], 'left');
+	$LeftOvers = $PDF->addTextWrap($Left_Margin+$Col2,$YPos,$Col3-$Col2-5,$FontSize,html_entity_decode($myrow['name'],ENT_QUOTES,'UTF-8'), 'left');
+	$LeftOvers = $PDF->addTextWrap($Left_Margin+$Col3,$YPos,$Col4-$Col3-5,$FontSize,ConvertSQLDate($myrow['orddate']), 'left');
+	$LeftOvers = $PDF->addTextWrap($Left_Margin+$Col4,$YPos,$Col5-$Col4-5,$FontSize,$myrow['stkcode'], 'left');
+	$LeftOvers = $PDF->addTextWrap($Left_Margin+$Col5,$YPos,$Col6-$Col5-5,$FontSize,$myrow['description'], 'left');
+	$LeftOvers = $PDF->addTextWrap($Left_Margin+$Col6,$YPos,$Col7-$Col6-5,$FontSize,locale_number_format($myrow['quantity'],$_SESSION['CompanyRecord']['decimalplaces']), 'right');
+	$LeftOvers = $PDF->addTextWrap($Left_Margin+$Col7,$YPos,$Col8-$Col7-5,$FontSize,locale_number_format($SalesValue,$_SESSION['CompanyRecord']['decimalplaces']), 'right');
+	$LeftOvers = $PDF->addTextWrap($Left_Margin+$Col8,$YPos,$Col9-$Col8-5,$FontSize,$Status, 'left');
+	$LeftOvers = $PDF->addTextWrap($Left_Margin+$Col9,$YPos,$Col10-$Col9-5,$FontSize,$myrow['salesmanname'], 'left');
 	if ($YPos - (2 *$line_height) < $Bottom_Margin){
 		$PageNumber++;
 		include ('includes/PDFWeeklyOrdersPageHeader.inc');
@@ -138,8 +138,8 @@ while ($myrow=DB_fetch_array($Result)){
 
 include('includes/htmlMimeMail.php');
 $filename=$_SESSION['reports_dir'] .  '/SalesBySalesperson.pdf';
-$pdf->Output($filename, 'F');
-$pdf->__destruct();
+$PDF->Output($filename, 'F');
+$PDF->__destruct();
 $mail = new htmlMimeMail();
 $attachment = $mail->getFile($filename);
 $mail->setText(_('Please find the Sales By Salesperson report'));

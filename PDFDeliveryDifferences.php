@@ -210,8 +210,8 @@ include('includes/PDFStarter.php');
 
 /*PDFStarter.php has all the variables for page size and width set up depending on the users default preferences for paper size */
 
-$pdf->addInfo('Title',_('Variances Between Deliveries and Orders'));
-$pdf->addInfo('Subject',_('Variances Between Deliveries and Orders from') . ' ' . $_POST['FromDate'] . ' ' . _('to') . ' ' . $_POST['ToDate']);
+$PDF->addInfo('Title',_('Variances Between Deliveries and Orders'));
+$PDF->addInfo('Subject',_('Variances Between Deliveries and Orders from') . ' ' . $_POST['FromDate'] . ' ' . _('to') . ' ' . $_POST['ToDate']);
 $line_height=12;
 $PageNumber = 1;
 $TotalDiffs = 0;
@@ -220,14 +220,14 @@ include ('includes/PDFDeliveryDifferencesPageHeader.inc');
 
 while ($myrow=DB_fetch_array($Result)){
 
-	  $LeftOvers = $pdf->addTextWrap($Left_Margin,$YPos,40,$FontSize,$myrow['invoiceno'], 'left');
-	  $LeftOvers = $pdf->addTextWrap($Left_Margin+40,$YPos,40,$FontSize,$myrow['orderno'], 'left');
-	  $LeftOvers = $pdf->addTextWrap($Left_Margin+80,$YPos,200,$FontSize,$myrow['stockid'] . ' - ' . $myrow['description'], 'left');
+	  $LeftOvers = $PDF->addTextWrap($Left_Margin,$YPos,40,$FontSize,$myrow['invoiceno'], 'left');
+	  $LeftOvers = $PDF->addTextWrap($Left_Margin+40,$YPos,40,$FontSize,$myrow['orderno'], 'left');
+	  $LeftOvers = $PDF->addTextWrap($Left_Margin+80,$YPos,200,$FontSize,$myrow['stockid'] . ' - ' . $myrow['description'], 'left');
 
-	  $LeftOvers = $pdf->addTextWrap($Left_Margin+280,$YPos,50,$FontSize,locale_number_format($myrow['quantitydiff'],$myrow['decimalplaces']), 'right');
-	  $LeftOvers = $pdf->addTextWrap($Left_Margin+335,$YPos,50,$FontSize,$myrow['debtorno'], 'left');
-	  $LeftOvers = $pdf->addTextWrap($Left_Margin+385,$YPos,50,$FontSize,$myrow['branch'], 'left');
-	  $LeftOvers = $pdf->addTextWrap($Left_Margin+435,$YPos,50,$FontSize,ConvertSQLDate($myrow['trandate']), 'left');
+	  $LeftOvers = $PDF->addTextWrap($Left_Margin+280,$YPos,50,$FontSize,locale_number_format($myrow['quantitydiff'],$myrow['decimalplaces']), 'right');
+	  $LeftOvers = $PDF->addTextWrap($Left_Margin+335,$YPos,50,$FontSize,$myrow['debtorno'], 'left');
+	  $LeftOvers = $PDF->addTextWrap($Left_Margin+385,$YPos,50,$FontSize,$myrow['branch'], 'left');
+	  $LeftOvers = $PDF->addTextWrap($Left_Margin+435,$YPos,50,$FontSize,ConvertSQLDate($myrow['trandate']), 'left');
 
 	  $YPos -= ($line_height);
 	  $TotalDiffs++;
@@ -241,7 +241,7 @@ while ($myrow=DB_fetch_array($Result)){
 
 
 $YPos-=$line_height;
-$LeftOvers = $pdf->addTextWrap($Left_Margin,$YPos,200,$FontSize,_('Total number of differences') . ' ' . locale_number_format($TotalDiffs), 'left');
+$LeftOvers = $PDF->addTextWrap($Left_Margin,$YPos,200,$FontSize,_('Total number of differences') . ' ' . locale_number_format($TotalDiffs), 'left');
 
 if ($_POST['CategoryID']=='All' AND $_POST['Location']=='All'){
 	$sql = "SELECT COUNT(salesorderdetails.orderno)
@@ -298,19 +298,19 @@ $result = DB_query($sql,$ErrMsg);
 
 $myrow=DB_fetch_row($result);
 $YPos-=$line_height;
-$LeftOvers = $pdf->addTextWrap($Left_Margin,$YPos,200,$FontSize,_('Total number of order lines') . ' ' . locale_number_format($myrow[0]), 'left');
+$LeftOvers = $PDF->addTextWrap($Left_Margin,$YPos,200,$FontSize,_('Total number of order lines') . ' ' . locale_number_format($myrow[0]), 'left');
 
 $YPos-=$line_height;
-$LeftOvers = $pdf->addTextWrap($Left_Margin,$YPos,200,$FontSize,_('DIFOT') . ' ' . locale_number_format((1-($TotalDiffs/$myrow[0])) * 100,2) . '%', 'left');
+$LeftOvers = $PDF->addTextWrap($Left_Margin,$YPos,200,$FontSize,_('DIFOT') . ' ' . locale_number_format((1-($TotalDiffs/$myrow[0])) * 100,2) . '%', 'left');
 
 $ReportFileName = $_SESSION['DatabaseName'] . '_DeliveryDifferences_' . date('Y-m-d').'.pdf';
-$pdf->OutputD($ReportFileName);
+$PDF->OutputD($ReportFileName);
 
 if ($_POST['Email']=='Yes'){
 	if (file_exists($_SESSION['reports_dir'] . '/'.$ReportFileName)){
 		unlink($_SESSION['reports_dir'] . '/'.$ReportFileName);
 	}
-	$pdf->Output($_SESSION['reports_dir'].'/'.$ReportFileName,'F');
+	$PDF->Output($_SESSION['reports_dir'].'/'.$ReportFileName,'F');
 
 	include('includes/htmlMimeMail.php');
 
@@ -327,6 +327,6 @@ if ($_POST['Email']=='Yes'){
 
 
 }
-$pdf->__destruct();
+$PDF->__destruct();
 
 ?>

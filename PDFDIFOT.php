@@ -209,8 +209,8 @@ include('includes/PDFStarter.php');
 
 /*PDFStarter.php has all the variables for page size and width set up depending on the users default preferences for paper size */
 
-$pdf->addInfo('Title',_('Dispatches After') . $_POST['DaysAcceptable'] . ' ' . _('Day(s) from Requested Delivery Date'));
-$pdf->addInfo('Subject',_('Delivery Dates from') . ' ' . $_POST['FromDate'] . ' ' . _('to') . ' ' . $_POST['ToDate']);
+$PDF->addInfo('Title',_('Dispatches After') . $_POST['DaysAcceptable'] . ' ' . _('Day(s) from Requested Delivery Date'));
+$PDF->addInfo('Subject',_('Delivery Dates from') . ' ' . $_POST['FromDate'] . ' ' . _('to') . ' ' . $_POST['ToDate']);
 $line_height=12;
 $PageNumber = 1;
 $TotalDiffs = 0;
@@ -225,13 +225,13 @@ while ($myrow=DB_fetch_array($Result)){
 		 $DaysDiff = $myrow['daydiff'];
 	  }
 	  if ($DaysDiff > $_POST['DaysAcceptable']){
-			$LeftOvers = $pdf->addTextWrap($Left_Margin,$YPos,40,$FontSize,$myrow['orderno'], 'left');
-			$LeftOvers = $pdf->addTextWrap($Left_Margin+40,$YPos,200,$FontSize,$myrow['stkcode'] .' - ' . $myrow['description'], 'left');
-			$LeftOvers = $pdf->addTextWrap($Left_Margin+240,$YPos,50,$FontSize,locale_number_format($myrow['quantity'],$myrow['decimalplaces']), 'right');
-			$LeftOvers = $pdf->addTextWrap($Left_Margin+295,$YPos,50,$FontSize,$myrow['debtorno'], 'left');
-			$LeftOvers = $pdf->addTextWrap($Left_Margin+345,$YPos,50,$FontSize,$myrow['branchcode'], 'left');
-			$LeftOvers = $pdf->addTextWrap($Left_Margin+395,$YPos,50,$FontSize,ConvertSQLDate($myrow['actualdispatchdate']), 'left');
-			$LeftOvers = $pdf->addTextWrap($Left_Margin+445,$YPos,20,$FontSize,$DaysDiff, 'left');
+			$LeftOvers = $PDF->addTextWrap($Left_Margin,$YPos,40,$FontSize,$myrow['orderno'], 'left');
+			$LeftOvers = $PDF->addTextWrap($Left_Margin+40,$YPos,200,$FontSize,$myrow['stkcode'] .' - ' . $myrow['description'], 'left');
+			$LeftOvers = $PDF->addTextWrap($Left_Margin+240,$YPos,50,$FontSize,locale_number_format($myrow['quantity'],$myrow['decimalplaces']), 'right');
+			$LeftOvers = $PDF->addTextWrap($Left_Margin+295,$YPos,50,$FontSize,$myrow['debtorno'], 'left');
+			$LeftOvers = $PDF->addTextWrap($Left_Margin+345,$YPos,50,$FontSize,$myrow['branchcode'], 'left');
+			$LeftOvers = $PDF->addTextWrap($Left_Margin+395,$YPos,50,$FontSize,ConvertSQLDate($myrow['actualdispatchdate']), 'left');
+			$LeftOvers = $PDF->addTextWrap($Left_Margin+445,$YPos,20,$FontSize,$DaysDiff, 'left');
 
 			$YPos -= ($line_height);
 			$TotalDiffs++;
@@ -246,7 +246,7 @@ while ($myrow=DB_fetch_array($Result)){
 
 
 $YPos-=$line_height;
-$LeftOvers = $pdf->addTextWrap($Left_Margin,$YPos,200,$FontSize,_('Total number of differences') . ' ' . locale_number_format($TotalDiffs), 'left');
+$LeftOvers = $PDF->addTextWrap($Left_Margin,$YPos,200,$FontSize,_('Total number of differences') . ' ' . locale_number_format($TotalDiffs), 'left');
 
 if ($_POST['CategoryID']=='All' AND $_POST['Location']=='All'){
 	$sql = "SELECT COUNT(salesorderdetails.orderno)
@@ -298,14 +298,14 @@ $result = DB_query($sql,$ErrMsg);
 
 $myrow=DB_fetch_row($result);
 $YPos-=$line_height;
-$LeftOvers = $pdf->addTextWrap($Left_Margin,$YPos,200,$FontSize,_('Total number of order lines') . ' ' . locale_number_format($myrow[0]), 'left');
+$LeftOvers = $PDF->addTextWrap($Left_Margin,$YPos,200,$FontSize,_('Total number of order lines') . ' ' . locale_number_format($myrow[0]), 'left');
 
 $YPos-=$line_height;
-$LeftOvers = $pdf->addTextWrap($Left_Margin,$YPos,200,$FontSize,_('DIFOT') . ' ' . locale_number_format((1-($TotalDiffs/$myrow[0])) * 100,2) . '%', 'left');
+$LeftOvers = $PDF->addTextWrap($Left_Margin,$YPos,200,$FontSize,_('DIFOT') . ' ' . locale_number_format((1-($TotalDiffs/$myrow[0])) * 100,2) . '%', 'left');
 $ReportFileName = $_SESSION['DatabaseName'] . '_DIFOT_' . date('Y-m-d').'.pdf';
-$pdf->OutputD($ReportFileName);
+$PDF->OutputD($ReportFileName);
 if ($_POST['Email']=='Yes'){
-	$pdf->Output($_SESSION['reports_dir'].'/'.$ReportFileName,'F');
+	$PDF->Output($_SESSION['reports_dir'].'/'.$ReportFileName,'F');
 	include('includes/htmlMimeMail.php');
 	$mail = new htmlMimeMail();
 	$attachment = $mail->getFile($_SESSION['reports_dir'] . '/'.$ReportFileName);
@@ -320,5 +320,5 @@ if ($_POST['Email']=='Yes'){
 		$result = SendmailBySmtp($mail,array($_SESSION['FactoryManagerEmail']));
 	}
 }
-$pdf->__destruct();
+$PDF->__destruct();
 ?>

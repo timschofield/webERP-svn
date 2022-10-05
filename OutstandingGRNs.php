@@ -73,8 +73,8 @@ if (isset($_POST['FromCriteria'])
 If (isset($_POST['PrintPDF']) AND DB_num_rows($GRNsResult)>0){
 
 	include('includes/PDFStarter.php');
-	$pdf->addInfo('Title',_('Outstanding GRNs Report'));
-	$pdf->addInfo('Subject',_('Outstanding GRNs Valuation'));
+	$PDF->addInfo('Title',_('Outstanding GRNs Report'));
+	$PDF->addInfo('Subject',_('Outstanding GRNs Valuation'));
 	$FontSize=10;
 	$PageNumber=1;
 	$line_height=12;
@@ -95,15 +95,15 @@ If (isset($_POST['PrintPDF']) AND DB_num_rows($GRNsResult)>0){
                   include('includes/PDFOstdgGRNsPageHeader.inc');
                }
 				$YPos -= (2*$line_height);
-				$LeftOvers = $pdf->addTextWrap($Left_Margin,$YPos,260-$Left_Margin,$FontSize,_('Total for') . ' ' . $Supplier . ' - ' . $SupplierName);
+				$LeftOvers = $PDF->addTextWrap($Left_Margin,$YPos,260-$Left_Margin,$FontSize,_('Total for') . ' ' . $Supplier . ' - ' . $SupplierName);
 				$DisplaySuppTotVal = locale_number_format($SuppTot_Val,$GRNs['currdecimalplaces']);
-				$LeftOvers = $pdf->addTextWrap(500,$YPos,60,$FontSize,$DisplaySuppTotVal, 'right');
+				$LeftOvers = $PDF->addTextWrap(500,$YPos,60,$FontSize,$DisplaySuppTotVal, 'right');
 				$YPos -=$line_height;
-				$pdf->line($Left_Margin, $YPos+$line_height-2,$Page_Width-$Right_Margin, $YPos+$line_height-2);
+				$PDF->line($Left_Margin, $YPos+$line_height-2,$Page_Width-$Right_Margin, $YPos+$line_height-2);
 				$YPos -=(2*$line_height);
 				$SuppTot_Val=0;
 			}
-			$LeftOvers = $pdf->addTextWrap($Left_Margin,$YPos,260-$Left_Margin,$FontSize,$GRNs['supplierid'] . ' - ' . $GRNs['suppname']);
+			$LeftOvers = $PDF->addTextWrap($Left_Margin,$YPos,260-$Left_Margin,$FontSize,$GRNs['supplierid'] . ' - ' . $GRNs['suppname']);
 			$Supplier = $GRNs['supplierid'];
 			$SupplierName = $GRNs['suppname'];
 		}
@@ -114,9 +114,9 @@ If (isset($_POST['PrintPDF']) AND DB_num_rows($GRNsResult)>0){
 		} else {
 			$ItemDecimalPlaces = $GRNs['itemdecimalplaces'];
 		}
-		$LeftOvers = $pdf->addTextWrap(32,$YPos,40,$FontSize,$GRNs['grnno']);
-		$LeftOvers = $pdf->addTextWrap(70,$YPos,40,$FontSize,$GRNs['orderno']);
-		$LeftOvers = $pdf->addTextWrap(110,$YPos,200,$FontSize,$GRNs['itemcode'] . ' - ' . $GRNs['itemdescription']);
+		$LeftOvers = $PDF->addTextWrap(32,$YPos,40,$FontSize,$GRNs['grnno']);
+		$LeftOvers = $PDF->addTextWrap(70,$YPos,40,$FontSize,$GRNs['orderno']);
+		$LeftOvers = $PDF->addTextWrap(110,$YPos,200,$FontSize,$GRNs['itemcode'] . ' - ' . $GRNs['itemdescription']);
 		$DisplayStdCost = locale_number_format($GRNs['stdcostunit'],$_SESSION['CompanyRecord']['decimalplaces']);
 		$DisplayQtyRecd = locale_number_format($GRNs['qtyrecd'],$ItemDecimalPlaces);
 		$DisplayQtyInv = locale_number_format($GRNs['quantityinv'],$ItemDecimalPlaces);
@@ -124,11 +124,11 @@ If (isset($_POST['PrintPDF']) AND DB_num_rows($GRNsResult)>0){
 		$LineValue = ($GRNs['qtyrecd']- $GRNs['quantityinv'])*$GRNs['stdcostunit'];
 		$DisplayValue = locale_number_format($LineValue,$_SESSION['CompanyRecord']['decimalplaces']);
 
-		$LeftOvers = $pdf->addTextWrap(310,$YPos,50,$FontSize,$DisplayQtyRecd,'right');
-		$LeftOvers = $pdf->addTextWrap(360,$YPos,50,$FontSize,$DisplayQtyInv, 'right');
-		$LeftOvers = $pdf->addTextWrap(410,$YPos,50,$FontSize,$DisplayQtyOstg, 'right');
-		$LeftOvers = $pdf->addTextWrap(460,$YPos,50,$FontSize,$DisplayStdCost, 'right');
-		$LeftOvers = $pdf->addTextWrap(510,$YPos,50,$FontSize,$DisplayValue, 'right');
+		$LeftOvers = $PDF->addTextWrap(310,$YPos,50,$FontSize,$DisplayQtyRecd,'right');
+		$LeftOvers = $PDF->addTextWrap(360,$YPos,50,$FontSize,$DisplayQtyInv, 'right');
+		$LeftOvers = $PDF->addTextWrap(410,$YPos,50,$FontSize,$DisplayQtyOstg, 'right');
+		$LeftOvers = $PDF->addTextWrap(460,$YPos,50,$FontSize,$DisplayStdCost, 'right');
+		$LeftOvers = $PDF->addTextWrap(510,$YPos,50,$FontSize,$DisplayValue, 'right');
 
 		$Tot_Val += $LineValue;
 		$SuppTot_Val += $LineValue;
@@ -142,26 +142,26 @@ If (isset($_POST['PrintPDF']) AND DB_num_rows($GRNsResult)>0){
 
 /*Print out the supplier totals */
 	$YPos -=$line_height;
-	$LeftOvers = $pdf->addTextWrap($Left_Margin,$YPos,260-$Left_Margin,$FontSize,_('Total for') . ' ' . $Supplier . ' - ' . $SupplierName, 'left');
+	$LeftOvers = $PDF->addTextWrap($Left_Margin,$YPos,260-$Left_Margin,$FontSize,_('Total for') . ' ' . $Supplier . ' - ' . $SupplierName, 'left');
 
 	$DisplaySuppTotVal = locale_number_format($SuppTot_Val,2);
-	$LeftOvers = $pdf->addTextWrap(500,$YPos,60,$FontSize,$DisplaySuppTotVal, 'right');
+	$LeftOvers = $PDF->addTextWrap(500,$YPos,60,$FontSize,$DisplaySuppTotVal, 'right');
 
 	/*draw a line under the SUPPLIER TOTAL*/
-	$pdf->line($Left_Margin, $YPos+$line_height-2,$Page_Width-$Right_Margin, $YPos+$line_height-2);
+	$PDF->line($Left_Margin, $YPos+$line_height-2,$Page_Width-$Right_Margin, $YPos+$line_height-2);
 	$YPos -=(2*$line_height);
 
 	$YPos -= (2*$line_height);
 
 /*Print out the grand totals */
-	$LeftOvers = $pdf->addTextWrap(80,$YPos,260-$Left_Margin,$FontSize,_('Grand Total Value'), 'right');
+	$LeftOvers = $PDF->addTextWrap(80,$YPos,260-$Left_Margin,$FontSize,_('Grand Total Value'), 'right');
 	$DisplayTotalVal = locale_number_format($Tot_Val,2);
-	$LeftOvers = $pdf->addTextWrap(500,$YPos,60,$FontSize,$DisplayTotalVal, 'right');
-	$pdf->line($Left_Margin, $YPos+$line_height-2,$Page_Width-$Right_Margin, $YPos+$line_height-2);
+	$LeftOvers = $PDF->addTextWrap(500,$YPos,60,$FontSize,$DisplayTotalVal, 'right');
+	$PDF->line($Left_Margin, $YPos+$line_height-2,$Page_Width-$Right_Margin, $YPos+$line_height-2);
 	$YPos -=(2*$line_height);
 
-	$pdf->OutputD($_SESSION['DatabaseName'] . '_OSGRNsValuation_' . date('Y-m-d').'.pdf');
-	$pdf->__destruct();
+	$PDF->OutputD($_SESSION['DatabaseName'] . '_OSGRNsValuation_' . date('Y-m-d').'.pdf');
+	$PDF->__destruct();
 } elseif (isset($_POST['ShowOnScreen'])  AND DB_num_rows($GRNsResult)>0) {
 	$Title=_('Outstanding GRNs Report');
 	include('includes/header.php');

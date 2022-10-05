@@ -27,9 +27,9 @@
 
 
 /**  Require mPDF library */
-$pdfRendererClassFile = PHPExcel_Settings::getPdfRendererPath() . '/mpdf.php';
-if (file_exists($pdfRendererClassFile)) {
-    require_once $pdfRendererClassFile;
+$PDFRendererClassFile = PHPExcel_Settings::getPdfRendererPath() . '/mpdf.php';
+if (file_exists($PDFRendererClassFile)) {
+    require_once $PDFRendererClassFile;
 } else {
     throw new PHPExcel_Writer_Exception('Unable to load PDF Rendering library');
 }
@@ -102,27 +102,27 @@ class PHPExcel_Writer_PDF_mPDF extends PHPExcel_Writer_PDF_Core implements PHPEx
         }
 
         //  Create PDF
-        $pdf = new mpdf();
+        $PDF = new mpdf();
         $ortmp = $orientation;
-        $pdf->_setPageSize(strtoupper($paperSize), $ortmp);
-        $pdf->DefOrientation = $orientation;
-        $pdf->AddPage($orientation);
+        $PDF->_setPageSize(strtoupper($paperSize), $ortmp);
+        $PDF->DefOrientation = $orientation;
+        $PDF->AddPage($orientation);
 
         //  Document info
-        $pdf->SetTitle($this->_phpExcel->getProperties()->getTitle());
-        $pdf->SetAuthor($this->_phpExcel->getProperties()->getCreator());
-        $pdf->SetSubject($this->_phpExcel->getProperties()->getSubject());
-        $pdf->SetKeywords($this->_phpExcel->getProperties()->getKeywords());
-        $pdf->SetCreator($this->_phpExcel->getProperties()->getCreator());
+        $PDF->SetTitle($this->_phpExcel->getProperties()->getTitle());
+        $PDF->SetAuthor($this->_phpExcel->getProperties()->getCreator());
+        $PDF->SetSubject($this->_phpExcel->getProperties()->getSubject());
+        $PDF->SetKeywords($this->_phpExcel->getProperties()->getKeywords());
+        $PDF->SetCreator($this->_phpExcel->getProperties()->getCreator());
 
-        $pdf->WriteHTML(
+        $PDF->WriteHTML(
             $this->generateHTMLHeader(FALSE) .
             $this->generateSheetData() .
             $this->generateHTMLFooter()
         );
 
         //  Write to file
-        fwrite($fileHandle, $pdf->Output('', 'S'));
+        fwrite($fileHandle, $PDF->Output('', 'S'));
 
 		parent::restoreStateAfterSave($fileHandle);
     }

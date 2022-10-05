@@ -6,8 +6,8 @@ include('includes/session.php');
 If (isset($_POST['PrintPDF'])){
 
 	include('includes/PDFStarter.php');
-	$pdf->addInfo('Title',_('Stock Count Sheets'));
-	$pdf->addInfo('Subject',_('Stock Count Sheets'));
+	$PDF->addInfo('Title',_('Stock Count Sheets'));
+	$PDF->addInfo('Subject',_('Stock Count Sheets'));
 	$FontSize=10;
 	$PageNumber=1;
 	$line_height=30;
@@ -157,11 +157,11 @@ If (isset($_POST['PrintPDF'])){
 			$FontSize=12;
 			if ($Category!=''){ /*Then it's NOT the first time round */
 				/*draw a line under the CATEGORY TOTAL*/
-				$pdf->line($Left_Margin, $YPos-2,$Page_Width-$Right_Margin, $YPos-2);
+				$PDF->line($Left_Margin, $YPos-2,$Page_Width-$Right_Margin, $YPos-2);
 				$YPos -=(2*$line_height);
 			}
 
-			$LeftOvers = $pdf->addTextWrap($Left_Margin,$YPos,260-$Left_Margin,$FontSize,$InventoryCheckRow['categoryid'] . ' - ' . $InventoryCheckRow['categorydescription'], 'left');
+			$LeftOvers = $PDF->addTextWrap($Left_Margin,$YPos,260-$Left_Margin,$FontSize,$InventoryCheckRow['categoryid'] . ' - ' . $InventoryCheckRow['categorydescription'], 'left');
 			$Category = $InventoryCheckRow['categoryid'];
 		}
 
@@ -223,18 +223,18 @@ If (isset($_POST['PrintPDF'])){
 	  			$DemandQty += $DemandRow[0];
 			}
 
-			$LeftOvers = $pdf->addTextWrap(350,$YPos,60,$FontSize,locale_number_format($InventoryCheckRow['qoh'], $InventoryCheckRow['decimalplaces']), 'right');
-			$LeftOvers = $pdf->addTextWrap(410,$YPos,60,$FontSize,locale_number_format($DemandQty,$InventoryCheckRow['decimalplaces']), 'right');
-			$LeftOvers = $pdf->addTextWrap(470,$YPos,60,$FontSize,locale_number_format($InventoryCheckRow['qoh']-$DemandQty,$InventoryCheckRow['decimalplaces']), 'right');
+			$LeftOvers = $PDF->addTextWrap(350,$YPos,60,$FontSize,locale_number_format($InventoryCheckRow['qoh'], $InventoryCheckRow['decimalplaces']), 'right');
+			$LeftOvers = $PDF->addTextWrap(410,$YPos,60,$FontSize,locale_number_format($DemandQty,$InventoryCheckRow['decimalplaces']), 'right');
+			$LeftOvers = $PDF->addTextWrap(470,$YPos,60,$FontSize,locale_number_format($InventoryCheckRow['qoh']-$DemandQty,$InventoryCheckRow['decimalplaces']), 'right');
 
 		}
 
-		$LeftOvers = $pdf->addTextWrap($Left_Margin,$YPos,150,$FontSize,$InventoryCheckRow['stockid'], 'left');
+		$LeftOvers = $PDF->addTextWrap($Left_Margin,$YPos,150,$FontSize,$InventoryCheckRow['stockid'], 'left');
 
-		$LeftOvers = $pdf->addTextWrap(150,$YPos,200,$FontSize,$InventoryCheckRow['description'], 'left');
+		$LeftOvers = $PDF->addTextWrap(150,$YPos,200,$FontSize,$InventoryCheckRow['description'], 'left');
 
 
-		$pdf->line($Left_Margin, $YPos-2,$Page_Width-$Right_Margin, $YPos-2);
+		$PDF->line($Left_Margin, $YPos-2,$Page_Width-$Right_Margin, $YPos-2);
 
 		if ($YPos < $Bottom_Margin + $line_height){
 		   $PageNumber++;
@@ -243,7 +243,7 @@ If (isset($_POST['PrintPDF'])){
 
 	} /*end STOCK SHEETS while loop */
 
-	$pdf->OutputD($_SESSION['DatabaseName'] . '_Stock_Count_Sheets_' . Date('Y-m-d') .'.pdf');
+	$PDF->OutputD($_SESSION['DatabaseName'] . '_Stock_Count_Sheets_' . Date('Y-m-d') .'.pdf');
 
 } else { /*The option to print PDF was not hit */
 

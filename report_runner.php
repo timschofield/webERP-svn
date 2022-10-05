@@ -101,9 +101,9 @@ include('includes/htmlMimeMail.php');
 $mail = new htmlMimeMail();
 
 if ($Counter >0){ /* the number of lines of the sales report is more than 0  ie there is a report to send! */
-	$pdfcode = $pdf->output();
+	$PDFcode = $PDF->output();
 	$fp = fopen( $_SESSION['reports_dir']. "/".$reportname,"wb");
-	fwrite ($fp, $pdfcode);
+	fwrite ($fp, $PDFcode);
 	fclose ($fp);
 
 	$attachment = $mail->getFile( $_SESSION['reports_dir'] . "/".$reportname);

@@ -16,7 +16,7 @@ $PaperSize = $FormDesign->PaperSize;
 $line_height=$FormDesign->LineHeight;
 include('includes/PDFStarter.php');
 $PageNumber=1;
-$pdf->addInfo('Title', _('QA Label') );
+$PDF->addInfo('Title', _('QA Label') );
 
 if ($GRNNo == 'Preview'){
 	$myrow['itemcode'] = str_pad('', 15,'x');
@@ -75,39 +75,39 @@ if ($NoOfGRNs >0){
 			$GetStockMoveResult = DB_query($SQL,_('Could not retrieve the stock movement reference number which is required in order to retrieve details of the serial items that came in with this GRN'));
 			while ($SerialStockMoves = DB_fetch_array($GetStockMoveResult)){
 				if ($PageNumber>1){
-					$pdf->newPage();
+					$PDF->newPage();
 				}
-				$pdf->addJpegFromFile($_SESSION['LogoFile'] ,$FormDesign->logo->x,$Page_Height-$FormDesign->logo->y,$FormDesign->logo->width,$FormDesign->logo->height);
-				$LeftOvers = $pdf->addText($FormDesign->ItemNbr->x,$Page_Height-$FormDesign->ItemNbr->y,$FormDesign->ItemNbr->FontSize,'Item: ' . $myrow['itemcode']);
-				$LeftOvers = $pdf->addText($FormDesign->ItemDesc->x,$Page_Height-$FormDesign->ItemDesc->y,$FormDesign->ItemDesc->FontSize,'Description: ' . $myrow['itemdescription']);
-				$LeftOvers = $pdf->addText($FormDesign->SupplierName->x,$Page_Height-$FormDesign->SupplierName->y,$FormDesign->SupplierName->FontSize,'Supplier: ' . $SuppRow['suppname']);
-				$LeftOvers = $pdf->addText($FormDesign->SupplierLot->x,$Page_Height-$FormDesign->SupplierLot->y,$FormDesign->SupplierLot->FontSize,'Supplier Lot: ' . $SerialStockMoves['serialno']);
-				$LeftOvers = $pdf->addText($FormDesign->Lot->x,$Page_Height-$FormDesign->Lot->y,$FormDesign->Lot->FontSize,'Lot: ' . $SerialStockMoves['serialno']);
-				$LeftOvers = $pdf->addText($FormDesign->ReceiptDate->x,$Page_Height-$FormDesign->ReceiptDate->y,$FormDesign->ReceiptDate->FontSize,'Receipt Date: ' . $myrow['deliverydate']);
-				$LeftOvers = $pdf->addText($FormDesign->OrderNumber->x,$Page_Height-$FormDesign->OrderNumber->y,$FormDesign->OrderNumber->FontSize,'P/O: ' . $myrow['orderno']);
+				$PDF->addJpegFromFile($_SESSION['LogoFile'] ,$FormDesign->logo->x,$Page_Height-$FormDesign->logo->y,$FormDesign->logo->width,$FormDesign->logo->height);
+				$LeftOvers = $PDF->addText($FormDesign->ItemNbr->x,$Page_Height-$FormDesign->ItemNbr->y,$FormDesign->ItemNbr->FontSize,'Item: ' . $myrow['itemcode']);
+				$LeftOvers = $PDF->addText($FormDesign->ItemDesc->x,$Page_Height-$FormDesign->ItemDesc->y,$FormDesign->ItemDesc->FontSize,'Description: ' . $myrow['itemdescription']);
+				$LeftOvers = $PDF->addText($FormDesign->SupplierName->x,$Page_Height-$FormDesign->SupplierName->y,$FormDesign->SupplierName->FontSize,'Supplier: ' . $SuppRow['suppname']);
+				$LeftOvers = $PDF->addText($FormDesign->SupplierLot->x,$Page_Height-$FormDesign->SupplierLot->y,$FormDesign->SupplierLot->FontSize,'Supplier Lot: ' . $SerialStockMoves['serialno']);
+				$LeftOvers = $PDF->addText($FormDesign->Lot->x,$Page_Height-$FormDesign->Lot->y,$FormDesign->Lot->FontSize,'Lot: ' . $SerialStockMoves['serialno']);
+				$LeftOvers = $PDF->addText($FormDesign->ReceiptDate->x,$Page_Height-$FormDesign->ReceiptDate->y,$FormDesign->ReceiptDate->FontSize,'Receipt Date: ' . $myrow['deliverydate']);
+				$LeftOvers = $PDF->addText($FormDesign->OrderNumber->x,$Page_Height-$FormDesign->OrderNumber->y,$FormDesign->OrderNumber->FontSize,'P/O: ' . $myrow['orderno']);
 				$PageNumber++;
 			} //while SerialStockMoves
 
 		} //controlled item*/
 		else {
 			if ($PageNumber>1){
-				$pdf->newPage();
+				$PDF->newPage();
 			}
-			$pdf->addJpegFromFile($_SESSION['LogoFile'] ,$FormDesign->logo->x,$Page_Height-$FormDesign->logo->y,$FormDesign->logo->width,$FormDesign->logo->height);
-			$LeftOvers = $pdf->addText($FormDesign->ItemNbr->x,$Page_Height-$FormDesign->ItemNbr->y,$FormDesign->ItemNbr->FontSize,'Item: ' . $myrow['itemcode']);
-			$LeftOvers = $pdf->addText($FormDesign->ItemDesc->x,$Page_Height-$FormDesign->ItemDesc->y,$FormDesign->ItemDesc->FontSize,'Description: ' . $myrow['itemdescription']);
-			$LeftOvers = $pdf->addText($FormDesign->SupplierName->x,$Page_Height-$FormDesign->SupplierName->y,$FormDesign->SupplierName->FontSize,'Supplier: ' . $SuppRow['suppname']);
-			//$LeftOvers = $pdf->addText($FormDesign->SupplierLot->x,$Page_Height-$FormDesign->SupplierLot->y,$FormDesign->SupplierLot->FontSize,'Supplier Lot: ' . $myrow['serialno']);
-			//$LeftOvers = $pdf->addText($FormDesign->Lot->x,$Page_Height-$FormDesign->Lot->y,$FormDesign->Lot->FontSize,'Lot: ' . $myrow['serialno']);
-			$LeftOvers = $pdf->addText($FormDesign->ReceiptDate->x,$Page_Height-$FormDesign->ReceiptDate->y,$FormDesign->ReceiptDate->FontSize,'Receipt Date: ' . $myrow['deliverydate']);
-			$LeftOvers = $pdf->addText($FormDesign->OrderNumber->x,$Page_Height-$FormDesign->OrderNumber->y,$FormDesign->OrderNumber->FontSize,'P/O: ' . $myrow['orderno']);
+			$PDF->addJpegFromFile($_SESSION['LogoFile'] ,$FormDesign->logo->x,$Page_Height-$FormDesign->logo->y,$FormDesign->logo->width,$FormDesign->logo->height);
+			$LeftOvers = $PDF->addText($FormDesign->ItemNbr->x,$Page_Height-$FormDesign->ItemNbr->y,$FormDesign->ItemNbr->FontSize,'Item: ' . $myrow['itemcode']);
+			$LeftOvers = $PDF->addText($FormDesign->ItemDesc->x,$Page_Height-$FormDesign->ItemDesc->y,$FormDesign->ItemDesc->FontSize,'Description: ' . $myrow['itemdescription']);
+			$LeftOvers = $PDF->addText($FormDesign->SupplierName->x,$Page_Height-$FormDesign->SupplierName->y,$FormDesign->SupplierName->FontSize,'Supplier: ' . $SuppRow['suppname']);
+			//$LeftOvers = $PDF->addText($FormDesign->SupplierLot->x,$Page_Height-$FormDesign->SupplierLot->y,$FormDesign->SupplierLot->FontSize,'Supplier Lot: ' . $myrow['serialno']);
+			//$LeftOvers = $PDF->addText($FormDesign->Lot->x,$Page_Height-$FormDesign->Lot->y,$FormDesign->Lot->FontSize,'Lot: ' . $myrow['serialno']);
+			$LeftOvers = $PDF->addText($FormDesign->ReceiptDate->x,$Page_Height-$FormDesign->ReceiptDate->y,$FormDesign->ReceiptDate->FontSize,'Receipt Date: ' . $myrow['deliverydate']);
+			$LeftOvers = $PDF->addText($FormDesign->OrderNumber->x,$Page_Height-$FormDesign->OrderNumber->y,$FormDesign->OrderNumber->FontSize,'P/O: ' . $myrow['orderno']);
 			$PageNumber++;
 		} //else not controlled
 	} //end of loop around GRNs to print
 
 
-    $pdf->OutputD($_SESSION['DatabaseName'] . '_QALabel_' . $GRNNo . '_' . date('Y-m-d').'.pdf');
-    $pdf->__destruct();
+    $PDF->OutputD($_SESSION['DatabaseName'] . '_QALabel_' . $GRNNo . '_' . date('Y-m-d').'.pdf');
+    $PDF->__destruct();
 } else { //there were not GRNs to print
 	$Title = _('GRN Error');
 	include('includes/header.php');

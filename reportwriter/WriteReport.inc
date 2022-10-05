@@ -710,10 +710,10 @@ function GenerateCSVFile($Data, $Prefs) {
 }
 
 function GeneratePDFFile($Data, $Prefs) {
-	$pdf=new PDF();
-	$pdf->ReportTable($Data);
+	$PDF=new PDF();
+	$PDF->ReportTable($Data);
 	$ReportName = ReplaceNonAllowedCharacters($Prefs['reportname']) .'.pdf';
-	$pdf->OutputD($ReportName);
+	$PDF->OutputD($ReportName);
 	exit(); // needs to be here to properly render the pdf file.
 }
 

@@ -200,8 +200,8 @@ if ($OrdersToPick[0]['orderno']=='Preview') {
 
 $PaperSize = $FormDesign->PaperSize;
 include('includes/PDFStarter.php');
-$pdf->addInfo('Title', _('Picking List') );
-$pdf->addInfo('Subject', _('Laser Picking List') );
+$PDF->addInfo('Title', _('Picking List') );
+$PDF->addInfo('Subject', _('Laser Picking List') );
 $FontSize=12;
 $ListCount = 0;
 $Copy='';
@@ -211,7 +211,7 @@ $line_height=$FormDesign->LineHeight;
 for ($i=0;$i<sizeof($OrdersToPick);$i++){
 /*Cycle through each of the orders to pick */
 	if ($i>0) {
-		$pdf->newPage();
+		$PDF->newPage();
 	}
 
 	/* Now ... Has the order got any line items still outstanding to be picked */
@@ -322,11 +322,11 @@ for ($i=0;$i<sizeof($OrdersToPick);$i++){
 			}
 			$ListCount ++;
 
-			$LeftOvers = $pdf->addTextWrap($FormDesign->Headings->Column1->x,$Page_Height - $YPos,$FormDesign->Headings->Column1->Length,$FormDesign->Headings->Column1->FontSize,$myrow2['stkcode'],'left');
-			$LeftOvers = $pdf->addTextWrap($FormDesign->Headings->Column2->x,$Page_Height - $YPos,$FormDesign->Headings->Column2->Length,$FormDesign->Headings->Column2->FontSize,$itemdesc);
-			$LeftOvers = $pdf->addTextWrap($FormDesign->Headings->Column3->x,$Page_Height - $YPos,$FormDesign->Headings->Column3->Length,$FormDesign->Headings->Column3->FontSize,$DisplayQty,'right');
-			$LeftOvers = $pdf->addTextWrap($FormDesign->Headings->Column4->x,$Page_Height - $YPos,$FormDesign->Headings->Column4->Length,$FormDesign->Headings->Column4->FontSize,$DisplayQtySupplied,'right');
-			$LeftOvers = $pdf->addTextWrap($FormDesign->Headings->Column5->x,$Page_Height - $YPos,$FormDesign->Headings->Column5->Length,$FormDesign->Headings->Column5->FontSize,$DisplayPrevDel,'right');
+			$LeftOvers = $PDF->addTextWrap($FormDesign->Headings->Column1->x,$Page_Height - $YPos,$FormDesign->Headings->Column1->Length,$FormDesign->Headings->Column1->FontSize,$myrow2['stkcode'],'left');
+			$LeftOvers = $PDF->addTextWrap($FormDesign->Headings->Column2->x,$Page_Height - $YPos,$FormDesign->Headings->Column2->Length,$FormDesign->Headings->Column2->FontSize,$itemdesc);
+			$LeftOvers = $PDF->addTextWrap($FormDesign->Headings->Column3->x,$Page_Height - $YPos,$FormDesign->Headings->Column3->Length,$FormDesign->Headings->Column3->FontSize,$DisplayQty,'right');
+			$LeftOvers = $PDF->addTextWrap($FormDesign->Headings->Column4->x,$Page_Height - $YPos,$FormDesign->Headings->Column4->Length,$FormDesign->Headings->Column4->FontSize,$DisplayQtySupplied,'right');
+			$LeftOvers = $PDF->addTextWrap($FormDesign->Headings->Column5->x,$Page_Height - $YPos,$FormDesign->Headings->Column5->Length,$FormDesign->Headings->Column5->FontSize,$DisplayPrevDel,'right');
 
 			if ($Page_Height-$YPos-$line_height <= 50){
 			/* We reached the end of the page so finish off the page and start a new */
@@ -349,7 +349,7 @@ if ($ListCount == 0){
 	include('includes/footer.php');
 	exit;
 } else {
-	$pdf->OutputD($_SESSION['DatabaseName'] . '_PickingLists_' . date('Y-m-d') . '.pdf');
-	$pdf->__destruct();
+	$PDF->OutputD($_SESSION['DatabaseName'] . '_PickingLists_' . date('Y-m-d') . '.pdf');
+	$PDF->__destruct();
 }
 ?>

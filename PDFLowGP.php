@@ -10,8 +10,8 @@ $debug=0;
 if (isset($_POST['PrintPDF'])) {
 
 	include('includes/PDFStarter.php');
-	$pdf->addInfo('Title', _('Low Gross Profit Sales'));
-	$pdf->addInfo('Subject', _('Low Gross Profit Sales'));
+	$PDF->addInfo('Title', _('Low Gross Profit Sales'));
+	$PDF->addInfo('Subject', _('Low Gross Profit Sales'));
 	$FontSize=10;
 	$PageNumber=1;
 	$line_height=12;
@@ -84,19 +84,19 @@ if (isset($_POST['PrintPDF'])) {
 		$YPos -=$line_height;
 		$FontSize=8;
 
-		$LeftOvers = $pdf->addTextWrap($Left_Margin+2,$YPos,30,$FontSize,$LowGPItems['typename']);
-		$LeftOvers = $pdf->addTextWrap(100,$YPos,30,$FontSize,$LowGPItems['transno']);
-		$LeftOvers = $pdf->addTextWrap(130,$YPos,50,$FontSize,$LowGPItems['stockid']);
-		$LeftOvers = $pdf->addTextWrap(220,$YPos,50,$FontSize,$LowGPItems['name']);
+		$LeftOvers = $PDF->addTextWrap($Left_Margin+2,$YPos,30,$FontSize,$LowGPItems['typename']);
+		$LeftOvers = $PDF->addTextWrap(100,$YPos,30,$FontSize,$LowGPItems['transno']);
+		$LeftOvers = $PDF->addTextWrap(130,$YPos,50,$FontSize,$LowGPItems['stockid']);
+		$LeftOvers = $PDF->addTextWrap(220,$YPos,50,$FontSize,$LowGPItems['name']);
 		$DisplayUnitCost = locale_number_format($LowGPItems['unitcost'],$_SESSION['CompanyRecord']['decimalplaces']);
 		$DisplaySellingPrice = locale_number_format($LowGPItems['sellingprice'],$_SESSION['CompanyRecord']['decimalplaces']);
 		$DisplayGP = locale_number_format($LowGPItems['gp'],$_SESSION['CompanyRecord']['decimalplaces']);
 		$DisplayGPPercent = locale_number_format(($LowGPItems['gp']*100)/$LowGPItems['sellingprice'],1);
 
-		$LeftOvers = $pdf->addTextWrap(330,$YPos,60,$FontSize,$DisplaySellingPrice,'right');
-		$LeftOvers = $pdf->addTextWrap(380,$YPos,62,$FontSize,$DisplayUnitCost, 'right');
-		$LeftOvers = $pdf->addTextWrap(440,$YPos,60,$FontSize,$DisplayGP, 'right');
-		$LeftOvers = $pdf->addTextWrap(500,$YPos,60,$FontSize,$DisplayGPPercent . '%', 'right');
+		$LeftOvers = $PDF->addTextWrap(330,$YPos,60,$FontSize,$DisplaySellingPrice,'right');
+		$LeftOvers = $PDF->addTextWrap(380,$YPos,62,$FontSize,$DisplayUnitCost, 'right');
+		$LeftOvers = $PDF->addTextWrap(440,$YPos,60,$FontSize,$DisplayGP, 'right');
+		$LeftOvers = $PDF->addTextWrap(500,$YPos,60,$FontSize,$DisplayGPPercent . '%', 'right');
 
 		if ($YPos < $Bottom_Margin + $line_height){
 			include('includes/PDFLowGPPageHeader.inc');
@@ -107,8 +107,8 @@ if (isset($_POST['PrintPDF'])) {
 	$FontSize =10;
 
 	$YPos -= (2*$line_height);
-	$pdf->OutputD($_SESSION['DatabaseName'] . '_LowGPSales_' . date('Y-m-d') . '.pdf');
-	$pdf->__destruct();
+	$PDF->OutputD($_SESSION['DatabaseName'] . '_LowGPSales_' . date('Y-m-d') . '.pdf');
+	$PDF->__destruct();
 
 } else { /*The option to print PDF was not hit */
 

@@ -53,8 +53,8 @@ if (isset($_POST['submit']) OR isset($_POST['pdf']) OR isset($_POST['csv'])) {
 	$result = DB_query($sql);
 	if (isset($_POST['pdf'])) {
 		$FontSize = 10;
-		$pdf->addInfo('Title', _('Fixed Asset Register'));
-		$pdf->addInfo('Subject', _('Fixed Asset Register'));
+		$PDF->addInfo('Title', _('Fixed Asset Register'));
+		$PDF->addInfo('Subject', _('Fixed Asset Register'));
 		$PageNumber = 1;
 		$line_height = 12;
 		if ($_POST['AssetCategory']=='%') {
@@ -138,28 +138,28 @@ if (isset($_POST['submit']) OR isset($_POST['pdf']) OR isset($_POST['csv'])) {
 
 			if (isset($_POST['pdf'])) {
 
-				$LeftOvers = $pdf->addTextWrap($XPos, $YPos, 30 - $Left_Margin, $FontSize, $myrow['assetid']);
-				$LeftOvers = $pdf->addTextWrap($XPos + 30, $YPos, 150 - $Left_Margin, $FontSize, $myrow['description']);
-				$LeftOvers = $pdf->addTextWrap($XPos + 180, $YPos, 40 - $Left_Margin, $FontSize, $myrow['serialno']);
+				$LeftOvers = $PDF->addTextWrap($XPos, $YPos, 30 - $Left_Margin, $FontSize, $myrow['assetid']);
+				$LeftOvers = $PDF->addTextWrap($XPos + 30, $YPos, 150 - $Left_Margin, $FontSize, $myrow['description']);
+				$LeftOvers = $PDF->addTextWrap($XPos + 180, $YPos, 40 - $Left_Margin, $FontSize, $myrow['serialno']);
 				/*
 				 * $TempYPos = $YPos;
 				for ($i = 1;$i < sizeof($Ancestors) - 1;$i++) {
 					for ($j = 0;$j < $i;$j++) {
 						$TempYPos-= (0.8 * $line_height);
-						$LeftOvers = $pdf->addTextWrap($XPos + 300, $TempYPos, 300 - $Left_Margin, $FontSize, '	');
+						$LeftOvers = $PDF->addTextWrap($XPos + 300, $TempYPos, 300 - $Left_Margin, $FontSize, '	');
 					}
-					$LeftOvers = $pdf->addTextWrap($XPos + 300, $TempYPos, 300 - $Left_Margin, $FontSize, '|_' . $Ancestors[$i]);
+					$LeftOvers = $PDF->addTextWrap($XPos + 300, $TempYPos, 300 - $Left_Margin, $FontSize, '|_' . $Ancestors[$i]);
 				}
 				* */
 
-				$LeftOvers = $pdf->addTextWrap($XPos + 220, $YPos, 50 - $Left_Margin, $FontSize, ConvertSQLDate($myrow['datepurchased']));
-				$LeftOvers = $pdf->addTextWrap($XPos + 270, $YPos, 70, $FontSize, locale_number_format($myrow['costbfwd'], 0), 'right');
-				$LeftOvers = $pdf->addTextWrap($XPos + 340, $YPos, 70, $FontSize, locale_number_format($myrow['depnbfwd'], 0), 'right');
-				$LeftOvers = $pdf->addTextWrap($XPos + 410, $YPos, 70, $FontSize, locale_number_format($myrow['periodadditions'], 0), 'right');
-				$LeftOvers = $pdf->addTextWrap($XPos + 480, $YPos, 70, $FontSize, locale_number_format($myrow['perioddepn'], 0), 'right');
-				$LeftOvers = $pdf->addTextWrap($XPos + 550, $YPos, 70, $FontSize, locale_number_format($CostCfwd, 0), 'right');
-				$LeftOvers = $pdf->addTextWrap($XPos + 620, $YPos, 70, $FontSize, locale_number_format($AccumDepnCfwd, 0), 'right');
-				$LeftOvers = $pdf->addTextWrap($XPos + 690, $YPos, 70, $FontSize, locale_number_format($CostCfwd - $AccumDepnCfwd, 0), 'right');
+				$LeftOvers = $PDF->addTextWrap($XPos + 220, $YPos, 50 - $Left_Margin, $FontSize, ConvertSQLDate($myrow['datepurchased']));
+				$LeftOvers = $PDF->addTextWrap($XPos + 270, $YPos, 70, $FontSize, locale_number_format($myrow['costbfwd'], 0), 'right');
+				$LeftOvers = $PDF->addTextWrap($XPos + 340, $YPos, 70, $FontSize, locale_number_format($myrow['depnbfwd'], 0), 'right');
+				$LeftOvers = $PDF->addTextWrap($XPos + 410, $YPos, 70, $FontSize, locale_number_format($myrow['periodadditions'], 0), 'right');
+				$LeftOvers = $PDF->addTextWrap($XPos + 480, $YPos, 70, $FontSize, locale_number_format($myrow['perioddepn'], 0), 'right');
+				$LeftOvers = $PDF->addTextWrap($XPos + 550, $YPos, 70, $FontSize, locale_number_format($CostCfwd, 0), 'right');
+				$LeftOvers = $PDF->addTextWrap($XPos + 620, $YPos, 70, $FontSize, locale_number_format($AccumDepnCfwd, 0), 'right');
+				$LeftOvers = $PDF->addTextWrap($XPos + 690, $YPos, 70, $FontSize, locale_number_format($CostCfwd - $AccumDepnCfwd, 0), 'right');
 
 				$YPos = $YPos - (0.8 * $line_height);
 				if ($YPos < $Bottom_Margin + $line_height) {
@@ -207,16 +207,16 @@ if (isset($_POST['submit']) OR isset($_POST['pdf']) OR isset($_POST['csv'])) {
 	}
 
 	if (isset($_POST['pdf'])) {
-		$LeftOvers = $pdf->addTextWrap($XPos, $YPos, 300 - $Left_Margin, $FontSize, _('TOTAL'));
-		$LeftOvers = $pdf->addTextWrap($XPos + 270, $YPos, 70, $FontSize, locale_number_format($TotalCostBfwd, $_SESSION['CompanyRecord']['decimalplaces']), 'right');
-		$LeftOvers = $pdf->addTextWrap($XPos + 340, $YPos, 70, $FontSize, locale_number_format($TotalDepnBfwd, $_SESSION['CompanyRecord']['decimalplaces']), 'right');
-		$LeftOvers = $pdf->addTextWrap($XPos + 410, $YPos, 70, $FontSize, locale_number_format($TotalAdditions, $_SESSION['CompanyRecord']['decimalplaces']), 'right');
-		$LeftOvers = $pdf->addTextWrap($XPos + 480, $YPos, 70, $FontSize, locale_number_format($TotalDepn, $_SESSION['CompanyRecord']['decimalplaces']), 'right');
-		$LeftOvers = $pdf->addTextWrap($XPos + 550, $YPos, 70, $FontSize, locale_number_format($TotalCostCfwd, $_SESSION['CompanyRecord']['decimalplaces']), 'right');
-		$LeftOvers = $pdf->addTextWrap($XPos + 620, $YPos, 70, $FontSize, locale_number_format($TotalDepnCfwd, $_SESSION['CompanyRecord']['decimalplaces']), 'right');
-		$LeftOvers = $pdf->addTextWrap($XPos + 690, $YPos, 70, $FontSize, locale_number_format($TotalNBV, $_SESSION['CompanyRecord']['decimalplaces']), 'right');
+		$LeftOvers = $PDF->addTextWrap($XPos, $YPos, 300 - $Left_Margin, $FontSize, _('TOTAL'));
+		$LeftOvers = $PDF->addTextWrap($XPos + 270, $YPos, 70, $FontSize, locale_number_format($TotalCostBfwd, $_SESSION['CompanyRecord']['decimalplaces']), 'right');
+		$LeftOvers = $PDF->addTextWrap($XPos + 340, $YPos, 70, $FontSize, locale_number_format($TotalDepnBfwd, $_SESSION['CompanyRecord']['decimalplaces']), 'right');
+		$LeftOvers = $PDF->addTextWrap($XPos + 410, $YPos, 70, $FontSize, locale_number_format($TotalAdditions, $_SESSION['CompanyRecord']['decimalplaces']), 'right');
+		$LeftOvers = $PDF->addTextWrap($XPos + 480, $YPos, 70, $FontSize, locale_number_format($TotalDepn, $_SESSION['CompanyRecord']['decimalplaces']), 'right');
+		$LeftOvers = $PDF->addTextWrap($XPos + 550, $YPos, 70, $FontSize, locale_number_format($TotalCostCfwd, $_SESSION['CompanyRecord']['decimalplaces']), 'right');
+		$LeftOvers = $PDF->addTextWrap($XPos + 620, $YPos, 70, $FontSize, locale_number_format($TotalDepnCfwd, $_SESSION['CompanyRecord']['decimalplaces']), 'right');
+		$LeftOvers = $PDF->addTextWrap($XPos + 690, $YPos, 70, $FontSize, locale_number_format($TotalNBV, $_SESSION['CompanyRecord']['decimalplaces']), 'right');
 
-		$pdf->Output($_SESSION['DatabaseName'] . '_Asset Register_' . date('Y-m-d') . '.pdf', 'I');
+		$PDF->Output($_SESSION['DatabaseName'] . '_Asset Register_' . date('Y-m-d') . '.pdf', 'I');
 		exit;
 	} elseif (isset($_POST['csv'])) {
 		$FileName =  $_SESSION['reports_dir'] . '/FixedAssetRegister_' . Date('Y-m-d') .'.csv';
@@ -335,7 +335,7 @@ include ('includes/footer.php');
 
 function PDFPageHeader (){
 	global $PageNumber,
-				$pdf,
+				$PDF,
 				$XPos,
 				$YPos,
 				$Page_Height,
@@ -350,23 +350,23 @@ function PDFPageHeader (){
 				$AssetCategory;
 
 	if ($PageNumber>1){
-		$pdf->newPage();
+		$PDF->newPage();
 	}
 
 	$FontSize=10;
 	$YPos= $Page_Height-$Top_Margin;
 	$XPos=0;
-	$pdf->addJpegFromFile($_SESSION['LogoFile'] ,$XPos+20,$YPos-50,0,60);
+	$PDF->addJpegFromFile($_SESSION['LogoFile'] ,$XPos+20,$YPos-50,0,60);
 
 
 
-	$LeftOvers = $pdf->addTextWrap($Page_Width-$Right_Margin-240,$YPos,240,$FontSize,$_SESSION['CompanyRecord']['coyname']);
-	$LeftOvers = $pdf->addTextWrap($Page_Width-$Right_Margin-240,$YPos-($line_height*1),240,$FontSize, _('Asset Category').' ' . $AssetCategory );
-	$LeftOvers = $pdf->addTextWrap($Page_Width-$Right_Margin-240,$YPos-($line_height*2),240,$FontSize, _('Asset Location').' ' . $_POST['AssetLocation'] );
-	$LeftOvers = $pdf->addTextWrap($Page_Width-$Right_Margin-240,$YPos-($line_height*3),240,$FontSize, _('Asset ID').': ' . $AssetDescription);
-	$LeftOvers = $pdf->addTextWrap($Page_Width-$Right_Margin-240,$YPos-($line_height*4),240,$FontSize, _('From').': ' . $_POST['FromDate']);
-	$LeftOvers = $pdf->addTextWrap($Page_Width-$Right_Margin-240,$YPos-($line_height*5),240,$FontSize, _('To').': ' . $_POST['ToDate']);
-	$LeftOvers = $pdf->addTextWrap($Page_Width-$Right_Margin-240,$YPos-($line_height*7),240,$FontSize, _('Page'). ' ' . $PageNumber);
+	$LeftOvers = $PDF->addTextWrap($Page_Width-$Right_Margin-240,$YPos,240,$FontSize,$_SESSION['CompanyRecord']['coyname']);
+	$LeftOvers = $PDF->addTextWrap($Page_Width-$Right_Margin-240,$YPos-($line_height*1),240,$FontSize, _('Asset Category').' ' . $AssetCategory );
+	$LeftOvers = $PDF->addTextWrap($Page_Width-$Right_Margin-240,$YPos-($line_height*2),240,$FontSize, _('Asset Location').' ' . $_POST['AssetLocation'] );
+	$LeftOvers = $PDF->addTextWrap($Page_Width-$Right_Margin-240,$YPos-($line_height*3),240,$FontSize, _('Asset ID').': ' . $AssetDescription);
+	$LeftOvers = $PDF->addTextWrap($Page_Width-$Right_Margin-240,$YPos-($line_height*4),240,$FontSize, _('From').': ' . $_POST['FromDate']);
+	$LeftOvers = $PDF->addTextWrap($Page_Width-$Right_Margin-240,$YPos-($line_height*5),240,$FontSize, _('To').': ' . $_POST['ToDate']);
+	$LeftOvers = $PDF->addTextWrap($Page_Width-$Right_Margin-240,$YPos-($line_height*7),240,$FontSize, _('Page'). ' ' . $PageNumber);
 
 	$YPos -= 60;
 
@@ -377,32 +377,32 @@ function PDFPageHeader (){
 
 	/*Draw a rectangle to put the headings in     */
 	$YTopLeft=$YPos+$line_height;
-	$pdf->line($Left_Margin, $YPos+$line_height,$Page_Width-$Right_Margin, $YPos+$line_height);
-	$pdf->line($Left_Margin, $YPos+$line_height,$Left_Margin, $YPos- $line_height);
-	$pdf->line($Left_Margin, $YPos- $line_height,$Page_Width-$Right_Margin, $YPos- $line_height);
-	$pdf->line($Page_Width-$Right_Margin, $YPos+$line_height,$Page_Width-$Right_Margin, $YPos- $line_height);
+	$PDF->line($Left_Margin, $YPos+$line_height,$Page_Width-$Right_Margin, $YPos+$line_height);
+	$PDF->line($Left_Margin, $YPos+$line_height,$Left_Margin, $YPos- $line_height);
+	$PDF->line($Left_Margin, $YPos- $line_height,$Page_Width-$Right_Margin, $YPos- $line_height);
+	$PDF->line($Page_Width-$Right_Margin, $YPos+$line_height,$Page_Width-$Right_Margin, $YPos- $line_height);
 
 	/*set up the headings */
 	$FontSize=10;
 	$XPos = $Left_Margin+1;
 	$YPos -=(0.8*$line_height);
-	$LeftOvers = $pdf->addTextWrap($XPos,$YPos,30,$FontSize,  _('Asset'), 'centre');
-	$LeftOvers = $pdf->addTextWrap($XPos+30,$YPos,150,$FontSize,  _('Description'), 'centre');
-	$LeftOvers = $pdf->addTextWrap($XPos+180,$YPos,40,$FontSize,  _('Serial No.'), 'centre');
-	$LeftOvers = $pdf->addTextWrap($XPos+220,$YPos,50,$FontSize,  _('Purchased'), 'centre');
-	$LeftOvers = $pdf->addTextWrap($XPos+270,$YPos,70,$FontSize,  _('Cost B/Fwd'), 'centre');
-	$LeftOvers = $pdf->addTextWrap($XPos+340,$YPos,70,$FontSize,  _('Depn B/Fwd'), 'centre');
-	$LeftOvers = $pdf->addTextWrap($XPos+410,$YPos,70,$FontSize,  _('Additions'), 'centre');
-	$LeftOvers = $pdf->addTextWrap($XPos+480,$YPos,70,$FontSize,  _('Depreciation'), 'centre');
-	$LeftOvers = $pdf->addTextWrap($XPos+550,$YPos,70,$FontSize,  _('Cost C/Fwd'), 'centre');
-	$LeftOvers = $pdf->addTextWrap($XPos+620,$YPos,70,$FontSize,  _('Depn C/Fwd'), 'centre');
-	$LeftOvers = $pdf->addTextWrap($XPos+690,$YPos,70,$FontSize,  _('Net Book Value'), 'centre');
-	//$LeftOvers = $pdf->addTextWrap($XPos+760,$YPos,70,$FontSize,  _('Disposal Proceeds'), 'centre');
+	$LeftOvers = $PDF->addTextWrap($XPos,$YPos,30,$FontSize,  _('Asset'), 'centre');
+	$LeftOvers = $PDF->addTextWrap($XPos+30,$YPos,150,$FontSize,  _('Description'), 'centre');
+	$LeftOvers = $PDF->addTextWrap($XPos+180,$YPos,40,$FontSize,  _('Serial No.'), 'centre');
+	$LeftOvers = $PDF->addTextWrap($XPos+220,$YPos,50,$FontSize,  _('Purchased'), 'centre');
+	$LeftOvers = $PDF->addTextWrap($XPos+270,$YPos,70,$FontSize,  _('Cost B/Fwd'), 'centre');
+	$LeftOvers = $PDF->addTextWrap($XPos+340,$YPos,70,$FontSize,  _('Depn B/Fwd'), 'centre');
+	$LeftOvers = $PDF->addTextWrap($XPos+410,$YPos,70,$FontSize,  _('Additions'), 'centre');
+	$LeftOvers = $PDF->addTextWrap($XPos+480,$YPos,70,$FontSize,  _('Depreciation'), 'centre');
+	$LeftOvers = $PDF->addTextWrap($XPos+550,$YPos,70,$FontSize,  _('Cost C/Fwd'), 'centre');
+	$LeftOvers = $PDF->addTextWrap($XPos+620,$YPos,70,$FontSize,  _('Depn C/Fwd'), 'centre');
+	$LeftOvers = $PDF->addTextWrap($XPos+690,$YPos,70,$FontSize,  _('Net Book Value'), 'centre');
+	//$LeftOvers = $PDF->addTextWrap($XPos+760,$YPos,70,$FontSize,  _('Disposal Proceeds'), 'centre');
 
-	$pdf->line($Left_Margin, $YTopLeft,$Page_Width-$Right_Margin, $YTopLeft);
-	$pdf->line($Left_Margin, $YTopLeft,$Left_Margin, $Bottom_Margin);
-	$pdf->line($Left_Margin, $Bottom_Margin,$Page_Width-$Right_Margin, $Bottom_Margin);
-	$pdf->line($Page_Width-$Right_Margin, $Bottom_Margin,$Page_Width-$Right_Margin, $YTopLeft);
+	$PDF->line($Left_Margin, $YTopLeft,$Page_Width-$Right_Margin, $YTopLeft);
+	$PDF->line($Left_Margin, $YTopLeft,$Left_Margin, $Bottom_Margin);
+	$PDF->line($Left_Margin, $Bottom_Margin,$Page_Width-$Right_Margin, $Bottom_Margin);
+	$PDF->line($Page_Width-$Right_Margin, $Bottom_Margin,$Page_Width-$Right_Margin, $YTopLeft);
 
 	$FontSize=8;
 	$YPos -= (1.5 * $line_height);

@@ -90,7 +90,7 @@ $PaperSize = $FormDesign->PaperSize;
 $line_height=$FormDesign->LineHeight;
 include('includes/PDFStarter.php');
 $PageNumber=1;
-$pdf->addInfo('Title', _('FG Label') );
+$PDF->addInfo('Title', _('FG Label') );
 
 if ($SelectedWO == 'Preview'){
 	$myrow['itemcode'] = str_pad('', 15,'x');
@@ -147,34 +147,34 @@ if ($NoOfLabels >0){
 			//var_dump($ControlledRow);
 		}
 		if ($PageNumber>1){
-			$pdf->newPage();
+			$PDF->newPage();
 		}
 		$PageNumber++;
-		$pdf->addJpegFromFile($_SESSION['LogoFile'] ,$FormDesign->logo->x,$Page_Height-$FormDesign->logo->y,$FormDesign->logo->width,$FormDesign->logo->height);
-		$pdf->addText($FormDesign->CompanyAddress->Line1->x,$Page_Height - $FormDesign->CompanyAddress->Line1->y, $FormDesign->CompanyAddress->Line1->FontSize,  $_SESSION['CompanyRecord']['regoffice1']);
-		$pdf->addText($FormDesign->CompanyAddress->Line2->x,$Page_Height - $FormDesign->CompanyAddress->Line2->y, $FormDesign->CompanyAddress->Line2->FontSize,  $_SESSION['CompanyRecord']['regoffice2']);
-		$pdf->addText($FormDesign->CompanyAddress->Line3->x,$Page_Height - $FormDesign->CompanyAddress->Line3->y, $FormDesign->CompanyAddress->Line3->FontSize,  $_SESSION['CompanyRecord']['regoffice3']);
-		$pdf->addText($FormDesign->CompanyAddress->phone->x,$Page_Height - $FormDesign->CompanyAddress->phone->y, $FormDesign->CompanyAddress->phone->FontSize, _('Tel'). ': ' . $_SESSION['CompanyRecord']['telephone']);
-		$pdf->addText($FormDesign->CompanyAddress->www->x,$Page_Height - $FormDesign->CompanyAddress->www->y, $FormDesign->CompanyAddress->www->FontSize,  $_SESSION['CompanyRecord']['regoffice4']);
-		$pdf->Line($FormDesign->LabelLine->startx, $Page_Height - $FormDesign->LabelLine->starty, $FormDesign->LabelLine->endx,$Page_Height - $FormDesign->LabelLine->endy);
-		$pdf->addText($FormDesign->ItemNbr->x,$Page_Height-$FormDesign->ItemNbr->y,$FormDesign->ItemNbr->FontSize,'Item: ' . $myrow['itemcode']);
-		$pdf->addText($FormDesign->ItemDesc->x,$Page_Height-$FormDesign->ItemDesc->y,$FormDesign->ItemDesc->FontSize,'Description: ' . $myrow['itemdescription']);
-		$pdf->addText($FormDesign->Weight->x,$Page_Height-$FormDesign->Weight->y,$FormDesign->Weight->FontSize,'Weight' . '(' . $ControlledRow['1'] . '): ' . $myrow['weight']);
-		$pdf->addText($FormDesign->Box->x,$Page_Height-$FormDesign->Box->y,$FormDesign->Box->FontSize,'Box' . ': ' . $myrow['box']);
+		$PDF->addJpegFromFile($_SESSION['LogoFile'] ,$FormDesign->logo->x,$Page_Height-$FormDesign->logo->y,$FormDesign->logo->width,$FormDesign->logo->height);
+		$PDF->addText($FormDesign->CompanyAddress->Line1->x,$Page_Height - $FormDesign->CompanyAddress->Line1->y, $FormDesign->CompanyAddress->Line1->FontSize,  $_SESSION['CompanyRecord']['regoffice1']);
+		$PDF->addText($FormDesign->CompanyAddress->Line2->x,$Page_Height - $FormDesign->CompanyAddress->Line2->y, $FormDesign->CompanyAddress->Line2->FontSize,  $_SESSION['CompanyRecord']['regoffice2']);
+		$PDF->addText($FormDesign->CompanyAddress->Line3->x,$Page_Height - $FormDesign->CompanyAddress->Line3->y, $FormDesign->CompanyAddress->Line3->FontSize,  $_SESSION['CompanyRecord']['regoffice3']);
+		$PDF->addText($FormDesign->CompanyAddress->phone->x,$Page_Height - $FormDesign->CompanyAddress->phone->y, $FormDesign->CompanyAddress->phone->FontSize, _('Tel'). ': ' . $_SESSION['CompanyRecord']['telephone']);
+		$PDF->addText($FormDesign->CompanyAddress->www->x,$Page_Height - $FormDesign->CompanyAddress->www->y, $FormDesign->CompanyAddress->www->FontSize,  $_SESSION['CompanyRecord']['regoffice4']);
+		$PDF->Line($FormDesign->LabelLine->startx, $Page_Height - $FormDesign->LabelLine->starty, $FormDesign->LabelLine->endx,$Page_Height - $FormDesign->LabelLine->endy);
+		$PDF->addText($FormDesign->ItemNbr->x,$Page_Height-$FormDesign->ItemNbr->y,$FormDesign->ItemNbr->FontSize,'Item: ' . $myrow['itemcode']);
+		$PDF->addText($FormDesign->ItemDesc->x,$Page_Height-$FormDesign->ItemDesc->y,$FormDesign->ItemDesc->FontSize,'Description: ' . $myrow['itemdescription']);
+		$PDF->addText($FormDesign->Weight->x,$Page_Height-$FormDesign->Weight->y,$FormDesign->Weight->FontSize,'Weight' . '(' . $ControlledRow['1'] . '): ' . $myrow['weight']);
+		$PDF->addText($FormDesign->Box->x,$Page_Height-$FormDesign->Box->y,$FormDesign->Box->FontSize,'Box' . ': ' . $myrow['box']);
 
 		if ($ControlledRow[0]==1) { /*Then its a controlled item */
-			$pdf->addText($FormDesign->Lot->x,$Page_Height-$FormDesign->Lot->y,$FormDesign->Lot->FontSize,'Lot: ' . $myrow['serialno']);
+			$PDF->addText($FormDesign->Lot->x,$Page_Height-$FormDesign->Lot->y,$FormDesign->Lot->FontSize,'Lot: ' . $myrow['serialno']);
 		} //controlled item*/
 	} //end of loop around GRNs to print
 
 	$Success = 1; //assume the best and email goes - has to be set to 1 to allow update status
 	if ($MakePDFThenDisplayIt) {
-		$pdf->OutputD($_SESSION['DatabaseName'] . '_FGLABEL_' . $SelectedWO . '_' . date('Y-m-d') . '.pdf');
-		$pdf->__destruct();
+		$PDF->OutputD($_SESSION['DatabaseName'] . '_FGLABEL_' . $SelectedWO . '_' . date('Y-m-d') . '.pdf');
+		$PDF->__destruct();
 	} else {
 		$PdfFileName = $_SESSION['DatabaseName'] . '__FGLABEL_' . $SelectedWO . '_' . date('Y-m-d') . '.pdf';
-		$pdf->Output($_SESSION['reports_dir'] . '/' . $PdfFileName, 'F');
-		$pdf->__destruct();
+		$PDF->Output($_SESSION['reports_dir'] . '/' . $PdfFileName, 'F');
+		$PDF->__destruct();
 		include('includes/htmlMimeMail.php');
 		$mail = new htmlMimeMail();
 		$attachment = $mail->getFile($_SESSION['reports_dir'] . '/' . $PdfFileName);

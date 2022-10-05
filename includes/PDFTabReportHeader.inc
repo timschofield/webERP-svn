@@ -6,13 +6,13 @@
 
 	$PageNumber++;
 	if ($PageNumber>1){
-		$pdf->newPage();
+		$PDF->newPage();
 	}
 
 	$FontSize = 8;
 	$YPos = $Page_Height - $Top_Margin;
-	$pdf->addText($Left_Margin,$YPos,$FontSize,$_SESSION['CompanyRecord']['coyname']);
-	$pdf->addText($Page_Width-$Right_Margin-120,$YPos,$FontSize, _('Printed'). ': ' . Date($_SESSION['DefaultDateFormat'])  . '   ' . _('Page'). ' ' . $PageNumber);
+	$PDF->addText($Left_Margin,$YPos,$FontSize,$_SESSION['CompanyRecord']['coyname']);
+	$PDF->addText($Page_Width-$Right_Margin-120,$YPos,$FontSize, _('Printed'). ': ' . Date($_SESSION['DefaultDateFormat'])  . '   ' . _('Page'). ' ' . $PageNumber);
 
 
 

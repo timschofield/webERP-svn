@@ -31,7 +31,7 @@ $PaperSize = $FormDesign->PaperSize;
 $PageNumber=1;
 $line_height=$FormDesign->LineHeight;
 include('includes/PDFStarter.php');
-$pdf->addInfo('Title', _('General Ledger Journal') );
+$PDF->addInfo('Title', _('General Ledger Journal') );
 
 if ($JournalNo=='Preview') {
 	$LineCount = 2; // UldisN
@@ -84,12 +84,12 @@ while ($counter<=$LineCount) {
 		$Tag = $myrow['tag'].' - '.$myrow['tagdescription'];
 		$JobRef = $myrow['jobref'];
 	}
-	$LeftOvers = $pdf->addTextWrap($FormDesign->Data->Column1->x,$Page_Height-$YPos,$FormDesign->Data->Column1->Length,$FormDesign->Data->Column1->FontSize, $AccountCode);
-	$LeftOvers = $pdf->addTextWrap($FormDesign->Data->Column2->x,$Page_Height-$YPos,$FormDesign->Data->Column2->Length,$FormDesign->Data->Column2->FontSize, $Description);
-	$LeftOvers = $pdf->addTextWrap($FormDesign->Data->Column3->x,$Page_Height-$YPos,$FormDesign->Data->Column3->Length,$FormDesign->Data->Column3->FontSize, $Narrative);
-	$LeftOvers = $pdf->addTextWrap($FormDesign->Data->Column4->x,$Page_Height-$YPos,$FormDesign->Data->Column4->Length,$FormDesign->Data->Column4->FontSize, locale_number_format($Amount,$_SESSION['CompanyRecord']['decimalplaces']), 'right');
-	$LeftOvers = $pdf->addTextWrap($FormDesign->Data->Column5->x,$Page_Height-$YPos,$FormDesign->Data->Column5->Length,$FormDesign->Data->Column5->FontSize, $Tag);
-	$LeftOvers = $pdf->addTextWrap($FormDesign->Data->Column6->x,$Page_Height-$YPos,$FormDesign->Data->Column6->Length,$FormDesign->Data->Column6->FontSize, $JobRef, 'left');
+	$LeftOvers = $PDF->addTextWrap($FormDesign->Data->Column1->x,$Page_Height-$YPos,$FormDesign->Data->Column1->Length,$FormDesign->Data->Column1->FontSize, $AccountCode);
+	$LeftOvers = $PDF->addTextWrap($FormDesign->Data->Column2->x,$Page_Height-$YPos,$FormDesign->Data->Column2->Length,$FormDesign->Data->Column2->FontSize, $Description);
+	$LeftOvers = $PDF->addTextWrap($FormDesign->Data->Column3->x,$Page_Height-$YPos,$FormDesign->Data->Column3->Length,$FormDesign->Data->Column3->FontSize, $Narrative);
+	$LeftOvers = $PDF->addTextWrap($FormDesign->Data->Column4->x,$Page_Height-$YPos,$FormDesign->Data->Column4->Length,$FormDesign->Data->Column4->FontSize, locale_number_format($Amount,$_SESSION['CompanyRecord']['decimalplaces']), 'right');
+	$LeftOvers = $PDF->addTextWrap($FormDesign->Data->Column5->x,$Page_Height-$YPos,$FormDesign->Data->Column5->Length,$FormDesign->Data->Column5->FontSize, $Tag);
+	$LeftOvers = $PDF->addTextWrap($FormDesign->Data->Column6->x,$Page_Height-$YPos,$FormDesign->Data->Column6->Length,$FormDesign->Data->Column6->FontSize, $JobRef, 'left');
 	$YPos += $line_height;
 	$counter++;
 	if ($YPos >= $FormDesign->LineAboveFooter->starty){
@@ -108,7 +108,7 @@ if ($LineCount == 0) {   //UldisN
 	include('includes/footer.php');
 	exit;
 } else {
-    $pdf->OutputD($_SESSION['DatabaseName'] . '_Journal_' . date('Y-m-d').'.pdf');//UldisN
-    $pdf->__destruct(); //UldisN
+    $PDF->OutputD($_SESSION['DatabaseName'] . '_Journal_' . date('Y-m-d').'.pdf');//UldisN
+    $PDF->__destruct(); //UldisN
 }
 ?>

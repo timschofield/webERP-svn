@@ -177,7 +177,7 @@ if (DB_num_rows($result)>0){
 // Javier: now I use the native constructor
 // Javier: better to not use references
 //	$PageSize = array(0,0,$Page_Width,$Page_Height);
-	//	$pdf = & new Cpdf($PageSize);
+	//	$PDF = & new Cpdf($PageSize);
 	Class Cpdf1 extends Cpdf {
 
 		Public function Footer() {
@@ -189,23 +189,23 @@ if (DB_num_rows($result)>0){
 		}
 	}
 
-	$pdf = new Cpdf1('L', 'pt', 'LETTER');
+	$PDF = new Cpdf1('L', 'pt', 'LETTER');
 
-	$pdf->addInfo('Creator', 'webERP http://www.weberp.org');
-	$pdf->addInfo('Author', 'webERP ' . $Version);
-	$pdf->addInfo('Title', _('Customer Packing Slip') );
-	$pdf->addInfo('Subject', _('Packing slip for order') . ' ' . $_GET['TransNo']);
+	$PDF->addInfo('Creator', 'webERP http://www.weberp.org');
+	$PDF->addInfo('Author', 'webERP ' . $Version);
+	$PDF->addInfo('Title', _('Customer Packing Slip') );
+	$PDF->addInfo('Subject', _('Packing slip for order') . ' ' . $_GET['TransNo']);
 
 /* Javier: I have brought this piece from the pdf class constructor to get it closer to the admin/user,
 	I corrected it to match TCPDF, but it still needs check, after which,
 	I think it should be moved to each report to provide flexible Document Header and Margins in a per-report basis. */
-	$pdf->setAutoPageBreak(0);	// Javier: needs check.
-	$pdf->setPrintHeader(false);	// Javier: I added this must be called before Add Page
-	$pdf->AddPage();
+	$PDF->setAutoPageBreak(0);	// Javier: needs check.
+	$PDF->setPrintHeader(false);	// Javier: I added this must be called before Add Page
+	$PDF->AddPage();
 //	$this->SetLineWidth(1); 	   Javier: It was ok for FPDF but now is too gross with TCPDF. TCPDF defaults to 0'57 pt (0'2 mm) which is ok.
-	$pdf->cMargin = 0;		// Javier: needs check.
+	$PDF->cMargin = 0;		// Javier: needs check.
 /* END Brought from class.pdf.php constructor */
-	$pdf->setPrintFooter(true);
+	$PDF->setPrintFooter(true);
 	$FontSize=12;
 	$line_height=16;
 
@@ -217,12 +217,12 @@ if (DB_num_rows($result)>0){
 		$DisplayPrevDel = locale_number_format($myrow2['qtyinvoiced'],$myrow2['decimalplaces']);
 		$DisplayQtySupplied = locale_number_format($myrow2['quantity'] - $myrow2['qtyinvoiced'],$myrow2['decimalplaces']);
 
-		$LeftOvers = $pdf->addTextWrap(13,$YPos,135,$FontSize,$myrow2['stkcode'],'left');
-		$LeftOvers = $pdf->addTextWrap(148,$YPos,239,$FontSize,$myrow2['description'],'left');
-		$LeftOvers = $pdf->addTextWrap(387,$YPos,90,$FontSize,$DisplayQty,'right');
-		$LeftOvers = $pdf->addTextWrap(475,$YPos,20,$FontSize,$myrow2['units'],'left');
-		$LeftOvers = $pdf->addTextWrap(505,$YPos,90,$FontSize,$DisplayQtySupplied,'right');
-		$LeftOvers = $pdf->addTextWrap(604,$YPos,90,$FontSize,$DisplayPrevDel,'right');
+		$LeftOvers = $PDF->addTextWrap(13,$YPos,135,$FontSize,$myrow2['stkcode'],'left');
+		$LeftOvers = $PDF->addTextWrap(148,$YPos,239,$FontSize,$myrow2['description'],'left');
+		$LeftOvers = $PDF->addTextWrap(387,$YPos,90,$FontSize,$DisplayQty,'right');
+		$LeftOvers = $PDF->addTextWrap(475,$YPos,20,$FontSize,$myrow2['units'],'left');
+		$LeftOvers = $PDF->addTextWrap(505,$YPos,90,$FontSize,$DisplayQtySupplied,'right');
+		$LeftOvers = $PDF->addTextWrap(604,$YPos,90,$FontSize,$DisplayPrevDel,'right');
 
 		if ($YPos-$line_height <= 136){
 	   /* We reached the end of the page so finsih off the page and start a newy */
@@ -237,8 +237,8 @@ if (DB_num_rows($result)>0){
 
       } //end while there are line items to print out
 
-	$pdf->OutputD($_SESSION['DatabaseName'] . '_Customer_Order_' . $_GET['TransNo'] . '_' . Date('Y-m-d') .'.pdf');
-	$pdf-> __destruct();
+	$PDF->OutputD($_SESSION['DatabaseName'] . '_Customer_Order_' . $_GET['TransNo'] . '_' . Date('Y-m-d') .'.pdf');
+	$PDF-> __destruct();
 
 	$sql = "UPDATE salesorders SET printedpackingslip=1,
 									datepackingslipprinted='" . Date('Y-m-d') . "'

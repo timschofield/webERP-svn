@@ -210,8 +210,8 @@ if ($OrdersToPick[0]['orderno'] == 'Preview') {
 
 $PaperSize = $FormDesign->PaperSize;
 include('includes/PDFStarter.php');
-$pdf->addInfo('Title', _('Picking List'));
-$pdf->addInfo('Subject', _('Laser Picking List'));
+$PDF->addInfo('Title', _('Picking List'));
+$PDF->addInfo('Subject', _('Laser Picking List'));
 $FontSize = 12;
 $ListCount = 0;
 $Copy = '';
@@ -222,7 +222,7 @@ $TotalOrderCount = sizeof($OrdersToPick);
 for ( $i = 0; $i < $TotalOrderCount; $i++ ){
 	/*Cycle through each of the orders to pick */
 	if ($i > 0) {
-		$pdf->newPage();
+		$PDF->newPage();
 	}
 
 	/* Now ... Has the order got any line items still outstanding to be picked */
@@ -396,12 +396,12 @@ for ( $i = 0; $i < $TotalOrderCount; $i++ ){
 			}
 			++$ListCount;
 
-			$LeftOvers = $pdf->addTextWrap($FormDesign->Headings->Column1->x, $Page_Height - $YPos, $FormDesign->Headings->Column1->Length, $FormDesign->Headings->Column1->FontSize, $MyRow2['stkcode'], 'left');
-			$LeftOvers = $pdf->addTextWrap($FormDesign->Headings->Column2->x, $Page_Height - $YPos, $FormDesign->Headings->Column2->Length, $FormDesign->Headings->Column2->FontSize, $MyRow2['description']);
-			$LeftOvers = $pdf->addTextWrap($FormDesign->Headings->Column3->x, $Page_Height - $YPos, $FormDesign->Headings->Column3->Length, $FormDesign->Headings->Column3->FontSize, $MyRow2['bin'], 'right');
-			$LeftOvers = $pdf->addTextWrap($FormDesign->Headings->Column4->x, $Page_Height - $YPos, $FormDesign->Headings->Column4->Length, $FormDesign->Headings->Column4->FontSize, $DisplayQtySupplied, 'right');
-			$LeftOvers = $pdf->addTextWrap($FormDesign->Headings->Column5->x, $Page_Height - $YPos, $FormDesign->Headings->Column5->Length, $FormDesign->Headings->Column5->FontSize, $DisplayQtyAvail, 'right');
-			$LeftOvers = $pdf->addTextWrap($FormDesign->Headings->Column6->x, $Page_Height - $YPos, $FormDesign->Headings->Column6->Length, $FormDesign->Headings->Column6->FontSize, $DisplayPicked, 'right');
+			$LeftOvers = $PDF->addTextWrap($FormDesign->Headings->Column1->x, $Page_Height - $YPos, $FormDesign->Headings->Column1->Length, $FormDesign->Headings->Column1->FontSize, $MyRow2['stkcode'], 'left');
+			$LeftOvers = $PDF->addTextWrap($FormDesign->Headings->Column2->x, $Page_Height - $YPos, $FormDesign->Headings->Column2->Length, $FormDesign->Headings->Column2->FontSize, $MyRow2['description']);
+			$LeftOvers = $PDF->addTextWrap($FormDesign->Headings->Column3->x, $Page_Height - $YPos, $FormDesign->Headings->Column3->Length, $FormDesign->Headings->Column3->FontSize, $MyRow2['bin'], 'right');
+			$LeftOvers = $PDF->addTextWrap($FormDesign->Headings->Column4->x, $Page_Height - $YPos, $FormDesign->Headings->Column4->Length, $FormDesign->Headings->Column4->FontSize, $DisplayQtySupplied, 'right');
+			$LeftOvers = $PDF->addTextWrap($FormDesign->Headings->Column5->x, $Page_Height - $YPos, $FormDesign->Headings->Column5->Length, $FormDesign->Headings->Column5->FontSize, $DisplayQtyAvail, 'right');
+			$LeftOvers = $PDF->addTextWrap($FormDesign->Headings->Column6->x, $Page_Height - $YPos, $FormDesign->Headings->Column6->Length, $FormDesign->Headings->Column6->FontSize, $DisplayPicked, 'right');
 
 			if ($Page_Height - $YPos - $line_height <= 60) {
 				/* We reached the end of the page so finish off the page and start a new */
@@ -414,7 +414,7 @@ for ( $i = 0; $i < $TotalOrderCount; $i++ ){
 			}
 
 			if ($MyRow2['cust_part'] > '') {
-				$LeftOvers = $pdf->addTextWrap($FormDesign->Headings->Column2->x, $Page_Height - $YPos, $FormDesign->Headings->Column2->Length, $FormDesign->Headings->Column2->FontSize, $MyRow2['cust_part'] . ' ' . $MyRow2['cust_description']);
+				$LeftOvers = $PDF->addTextWrap($FormDesign->Headings->Column2->x, $Page_Height - $YPos, $FormDesign->Headings->Column2->Length, $FormDesign->Headings->Column2->FontSize, $MyRow2['cust_part'] . ' ' . $MyRow2['cust_description']);
 
 				if ($Page_Height - $YPos - $line_height <= 60) {
 					/* We reached the end of the page so finish off the page and start a new */
@@ -428,7 +428,7 @@ for ( $i = 0; $i < $TotalOrderCount; $i++ ){
 			}
 
 			if ($MyRow2['narrative'] > '') {
-				$LeftOvers = $pdf->addTextWrap($FormDesign->Headings->Column2->x, $Page_Height - $YPos, $FormDesign->Headings->Column2->Length, $FormDesign->Headings->Column2->FontSize, $MyRow2['narrative']);
+				$LeftOvers = $PDF->addTextWrap($FormDesign->Headings->Column2->x, $Page_Height - $YPos, $FormDesign->Headings->Column2->Length, $FormDesign->Headings->Column2->FontSize, $MyRow2['narrative']);
 				if ($Page_Height - $YPos - $line_height <= 60) {
 					/* We reached the end of the page so finish off the page and start a new */
 					$PageNumber++;
@@ -482,10 +482,10 @@ for ( $i = 0; $i < $TotalOrderCount; $i++ ){
 						$mybundles['qtypickedthisorder'] = '____________';
 					}
 
-					$LeftOvers = $pdf->addTextWrap($FormDesign->Headings->Column3->x, $Page_Height - $YPos, $FormDesign->Headings->Column3->Length, $FormDesign->Headings->Column3->FontSize, $BundleLabel, 'right');
-					$LeftOvers = $pdf->addTextWrap($FormDesign->Headings->Column4->x, $Page_Height - $YPos, $FormDesign->Headings->Column4->Length, $FormDesign->Headings->Column4->FontSize, $mybundles['serialno'], 'left');
-					$LeftOvers = $pdf->addTextWrap($FormDesign->Headings->Column5->x, $Page_Height - $YPos, $FormDesign->Headings->Column5->Length, $FormDesign->Headings->Column5->FontSize, $mybundles['quantity'] - $mybundles['qtypickedtotal'], 'right');
-					$LeftOvers = $pdf->addTextWrap($FormDesign->Headings->Column6->x, $Page_Height - $YPos, $FormDesign->Headings->Column6->Length, $FormDesign->Headings->Column6->FontSize, $mybundles['qtypickedthisorder'], 'right');
+					$LeftOvers = $PDF->addTextWrap($FormDesign->Headings->Column3->x, $Page_Height - $YPos, $FormDesign->Headings->Column3->Length, $FormDesign->Headings->Column3->FontSize, $BundleLabel, 'right');
+					$LeftOvers = $PDF->addTextWrap($FormDesign->Headings->Column4->x, $Page_Height - $YPos, $FormDesign->Headings->Column4->Length, $FormDesign->Headings->Column4->FontSize, $mybundles['serialno'], 'left');
+					$LeftOvers = $PDF->addTextWrap($FormDesign->Headings->Column5->x, $Page_Height - $YPos, $FormDesign->Headings->Column5->Length, $FormDesign->Headings->Column5->FontSize, $mybundles['quantity'] - $mybundles['qtypickedtotal'], 'right');
+					$LeftOvers = $PDF->addTextWrap($FormDesign->Headings->Column6->x, $Page_Height - $YPos, $FormDesign->Headings->Column6->Length, $FormDesign->Headings->Column6->FontSize, $mybundles['qtypickedthisorder'], 'right');
 
 					if ($Page_Height - $YPos - $line_height <= 60) {
 						/* We reached the end of the page so finish off the page and start a new */
@@ -504,10 +504,10 @@ for ( $i = 0; $i < $TotalOrderCount; $i++ ){
 		} //end while there are line items to print out
 
 		$YPos = $Page_Height - 45;
-		$pdf->setFont('', 'B');
-		$LeftOvers = $pdf->addTextWrap($FormDesign->Headings->Column2->x, $Page_Height - $YPos, $FormDesign->Headings->Column2->Length, $FormDesign->Headings->Column2->FontSize, _('Signed for') . ': ______________________________');
-		$LeftOvers = $pdf->addTextWrap($FormDesign->Headings->Column3->x, $Page_Height - $YPos, $FormDesign->Headings->Column3->Length, $FormDesign->Headings->Column3->FontSize, _('Date') . ' : __________');
-		$pdf->setFont('', '');
+		$PDF->setFont('', 'B');
+		$LeftOvers = $PDF->addTextWrap($FormDesign->Headings->Column2->x, $Page_Height - $YPos, $FormDesign->Headings->Column2->Length, $FormDesign->Headings->Column2->FontSize, _('Signed for') . ': ______________________________');
+		$LeftOvers = $PDF->addTextWrap($FormDesign->Headings->Column3->x, $Page_Height - $YPos, $FormDesign->Headings->Column3->Length, $FormDesign->Headings->Column3->FontSize, _('Date') . ' : __________');
+		$PDF->setFont('', '');
 	} /*end if there are order details to show on the order*/
 } /*end for loop to print the whole lot twice */
 
@@ -518,8 +518,8 @@ if ($ListCount == 0) {
 	include('includes/footer.php');
 	exit;
 } else {
-	$pdf->OutputD($_SESSION['DatabaseName'] . '_PickingLists_' . date('Y-m-d') . '.pdf');
-	$pdf->__destruct();
+	$PDF->OutputD($_SESSION['DatabaseName'] . '_PickingLists_' . date('Y-m-d') . '.pdf');
+	$PDF->__destruct();
 	DB_Txn_Commit();
 }
 ?>

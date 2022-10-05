@@ -1634,7 +1634,7 @@ class PHPExcel_Calculation_Statistical {
 			$xHi = $alpha * $beta * 5;
 
 			$x = $xNew = 1;
-			$error = $pdf = 0;
+			$error = $PDF = 0;
 			$dx	= 1024;
 			$i = 0;
 
@@ -1646,16 +1646,16 @@ class PHPExcel_Calculation_Statistical {
 				} else {
 					$xHi = $x;
 				}
-				$pdf = self::GAMMADIST($x, $alpha, $beta, False);
+				$PDF = self::GAMMADIST($x, $alpha, $beta, False);
 				// Avoid division by zero
-				if ($pdf != 0.0) {
-					$dx = $error / $pdf;
+				if ($PDF != 0.0) {
+					$dx = $error / $PDF;
 					$xNew = $x - $dx;
 				}
 				// If the NR fails to converge (which for example may be the
 				// case if the initial guess is too rough) we apply a bisection
 				// step to determine a more narrow interval around the root.
-				if (($xNew < $xLo) || ($xNew > $xHi) || ($pdf == 0.0)) {
+				if (($xNew < $xLo) || ($xNew > $xHi) || ($PDF == 0.0)) {
 					$xNew = ($xLo + $xHi) / 2;
 					$dx = $xNew - $x;
 				}

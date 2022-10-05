@@ -10,8 +10,8 @@ if (isset($_POST['PrintPDF'])
 	AND mb_strlen($_POST['ToCriteria'])>=1){
 
 	include('includes/PDFStarter.php');
-	$pdf->addInfo('Title',_('Customer Balance Listing'));
-	$pdf->addInfo('Subject',_('Customer Balances'));
+	$PDF->addInfo('Title',_('Customer Balance Listing'));
+	$PDF->addInfo('Subject',_('Customer Balances'));
 	$FontSize=12;
 	$PageNumber=0;
 	$line_height=12;
@@ -89,11 +89,11 @@ if (isset($_POST['PrintPDF'])
 
 			$TotBal += $Balance;
 
-			$LeftOvers = $pdf->addTextWrap($Left_Margin+3,$YPos,220-$Left_Margin,$FontSize,$DebtorBalances['debtorno'] .
+			$LeftOvers = $PDF->addTextWrap($Left_Margin+3,$YPos,220-$Left_Margin,$FontSize,$DebtorBalances['debtorno'] .
 				' - ' . html_entity_decode($DebtorBalances['name'],ENT_QUOTES,'UTF-8'),'left');
-			$LeftOvers = $pdf->addTextWrap(220,$YPos,60,$FontSize,$DisplayBalance,'right');
-			$LeftOvers = $pdf->addTextWrap(280,$YPos,60,$FontSize,$DisplayFXBalance,'right');
-			$LeftOvers = $pdf->addTextWrap(350,$YPos,100,$FontSize,$DebtorBalances['currency'],'left');
+			$LeftOvers = $PDF->addTextWrap(220,$YPos,60,$FontSize,$DisplayBalance,'right');
+			$LeftOvers = $PDF->addTextWrap(280,$YPos,60,$FontSize,$DisplayFXBalance,'right');
+			$LeftOvers = $PDF->addTextWrap(350,$YPos,100,$FontSize,$DebtorBalances['currency'],'left');
 
 
 			$YPos -=$line_height;
@@ -111,11 +111,11 @@ if (isset($_POST['PrintPDF'])
 
 	$DisplayTotBalance = locale_number_format($TotBal,$_SESSION['CompanyRecord']['decimalplaces']);
 
-	$LeftOvers = $pdf->addTextWrap(50,$YPos,160,$FontSize,_('Total balances'),'left');
-	$LeftOvers = $pdf->addTextWrap(220,$YPos,60,$FontSize,$DisplayTotBalance,'right');
+	$LeftOvers = $PDF->addTextWrap(50,$YPos,160,$FontSize,_('Total balances'),'left');
+	$LeftOvers = $PDF->addTextWrap(220,$YPos,60,$FontSize,$DisplayTotBalance,'right');
 
-	$pdf->OutputD($_SESSION['DatabaseName'] . '_DebtorBals_' . date('Y-m-d').'.pdf');
-	$pdf->__destruct();
+	$PDF->OutputD($_SESSION['DatabaseName'] . '_DebtorBals_' . date('Y-m-d').'.pdf');
+	$PDF->__destruct();
 
 } else { /*The option to print PDF was not hit */
 

@@ -4,8 +4,8 @@
 include('includes/session.php');
 
 include('includes/PDFStarter.php');
-$pdf->addInfo('Title', _('Inventory Negatives Listing') );
-$pdf->addInfo('Subject', _('Inventory Negatives Listing'));
+$PDF->addInfo('Title', _('Inventory Negatives Listing') );
+$PDF->addInfo('Subject', _('Inventory Negatives Listing'));
 $FontSize=9;
 $PageNumber=1;
 $line_height=15;
@@ -49,11 +49,11 @@ $FontSize=10;
 
 do {
 
-	$LeftOvers = $pdf->addTextWrap($Left_Margin,$YPos,130,$FontSize, $NegativesRow['loccode'] . ' - ' . $NegativesRow['locationname'], 'left');
-	$LeftOvers = $pdf->addTextWrap(170,$YPos,350,$FontSize,$NegativesRow['stockid'] . ' - ' .$NegativesRow['description'], 'left');
-	$LeftOvers = $pdf->addTextWrap(520,$YPos,30,$FontSize,locale_number_format($NegativesRow['quantity'],$NegativesRow['decimalplaces']), 'right');
+	$LeftOvers = $PDF->addTextWrap($Left_Margin,$YPos,130,$FontSize, $NegativesRow['loccode'] . ' - ' . $NegativesRow['locationname'], 'left');
+	$LeftOvers = $PDF->addTextWrap(170,$YPos,350,$FontSize,$NegativesRow['stockid'] . ' - ' .$NegativesRow['description'], 'left');
+	$LeftOvers = $PDF->addTextWrap(520,$YPos,30,$FontSize,locale_number_format($NegativesRow['quantity'],$NegativesRow['decimalplaces']), 'right');
 
-	$pdf->line($Left_Margin, $YPos-2,$Page_Width-$Right_Margin, $YPos-2);
+	$PDF->line($Left_Margin, $YPos-2,$Page_Width-$Right_Margin, $YPos-2);
 
 	$YPos -= $line_height;
 
@@ -65,8 +65,8 @@ do {
 } while ($NegativesRow = DB_fetch_array($result));
 
 if (DB_num_rows($result)>0){
-	$pdf->OutputD($_SESSION['DatabaseName'] . '_NegativeStocks_' . date('Y-m-d') . '.pdf');
-	$pdf->__destruct();
+	$PDF->OutputD($_SESSION['DatabaseName'] . '_NegativeStocks_' . date('Y-m-d') . '.pdf');
+	$PDF->__destruct();
 } else {
 	$Title = _('Negative Stock Listing Problem');
 	include('includes/header.php');

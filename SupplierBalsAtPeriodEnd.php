@@ -11,8 +11,8 @@ If (isset($_POST['PrintPDF'])
 
 	include('includes/PDFStarter.php');
 
-	$pdf->addInfo('Title',_('Supplier Balance Listing'));
-	$pdf->addInfo('Subject',_('Supplier Balances'));
+	$PDF->addInfo('Title',_('Supplier Balance Listing'));
+	$PDF->addInfo('Subject',_('Supplier Balances'));
 
 	$FontSize=12;
 	$PageNumber=0;
@@ -81,10 +81,10 @@ If (isset($_POST['PrintPDF'])
 
 			$TotBal += $Balance;
 
-			$LeftOvers = $pdf->addTextWrap($Left_Margin,$YPos,220-$Left_Margin,$FontSize,$SupplierBalances['supplierid'] . ' - ' . $SupplierBalances['suppname'],'left');
-			$LeftOvers = $pdf->addTextWrap(220,$YPos,60,$FontSize,$DisplayBalance,'right');
-			$LeftOvers = $pdf->addTextWrap(280,$YPos,60,$FontSize,$DisplayFXBalance,'right');
-			$LeftOvers = $pdf->addTextWrap(350,$YPos,100,$FontSize,$SupplierBalances['currency'],'left');
+			$LeftOvers = $PDF->addTextWrap($Left_Margin,$YPos,220-$Left_Margin,$FontSize,$SupplierBalances['supplierid'] . ' - ' . $SupplierBalances['suppname'],'left');
+			$LeftOvers = $PDF->addTextWrap(220,$YPos,60,$FontSize,$DisplayBalance,'right');
+			$LeftOvers = $PDF->addTextWrap(280,$YPos,60,$FontSize,$DisplayFXBalance,'right');
+			$LeftOvers = $PDF->addTextWrap(350,$YPos,100,$FontSize,$SupplierBalances['currency'],'left');
 
 			$YPos -=$line_height;
 			if ($YPos < $Bottom_Margin + $line_height){
@@ -101,10 +101,10 @@ If (isset($_POST['PrintPDF'])
 
 	$DisplayTotBalance = locale_number_format($TotBal,$_SESSION['CompanyRecord']['decimalplaces']);
 
-	$LeftOvers = $pdf->addTextWrap(220,$YPos,60,$FontSize,$DisplayTotBalance,'right');
+	$LeftOvers = $PDF->addTextWrap(220,$YPos,60,$FontSize,$DisplayTotBalance,'right');
 
-	$pdf->OutputD($_SESSION['DatabaseName'] . '_Supplier_Balances_at_Period_End_' . Date('Y-m-d') . '.pdf');
-	$pdf->__destruct();
+	$PDF->OutputD($_SESSION['DatabaseName'] . '_Supplier_Balances_at_Period_End_' . Date('Y-m-d') . '.pdf');
+	$PDF->__destruct();
 
 } else { /*The option to print PDF was not hit */
 

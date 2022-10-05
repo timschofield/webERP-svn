@@ -43,8 +43,8 @@ If ((isset($_POST['PrintPDF']))
 /*then print the report */
 
 	include('includes/PDFStarter.php');
-	$pdf->addInfo('Title',_('Remittance Advice'));
-	$pdf->addInfo('Subject',_('Remittance Advice') . ' - ' . _('suppliers from') . ' ' . $_POST['FromCriteria'] . ' ' . _('to') . ' ' . $_POST['ToCriteria'] . ' ' . _('and Paid On') . ' ' .  $_POST['PaymentDate']);
+	$PDF->addInfo('Title',_('Remittance Advice'));
+	$PDF->addInfo('Subject',_('Remittance Advice') . ' - ' . _('suppliers from') . ' ' . $_POST['FromCriteria'] . ' ' . _('to') . ' ' . $_POST['ToCriteria'] . ' ' . _('and Paid On') . ' ' .  $_POST['PaymentDate']);
 
 	$line_height=12;
 
@@ -92,11 +92,11 @@ If ((isset($_POST['PrintPDF']))
 
 			$DisplayTranDate = ConvertSQLDate($DetailTrans['trandate']);
 
-			$LeftOvers = $pdf->addTextWrap($Left_Margin+5, $YPos, 80,$FontSize,$DetailTrans['typename'], 'left');
-			$LeftOvers = $pdf->addTextWrap($Left_Margin+95, $YPos, 80,$FontSize,$DisplayTranDate, 'left');
-			$LeftOvers = $pdf->addTextWrap($Left_Margin+175, $YPos, 80,$FontSize,$DetailTrans['suppreference'], 'left');
-			$LeftOvers = $pdf->addTextWrap($Left_Margin+255, $YPos, 80,$FontSize,locale_number_format($DetailTrans['trantotal'],$SuppliersPaid['currdecimalplaces']), 'right');
-			$LeftOvers = $pdf->addTextWrap($Left_Margin+355, $YPos,80,$FontSize,locale_number_format($DetailTrans['amt'],$SuppliersPaid['currdecimalplaces']), 'right');
+			$LeftOvers = $PDF->addTextWrap($Left_Margin+5, $YPos, 80,$FontSize,$DetailTrans['typename'], 'left');
+			$LeftOvers = $PDF->addTextWrap($Left_Margin+95, $YPos, 80,$FontSize,$DisplayTranDate, 'left');
+			$LeftOvers = $PDF->addTextWrap($Left_Margin+175, $YPos, 80,$FontSize,$DetailTrans['suppreference'], 'left');
+			$LeftOvers = $PDF->addTextWrap($Left_Margin+255, $YPos, 80,$FontSize,locale_number_format($DetailTrans['trantotal'],$SuppliersPaid['currdecimalplaces']), 'right');
+			$LeftOvers = $PDF->addTextWrap($Left_Margin+355, $YPos,80,$FontSize,locale_number_format($DetailTrans['amt'],$SuppliersPaid['currdecimalplaces']), 'right');
 			$AccumBalance += $DetailTrans['amt'];
 
 			$YPos -=$line_height;
@@ -106,23 +106,23 @@ If ((isset($_POST['PrintPDF']))
 			}
 		} /*end while there are detail transactions to show */
 		$YPos -= (0.5*$line_height);
-    	$pdf->line($Left_Margin, $YPos+$line_height,$Page_Width-$Right_Margin, $YPos+$line_height);
+    	$PDF->line($Left_Margin, $YPos+$line_height,$Page_Width-$Right_Margin, $YPos+$line_height);
 
-	    $LeftOvers = $pdf->addTextWrap($Left_Margin+280,$YPos,75,$FontSize,_('Total Payment:'), 'right');
+	    $LeftOvers = $PDF->addTextWrap($Left_Margin+280,$YPos,75,$FontSize,_('Total Payment:'), 'right');
 
         $TotalPayments += $AccumBalance;
 
-	    $LeftOvers = $pdf->addTextWrap($Left_Margin+355,$YPos,80,$FontSize,locale_number_format($AccumBalance,$SuppliersPaid['currdecimalplaces']), 'right');
+	    $LeftOvers = $PDF->addTextWrap($Left_Margin+355,$YPos,80,$FontSize,locale_number_format($AccumBalance,$SuppliersPaid['currdecimalplaces']), 'right');
 
 	    $YPos -= (1.5*$line_height);
-	    $pdf->line($Left_Margin, $YPos+$line_height,$Page_Width-$Right_Margin, $YPos+$line_height);
+	    $PDF->line($Left_Margin, $YPos+$line_height,$Page_Width-$Right_Margin, $YPos+$line_height);
 
 	} /* end while there are supplier payments to retrieve allocations for */
 
 
 	$FileName=$_SESSION['DatabaseName']. '_' . _('Remittance_Advices') . '_' . date('Y-m-d').'.pdf';
-	$pdf->OutputD($FileName);
-	$pdf->__destruct();
+	$PDF->OutputD($FileName);
+	$PDF->__destruct();
 
 } else { /*The option to print PDF was not hit */
 
@@ -181,7 +181,7 @@ If ((isset($_POST['PrintPDF']))
 } /*end of else not PrintPDF */
 
 function PageHeader(){
-	global $pdf;
+	global $PDF;
 	global $PageNumber;
 	global $YPos;
 	global $Xpos;
@@ -199,22 +199,22 @@ function PageHeader(){
 	global $SuppliersPaid;
 
 	if ($RemittanceAdviceCounter>0){
-		$pdf->newPage();
+		$PDF->newPage();
 	}
 
 	$YPos = $Page_Height - $Top_Margin;
 
-	$pdf->addJpegFromFile($_SESSION['LogoFile'],$Page_Width/2 -50,$YPos-50,0,30);
+	$PDF->addJpegFromFile($_SESSION['LogoFile'],$Page_Width/2 -50,$YPos-50,0,30);
 
 	// Title
 	$FontSize =15;
 	$XPos = $Page_Width/2 - 110;
-	$pdf->addText($XPos, $YPos,$FontSize, _('Remittance Advice') );
+	$PDF->addText($XPos, $YPos,$FontSize, _('Remittance Advice') );
 
 	$FontSize = 10;
-	$pdf->addText($XPos + 150, $YPos,$FontSize, ' '. _('printed:').' ' . Date($_SESSION['DefaultDateFormat']));
+	$PDF->addText($XPos + 150, $YPos,$FontSize, ' '. _('printed:').' ' . Date($_SESSION['DefaultDateFormat']));
 
-	$pdf->addText($XPos + 280, $YPos,$FontSize, _('Page').': ' . $PageNumber);
+	$PDF->addText($XPos + 280, $YPos,$FontSize, _('Page').': ' . $PageNumber);
 
 	/*Now print out company info at the top left */
 
@@ -225,29 +225,29 @@ function PageHeader(){
 	$LineHeight = 13;
 	$LineCount = 0;
 
-	$pdf->addText($XPos, $YPos-$LineCount*$LineHeight, $FontSize, $_SESSION['CompanyRecord']['coyname']);
+	$PDF->addText($XPos, $YPos-$LineCount*$LineHeight, $FontSize, $_SESSION['CompanyRecord']['coyname']);
 
 	$FontSize = 8;
 	$LineHeight = 10;
 
 	if ($_SESSION['CompanyRecord']['regoffice1'] <> '') {
 	  $LineCount += 1;
-	  $pdf->addText($XPos, $YPos-$LineCount*$LineHeight,$FontSize, $_SESSION['CompanyRecord']['regoffice1']);
+	  $PDF->addText($XPos, $YPos-$LineCount*$LineHeight,$FontSize, $_SESSION['CompanyRecord']['regoffice1']);
 	}
 	if ($_SESSION['CompanyRecord']['regoffice2'] <> '') {
 	  $LineCount += 1;
-	  $pdf->addText($XPos, $YPos-$LineCount*$LineHeight,$FontSize, $_SESSION['CompanyRecord']['regoffice2']);
+	  $PDF->addText($XPos, $YPos-$LineCount*$LineHeight,$FontSize, $_SESSION['CompanyRecord']['regoffice2']);
 	}
 	if (($_SESSION['CompanyRecord']['regoffice3'] <> '') OR ($_SESSION['CompanyRecord']['regoffice4'] <> '') OR ($_SESSION['CompanyRecord']['regoffice5'] <> '')) {
 	  $LineCount += 1;
-	  $pdf->addText($XPos, $YPos-$LineCount*$LineHeight,$FontSize, $_SESSION['CompanyRecord']['regoffice3'] . ' ' . $_SESSION['CompanyRecord']['regoffice4'] . ' ' . $_SESSION['CompanyRecord']['regoffice5']);  // country in 6 not printed
+	  $PDF->addText($XPos, $YPos-$LineCount*$LineHeight,$FontSize, $_SESSION['CompanyRecord']['regoffice3'] . ' ' . $_SESSION['CompanyRecord']['regoffice4'] . ' ' . $_SESSION['CompanyRecord']['regoffice5']);  // country in 6 not printed
 	}
 	$LineCount += 1;
-	$pdf->addText($XPos, $YPos-$LineCount*$LineHeight, $FontSize, _('Phone') . ':' . $_SESSION['CompanyRecord']['telephone']);
+	$PDF->addText($XPos, $YPos-$LineCount*$LineHeight, $FontSize, _('Phone') . ':' . $_SESSION['CompanyRecord']['telephone']);
 	$LineCount += 1;
-	$pdf->addText($XPos, $YPos-$LineCount*$LineHeight,$FontSize, _('Fax') . ': ' . $_SESSION['CompanyRecord']['fax']);
+	$PDF->addText($XPos, $YPos-$LineCount*$LineHeight,$FontSize, _('Fax') . ': ' . $_SESSION['CompanyRecord']['fax']);
 	$LineCount += 1;
-	$pdf->addText($XPos, $YPos-$LineCount*$LineHeight, $FontSize, _('Email') . ': ' . $_SESSION['CompanyRecord']['email']);
+	$PDF->addText($XPos, $YPos-$LineCount*$LineHeight, $FontSize, _('Email') . ': ' . $_SESSION['CompanyRecord']['email']);
 
 
 	/*Now the supplier details and remittance advice address */
@@ -257,23 +257,23 @@ function PageHeader(){
 
 	$LineCount = 0;
 	$FontSize = 10;
-	$pdf->addText($XPos, $YPos-$LineCount*$LineHeight, $FontSize, $SuppliersPaid['suppname']);
+	$PDF->addText($XPos, $YPos-$LineCount*$LineHeight, $FontSize, $SuppliersPaid['suppname']);
 	$LineCount ++;
-	$pdf->addText($XPos, $YPos-$LineCount*$LineHeight, $FontSize, $SuppliersPaid['address1']);
+	$PDF->addText($XPos, $YPos-$LineCount*$LineHeight, $FontSize, $SuppliersPaid['address1']);
 	$LineCount ++;
-	$pdf->addText($XPos, $YPos-$LineCount*$LineHeight, $FontSize, $SuppliersPaid['address2']);
+	$PDF->addText($XPos, $YPos-$LineCount*$LineHeight, $FontSize, $SuppliersPaid['address2']);
 	$LineCount ++;
-	$pdf->addText($XPos, $YPos-$LineCount*$LineHeight, $FontSize, $SuppliersPaid['address3'] . ' ' . $SuppliersPaid['address4']  . ' ' . $SuppliersPaid['address5']  . ' ' . $SuppliersPaid['address6']);
+	$PDF->addText($XPos, $YPos-$LineCount*$LineHeight, $FontSize, $SuppliersPaid['address3'] . ' ' . $SuppliersPaid['address4']  . ' ' . $SuppliersPaid['address5']  . ' ' . $SuppliersPaid['address6']);
 	$LineCount += 2;
-	$pdf->addText($XPos, $YPos-$LineCount*$LineHeight, $FontSize, _('Our Code:') . ' ' .$SuppliersPaid['supplierid']);
+	$PDF->addText($XPos, $YPos-$LineCount*$LineHeight, $FontSize, _('Our Code:') . ' ' .$SuppliersPaid['supplierid']);
 
 	$YPos = $Page_Height - $Top_Margin - 120;
 
 	$FontSize=8;
 	$XPos = $Page_Width/2 - 60;
-	$pdf->addText($XPos, $YPos,$FontSize, _('All amounts stated in') . ' - ' . $SuppliersPaid['currcode']);
+	$PDF->addText($XPos, $YPos,$FontSize, _('All amounts stated in') . ' - ' . $SuppliersPaid['currcode']);
 	$YPos -= $line_height;
-	$pdf->addText($XPos, $YPos,$FontSize, $SuppliersPaid['terms']);
+	$PDF->addText($XPos, $YPos,$FontSize, $SuppliersPaid['terms']);
 
 	$YPos = $Page_Height - $Top_Margin - 180;
 	//$YPos -= $line_height;
@@ -281,37 +281,37 @@ function PageHeader(){
 
 	/*draw a nice curved corner box around the statement details */
 	/*from the top right */
-	$pdf->partEllipse($Page_Width-$Right_Margin-10,$YPos-10,0,90,10,10);
+	$PDF->partEllipse($Page_Width-$Right_Margin-10,$YPos-10,0,90,10,10);
 	/*line to the top left */
-	$pdf->line($Page_Width-$Right_Margin-10, $YPos,$Left_Margin+10, $YPos);
+	$PDF->line($Page_Width-$Right_Margin-10, $YPos,$Left_Margin+10, $YPos);
 	/*Do top left corner */
-	$pdf->partEllipse($Left_Margin+10, $YPos-10,90,180,10,10);
+	$PDF->partEllipse($Left_Margin+10, $YPos-10,90,180,10,10);
 	/*Do a line to the bottom left corner */
-	$pdf->line($Left_Margin, $YPos-10,$Left_Margin, $Bottom_Margin+10);
+	$PDF->line($Left_Margin, $YPos-10,$Left_Margin, $Bottom_Margin+10);
 	/*Now do the bottom left corner 180 - 270 coming back west*/
-	$pdf->partEllipse($Left_Margin+10, $Bottom_Margin+10,180,270,10,10);
+	$PDF->partEllipse($Left_Margin+10, $Bottom_Margin+10,180,270,10,10);
 	/*Now a line to the bottom right */
-	$pdf->line($Left_Margin+10, $Bottom_Margin,$Page_Width-$Right_Margin-10, $Bottom_Margin);
+	$PDF->line($Left_Margin+10, $Bottom_Margin,$Page_Width-$Right_Margin-10, $Bottom_Margin);
 	/*Now do the bottom right corner */
-	$pdf->partEllipse($Page_Width-$Right_Margin-10, $Bottom_Margin+10,270,360,10,10);
+	$PDF->partEllipse($Page_Width-$Right_Margin-10, $Bottom_Margin+10,270,360,10,10);
 	/*Finally join up to the top right corner where started */
-	$pdf->line($Page_Width-$Right_Margin, $Bottom_Margin+10,$Page_Width-$Right_Margin, $YPos-10);
+	$PDF->line($Page_Width-$Right_Margin, $Bottom_Margin+10,$Page_Width-$Right_Margin, $YPos-10);
 
 	/*Finally join up to the top right corner where started */
-	$pdf->line($Page_Width-$Right_Margin, $Bottom_Margin+10,$Page_Width-$Right_Margin, $YPos-10);
+	$PDF->line($Page_Width-$Right_Margin, $Bottom_Margin+10,$Page_Width-$Right_Margin, $YPos-10);
 
 	$YPos -= $line_height;
 	$FontSize =10;
 	/*Set up headings */
-	$pdf->addText($Left_Margin+10, $YPos,$FontSize, _('Trans Type') );
-	$pdf->addText($Left_Margin+100, $YPos,$FontSize, _('Date') );
-	$pdf->addText($Left_Margin+180, $YPos,$FontSize, _('Reference') );
-	$pdf->addText($Left_Margin+310, $YPos,$FontSize, _('Total') );
-	$pdf->addText($Left_Margin+390, $YPos,$FontSize, _('This Payment') );
+	$PDF->addText($Left_Margin+10, $YPos,$FontSize, _('Trans Type') );
+	$PDF->addText($Left_Margin+100, $YPos,$FontSize, _('Date') );
+	$PDF->addText($Left_Margin+180, $YPos,$FontSize, _('Reference') );
+	$PDF->addText($Left_Margin+310, $YPos,$FontSize, _('Total') );
+	$PDF->addText($Left_Margin+390, $YPos,$FontSize, _('This Payment') );
 
 	$YPos -= $line_height;
 	/*draw a line */
-	$pdf->line($Page_Width-$Right_Margin, $YPos,$XPos, $YPos);
+	$PDF->line($Page_Width-$Right_Margin, $YPos,$XPos, $YPos);
 
 	$YPos -= $line_height;
 	$XPos = $Left_Margin;

@@ -89,8 +89,8 @@ if (isset($_POST['PrintPDF']) AND isset($_POST['FromCust']) AND $_POST['FromCust
 	//Start the statement if there are any in the range and we are printing the whole lot
 	if ($_POST['EmailOrPrint']=='print') {
 		include('includes/PDFStarter.php');
-		$pdf->addInfo('Title', _('Customer Statements') );
-		$pdf->addInfo('Subject', _('Statements from') . ' ' . $_POST['FromCust'] . ' ' . _('to') . ' ' . $_POST['ToCust']);
+		$PDF->addInfo('Title', _('Customer Statements') );
+		$PDF->addInfo('Subject', _('Statements from') . ' ' . $_POST['FromCust'] . ' ' . _('to') . ' ' . $_POST['ToCust']);
 		$PageNumber = 1;
 	} else {
 		$Title = _('Email Customer Statements');
@@ -137,8 +137,8 @@ if (isset($_POST['PrintPDF']) AND isset($_POST['FromCust']) AND $_POST['FromCust
 		}
 		if ($_POST['EmailOrPrint']=='email'){
 			include('includes/PDFStarter.php');
-			$pdf->addInfo('Title', $_SESSION['CompanyRecord']['coyname'] . ' - ' . _('Customer Statement') );
-			$pdf->addInfo('Subject', _('For customer') . ': ' . $StmtHeader['name']);
+			$PDF->addInfo('Title', $_SESSION['CompanyRecord']['coyname'] . ' - ' . _('Customer Statement') );
+			$PDF->addInfo('Subject', _('For customer') . ': ' . $StmtHeader['name']);
 			$PageNumber = 1;
 		}
 
@@ -215,7 +215,7 @@ if (isset($_POST['PrintPDF']) AND isset($_POST['FromCust']) AND $_POST['FromCust
 				if ($FirstStatement==True){
 					$FirstStatement=False;
 		      		} else {
-					$pdf->newPage();
+					$PDF->newPage();
 		      		}
 
 		      		include('includes/PDFStatementPageHeader.inc');
@@ -227,7 +227,7 @@ if (isset($_POST['PrintPDF']) AND isset($_POST['FromCust']) AND $_POST['FromCust
 					if (DB_num_rows($SetldTrans)>=1) {
 
 						$FontSize=12;
-						$pdf->addText($Left_Margin+1,$YPos+5,$FontSize, _('Settled Transactions'));
+						$PDF->addText($Left_Margin+1,$YPos+5,$FontSize, _('Settled Transactions'));
 
 						$YPos -= (2*$line_height);
 
@@ -240,26 +240,26 @@ if (isset($_POST['PrintPDF']) AND isset($_POST['FromCust']) AND $_POST['FromCust
 
 							$FontSize=9;
 
-							$LeftOvers = $pdf->addTextWrap($Left_Margin+1,$YPos,60,$FontSize, _($myrow['typename']), 'left');
-							$LeftOvers = $pdf->addTextWrap($Left_Margin+110,$YPos,50,$FontSize,$myrow['transno'], 'left');
-							$LeftOvers = $pdf->addTextWrap($Left_Margin+211,$YPos,55,$FontSize,ConvertSQLDate($myrow['trandate']), 'left');
+							$LeftOvers = $PDF->addTextWrap($Left_Margin+1,$YPos,60,$FontSize, _($myrow['typename']), 'left');
+							$LeftOvers = $PDF->addTextWrap($Left_Margin+110,$YPos,50,$FontSize,$myrow['transno'], 'left');
+							$LeftOvers = $PDF->addTextWrap($Left_Margin+211,$YPos,55,$FontSize,ConvertSQLDate($myrow['trandate']), 'left');
 
 							$FontSize=10;
 							if ($myrow['total']>0){
 								$DisplayTotal = locale_number_format($myrow['total'],$StmtHeader['currdecimalplaces']);
-								$LeftOvers = $pdf->addTextWrap($Left_Margin+300,$YPos,60,$FontSize,$DisplayTotal, 'right');
+								$LeftOvers = $PDF->addTextWrap($Left_Margin+300,$YPos,60,$FontSize,$DisplayTotal, 'right');
 							} else {
 								$DisplayTotal = locale_number_format(-$myrow['total'],$StmtHeader['currdecimalplaces']);
-								$LeftOvers = $pdf->addTextWrap($Left_Margin+382,$YPos,60,$FontSize,$DisplayTotal, 'right');
+								$LeftOvers = $PDF->addTextWrap($Left_Margin+382,$YPos,60,$FontSize,$DisplayTotal, 'right');
 							}
-							$LeftOvers = $pdf->addTextWrap($Left_Margin+459,$YPos,60,$FontSize,$DisplayAlloc, 'right');
-							$LeftOvers = $pdf->addTextWrap($Left_Margin+536,$YPos,60,$FontSize,$DisplayOutstanding, 'right');
+							$LeftOvers = $PDF->addTextWrap($Left_Margin+459,$YPos,60,$FontSize,$DisplayAlloc, 'right');
+							$LeftOvers = $PDF->addTextWrap($Left_Margin+536,$YPos,60,$FontSize,$DisplayOutstanding, 'right');
 
 							if ($YPos-$line_height <= $Bottom_Margin){
 			/* head up a new statement page */
 
 								$PageNumber++;
-								$pdf->newPage();
+								$PDF->newPage();
 								include ('includes/PDFStatementPageHeader.inc');
 							} //end if need a new page headed up
 
@@ -275,13 +275,13 @@ if (isset($_POST['PrintPDF']) AND isset($_POST['FromCust']) AND $_POST['FromCust
 			      		$YPos -= ($line_height);
 					if ($YPos-(2 * $line_height) <= $Bottom_Margin){
 						$PageNumber++;
-						$pdf->newPage();
+						$PDF->newPage();
 						include ('includes/PDFStatementPageHeader.inc');
 					}
 				/*Now the same again for outstanding transactions */
 
 				$FontSize=12;
-				$pdf->addText($Left_Margin+1,$YPos+20,$FontSize, _('Outstanding Transactions') );
+				$PDF->addText($Left_Margin+1,$YPos+20,$FontSize, _('Outstanding Transactions') );
 				$YPos -= $line_height;
 
 				while ($myrow=DB_fetch_array($OstdgTrans)){
@@ -290,33 +290,33 @@ if (isset($_POST['PrintPDF']) AND isset($_POST['FromCust']) AND $_POST['FromCust
 					$DisplayOutstanding = locale_number_format($myrow['ostdg'],$StmtHeader['currdecimalplaces']);
 
 					$FontSize=9;
-					$LeftOvers = $pdf->addTextWrap($Left_Margin+1,$YPos,60,$FontSize, _($myrow['typename']), 'left');
-					$LeftOvers = $pdf->addTextWrap($Left_Margin+110,$YPos,50,$FontSize,$myrow['transno'], 'left');
-					$LeftOvers = $pdf->addTextWrap($Left_Margin+211,$YPos,55,$FontSize,ConvertSQLDate($myrow['trandate']), 'left');
+					$LeftOvers = $PDF->addTextWrap($Left_Margin+1,$YPos,60,$FontSize, _($myrow['typename']), 'left');
+					$LeftOvers = $PDF->addTextWrap($Left_Margin+110,$YPos,50,$FontSize,$myrow['transno'], 'left');
+					$LeftOvers = $PDF->addTextWrap($Left_Margin+211,$YPos,55,$FontSize,ConvertSQLDate($myrow['trandate']), 'left');
 
 					$FontSize=10;
 					if ($myrow['total']>0){
 						$DisplayTotal = locale_number_format($myrow['total'],$StmtHeader['currdecimalplaces']);
-						$LeftOvers = $pdf->addTextWrap($Left_Margin+300,$YPos,55,$FontSize,$DisplayTotal, 'right');
+						$LeftOvers = $PDF->addTextWrap($Left_Margin+300,$YPos,55,$FontSize,$DisplayTotal, 'right');
 					} else {
 						$DisplayTotal = locale_number_format(-$myrow['total'],$StmtHeader['currdecimalplaces']);
-						$LeftOvers = $pdf->addTextWrap($Left_Margin+382,$YPos,55,$FontSize,$DisplayTotal, 'right');
+						$LeftOvers = $PDF->addTextWrap($Left_Margin+382,$YPos,55,$FontSize,$DisplayTotal, 'right');
 					}
 
-					$LeftOvers = $pdf->addTextWrap($Left_Margin+459,$YPos,59,$FontSize,$DisplayAlloc, 'right');
-					$LeftOvers = $pdf->addTextWrap($Left_Margin+536,$YPos,60,$FontSize,$DisplayOutstanding, 'right');
+					$LeftOvers = $PDF->addTextWrap($Left_Margin+459,$YPos,59,$FontSize,$DisplayAlloc, 'right');
+					$LeftOvers = $PDF->addTextWrap($Left_Margin+536,$YPos,60,$FontSize,$DisplayOutstanding, 'right');
 
 					/*Now show also in the remittance advice sectin */
 					$FontSize=8;
-					$LeftOvers = $pdf->addTextWrap($Perforation+10,$YPos,30,$FontSize, _($myrow['typename']), 'left');
-					$LeftOvers = $pdf->addTextWrap($Perforation+75,$YPos,30,$FontSize,$myrow['transno'], 'left');
-					$LeftOvers = $pdf->addTextWrap($Perforation+90,$YPos,60,$FontSize,$DisplayOutstanding, 'right');
+					$LeftOvers = $PDF->addTextWrap($Perforation+10,$YPos,30,$FontSize, _($myrow['typename']), 'left');
+					$LeftOvers = $PDF->addTextWrap($Perforation+75,$YPos,30,$FontSize,$myrow['transno'], 'left');
+					$LeftOvers = $PDF->addTextWrap($Perforation+90,$YPos,60,$FontSize,$DisplayOutstanding, 'right');
 
 					if ($YPos-$line_height <= $Bottom_Margin){
 			/* head up a new statement page */
 
 						$PageNumber++;
-						$pdf->newPage();
+						$PDF->newPage();
 						include ('includes/PDFStatementPageHeader.inc');
 					} //end if need a new page headed up
 
@@ -334,7 +334,7 @@ if (isset($_POST['PrintPDF']) AND isset($_POST['FromCust']) AND $_POST['FromCust
 
 			/* head up a new statement page */
 				$PageNumber++;
-				$pdf->newPage();
+				$PDF->newPage();
 				include ('includes/PDFStatementPageHeader.inc');
 			}
 				/*Now figure out the aged analysis for the customer under review */
@@ -427,53 +427,53 @@ if (isset($_POST['PrintPDF']) AND isset($_POST['FromCust']) AND $_POST['FromCust
 				$DisplayOverdue2 = locale_number_format($AgedAnalysis['overdue2'],$StmtHeader['currdecimalplaces']);
 
 
-				$pdf->line($Page_Width-$Right_Margin, $Bottom_Margin+(4*$line_height),$Left_Margin,$Bottom_Margin+(4*$line_height));
+				$PDF->line($Page_Width-$Right_Margin, $Bottom_Margin+(4*$line_height),$Left_Margin,$Bottom_Margin+(4*$line_height));
 
 				$FontSize=10;
 
 
-				$pdf->addText($Left_Margin+75, ($Bottom_Margin+10)+(3*$line_height)+4, $FontSize, _('Current'). ' ');
-				$pdf->addText($Left_Margin+158, ($Bottom_Margin+10)+(3*$line_height)+4, $FontSize, _('Past Due').' ');
-				$pdf->addText($Left_Margin+242, ($Bottom_Margin+10)+(3*$line_height)+4, $FontSize, $_SESSION['PastDueDays1'] . '-' . $_SESSION['PastDueDays2'] . ' ' . _('days') );
-				$pdf->addText($Left_Margin+315, ($Bottom_Margin+10)+(3*$line_height)+4, $FontSize, _('Over').' ' . $_SESSION['PastDueDays2'] . ' '. _('days'));
-				$pdf->addText($Left_Margin+442, ($Bottom_Margin+10)+(3*$line_height)+4, $FontSize, _('Total Balance') );
+				$PDF->addText($Left_Margin+75, ($Bottom_Margin+10)+(3*$line_height)+4, $FontSize, _('Current'). ' ');
+				$PDF->addText($Left_Margin+158, ($Bottom_Margin+10)+(3*$line_height)+4, $FontSize, _('Past Due').' ');
+				$PDF->addText($Left_Margin+242, ($Bottom_Margin+10)+(3*$line_height)+4, $FontSize, $_SESSION['PastDueDays1'] . '-' . $_SESSION['PastDueDays2'] . ' ' . _('days') );
+				$PDF->addText($Left_Margin+315, ($Bottom_Margin+10)+(3*$line_height)+4, $FontSize, _('Over').' ' . $_SESSION['PastDueDays2'] . ' '. _('days'));
+				$PDF->addText($Left_Margin+442, ($Bottom_Margin+10)+(3*$line_height)+4, $FontSize, _('Total Balance') );
 
-				$LeftOvers = $pdf->addTextWrap($Left_Margin+37, $Bottom_Margin+(2*$line_height)+8,70,$FontSize,$DisplayCurrent, 'right');
-				$LeftOvers = $pdf->addTextWrap($Left_Margin+130, $Bottom_Margin+(2*$line_height)+8,70,$FontSize,$DisplayDue, 'right');
-				$LeftOvers = $pdf->addTextWrap($Left_Margin+222, $Bottom_Margin+(2*$line_height)+8,70,$FontSize,$DisplayOverdue1, 'right');
+				$LeftOvers = $PDF->addTextWrap($Left_Margin+37, $Bottom_Margin+(2*$line_height)+8,70,$FontSize,$DisplayCurrent, 'right');
+				$LeftOvers = $PDF->addTextWrap($Left_Margin+130, $Bottom_Margin+(2*$line_height)+8,70,$FontSize,$DisplayDue, 'right');
+				$LeftOvers = $PDF->addTextWrap($Left_Margin+222, $Bottom_Margin+(2*$line_height)+8,70,$FontSize,$DisplayOverdue1, 'right');
 
-				$LeftOvers = $pdf->addTextWrap($Left_Margin+305, $Bottom_Margin+(2*$line_height)+8,70,$FontSize,$DisplayOverdue2, 'right');
+				$LeftOvers = $PDF->addTextWrap($Left_Margin+305, $Bottom_Margin+(2*$line_height)+8,70,$FontSize,$DisplayOverdue2, 'right');
 
-				$LeftOvers = $pdf->addTextWrap($Left_Margin+432, $Bottom_Margin+(2*$line_height)+8,70,$FontSize,$DisplayBalance, 'right');
+				$LeftOvers = $PDF->addTextWrap($Left_Margin+432, $Bottom_Margin+(2*$line_height)+8,70,$FontSize,$DisplayBalance, 'right');
 
 
 				/*draw a line under the balance info */
 				$YPos = $Bottom_Margin+(2*$line_height);
-				$pdf->line($Left_Margin, $YPos,$Perforation,$YPos);
+				$PDF->line($Left_Margin, $YPos,$Perforation,$YPos);
 
 
 				if (mb_strlen($StmtHeader['lastpaiddate'])>1 AND $StmtHeader['lastpaid']!=0){
-					$pdf->addText($Left_Margin+5, $Bottom_Margin+13, $FontSize, _('Last payment received').' ' . ConvertSQLDate($StmtHeader['lastpaiddate']) .
+					$PDF->addText($Left_Margin+5, $Bottom_Margin+13, $FontSize, _('Last payment received').' ' . ConvertSQLDate($StmtHeader['lastpaiddate']) .
 						'    ' . _('Amount received was').' ' . locale_number_format($StmtHeader['lastpaid'],$StmtHeader['currdecimalplaces']));
 
 				}
 
 				/* Show the bank account details */
-				$pdf->addText($Perforation-250, $Bottom_Margin+32, $FontSize, _('Please make payments to our account:') . ' ' . $DefaultBankAccountNumber);
-				$pdf->addText($Perforation-250, $Bottom_Margin+32-$line_height, $FontSize, _('Quoting your account reference') . ' ' . $StmtHeader['debtorno'] );
+				$PDF->addText($Perforation-250, $Bottom_Margin+32, $FontSize, _('Please make payments to our account:') . ' ' . $DefaultBankAccountNumber);
+				$PDF->addText($Perforation-250, $Bottom_Margin+32-$line_height, $FontSize, _('Quoting your account reference') . ' ' . $StmtHeader['debtorno'] );
 
 				/*also show the total due in the remittance section */
 				if ($AgedAnalysis['balance']>0){ /*No point showing a negative balance for payment! */
 						$FontSize=8;
-						$LeftOvers = $pdf->addTextWrap($Perforation+2, $Bottom_Margin+(2*$line_height)+8,40,$FontSize, _('Payment'), 'left');
-						$LeftOvers = $pdf->addTextWrap($Page_Width-$Right_Margin-90, $Bottom_Margin+(2*$line_height)+8,88,$FontSize,$DisplayBalance, 'right');
+						$LeftOvers = $PDF->addTextWrap($Perforation+2, $Bottom_Margin+(2*$line_height)+8,40,$FontSize, _('Payment'), 'left');
+						$LeftOvers = $PDF->addTextWrap($Page_Width-$Right_Margin-90, $Bottom_Margin+(2*$line_height)+8,88,$FontSize,$DisplayBalance, 'right');
 
 				}
 
 			} /* end of check to see that there were statement transactons to print */
 			if ($_POST['EmailOrPrint']=='email'){
 				$FileName = 'Statement_Account_' . $StmtHeader['debtorno']  . '.pdf';
-				$pdf->Output($FileName,'F');
+				$PDF->Output($FileName,'F');
 				$mail = new htmlMimeMail();
 				$Attachment = $mail->getFile($FileName);
 				$mail->setText(_('Please find a statement or your account attached') );
@@ -499,15 +499,15 @@ if (isset($_POST['PrintPDF']) AND isset($_POST['FromCust']) AND $_POST['FromCust
 				}
 				echo '</td></tr>';
 				unlink($FileName); //delete the temporary file
-				$pdf->__destruct();
+				$PDF->__destruct();
 			}
 		} /* end if we are printing or if we are emailing and there are recipients to email */
 	} /* end loop to print statements */
 
-	if (isset($pdf) AND $_POST['EmailOrPrint']=='print'){
-		$pdf->OutputD($_SESSION['DatabaseName'] . '_CustStatements_' . date('Y-m-d') . '.pdf');
-		$pdf->__destruct();
-	} elseif (!isset($pdf)) {
+	if (isset($PDF) AND $_POST['EmailOrPrint']=='print'){
+		$PDF->OutputD($_SESSION['DatabaseName'] . '_CustStatements_' . date('Y-m-d') . '.pdf');
+		$PDF->__destruct();
+	} elseif (!isset($PDF)) {
 		$Title = _('Print Statements') . ' - ' . _('No Statements Found');
 		if ($_POST['EmailOrPrint']=='print') {
 			include('includes/header.php');

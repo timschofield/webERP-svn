@@ -39,8 +39,8 @@ if (isset($WO) and isset($StockId) and $WO != '') {
 	if (DB_num_rows($ResultItems) != 0) {
 		include ('includes/PDFStarter.php');
 
-		$pdf->addInfo('Title', _('WO Production Slip'));
-		$pdf->addInfo('Subject', _('WO Production Slip'));
+		$PDF->addInfo('Title', _('WO Production Slip'));
+		$PDF->addInfo('Subject', _('WO Production Slip'));
 
 		while ($myItem = DB_fetch_array($ResultItems)) {
 			// print the info of the parent product
@@ -52,7 +52,7 @@ if (isset($WO) and isset($StockId) and $WO != '') {
 
 			$QtyPending = $myItem['qtyreqd'] - $myItem['qtyrecd'];
 
-			PrintHeader($pdf, $YPos, $PageNumber, $Page_Height, $Top_Margin, $Left_Margin, $Page_Width, $Right_Margin, $WO, $StockId, $myItem['description'], $QtyPending, $myItem['units'], $myItem['decimalplaces'], $ReportDate);
+			PrintHeader($PDF, $YPos, $PageNumber, $Page_Height, $Top_Margin, $Left_Margin, $Page_Width, $Right_Margin, $WO, $StockId, $myItem['description'], $QtyPending, $myItem['units'], $myItem['decimalplaces'], $ReportDate);
 
 			$PartCounter = 0;
 
@@ -81,34 +81,34 @@ if (isset($WO) and isset($StockId) and $WO != '') {
 
 				$Xpos = $Left_Margin + 1;
 
-				$pdf->addTextWrap($Xpos, $YPos, 150, $FontSize, $myComponent['component'], 'left');
-				$pdf->addTextWrap(150, $YPos, 50, $FontSize, locale_number_format($myComponent['bomqty'], 'Variable'), 'right');
-				$pdf->addTextWrap(200, $YPos, 30, $FontSize, $myComponent['units'], 'left');
-				$pdf->addTextWrap(230, $YPos, 50, $FontSize, locale_number_format($ComponentNeeded, $myComponent['decimalplaces']), 'right');
-				$pdf->addTextWrap(280, $YPos, 30, $FontSize, $myComponent['units'], 'left');
-				$pdf->addTextWrap(310, $YPos, 50, $FontSize, locale_number_format($PrevisionShrinkage, $myComponent['decimalplaces']), 'right');
-				$pdf->addTextWrap(360, $YPos, 30, $FontSize, $myComponent['units'], 'left');
+				$PDF->addTextWrap($Xpos, $YPos, 150, $FontSize, $myComponent['component'], 'left');
+				$PDF->addTextWrap(150, $YPos, 50, $FontSize, locale_number_format($myComponent['bomqty'], 'Variable'), 'right');
+				$PDF->addTextWrap(200, $YPos, 30, $FontSize, $myComponent['units'], 'left');
+				$PDF->addTextWrap(230, $YPos, 50, $FontSize, locale_number_format($ComponentNeeded, $myComponent['decimalplaces']), 'right');
+				$PDF->addTextWrap(280, $YPos, 30, $FontSize, $myComponent['units'], 'left');
+				$PDF->addTextWrap(310, $YPos, 50, $FontSize, locale_number_format($PrevisionShrinkage, $myComponent['decimalplaces']), 'right');
+				$PDF->addTextWrap(360, $YPos, 30, $FontSize, $myComponent['units'], 'left');
 
 				$YPos-= $line_height;
 
 				if ($YPos < $Bottom_Margin + $line_height) {
-					PrintHeader($pdf, $YPos, $PageNumber, $Page_Height, $Top_Margin, $Left_Margin, $Page_Width, $Right_Margin, $WO, $Stockid, $myItem['description'], $QtyPending, $myItem['units'], $myItem['decimalplaces'], $ReportDate);
+					PrintHeader($PDF, $YPos, $PageNumber, $Page_Height, $Top_Margin, $Left_Margin, $Page_Width, $Right_Margin, $WO, $Stockid, $myItem['description'], $QtyPending, $myItem['units'], $myItem['decimalplaces'], $ReportDate);
 				}
 			}
 		}
 
 		// Production Notes
-		$pdf->addTextWrap($Xpos, $YPos - 50, 200, $FontSize, _('Incidences / Production Notes') . ':', 'left');
+		$PDF->addTextWrap($Xpos, $YPos - 50, 200, $FontSize, _('Incidences / Production Notes') . ':', 'left');
 		$YPos-= (8 * $line_height);
 
-		PrintFooterSlip($pdf, _('Components Ready By'), _('Item Produced By'), _('Quality Control By'), $YPos, $FontSize, false);
+		PrintFooterSlip($PDF, _('Components Ready By'), _('Item Produced By'), _('Quality Control By'), $YPos, $FontSize, false);
 
 		if ($YPos < $Bottom_Margin + $line_height) {
-			PrintHeader($pdf, $YPos, $PageNumber, $Page_Height, $Top_Margin, $Left_Margin, $Page_Width, $Right_Margin, $WO, $Stockid, $myItem['description'], $QtyPending, $myItem['units'], $myItem['decimalplaces'], $ReportDate);
+			PrintHeader($PDF, $YPos, $PageNumber, $Page_Height, $Top_Margin, $Left_Margin, $Page_Width, $Right_Margin, $WO, $Stockid, $myItem['description'], $QtyPending, $myItem['units'], $myItem['decimalplaces'], $ReportDate);
 		}
 
-		$pdf->OutputD('WO-' . $WO . '-' . $StockId . '-' . Date('Y-m-d') . '.pdf');
-		$pdf->__destruct();
+		$PDF->OutputD('WO-' . $WO . '-' . $StockId . '-' . Date('Y-m-d') . '.pdf');
+		$PDF->__destruct();
 	} else {
 		$Title = _('WO Item production Slip');
 		include ('includes/header.php');
@@ -121,47 +121,47 @@ if (isset($WO) and isset($StockId) and $WO != '') {
 	}
 }
 
-function PrintHeader(&$pdf, &$YPos, &$PageNumber, $Page_Height, $Top_Margin, $Left_Margin, $Page_Width, $Right_Margin, $WO, $StockId, $Description, $Qty, $UOM, $DecimalPlaces, $ReportDate) {
+function PrintHeader(&$PDF, &$YPos, &$PageNumber, $Page_Height, $Top_Margin, $Left_Margin, $Page_Width, $Right_Margin, $WO, $StockId, $Description, $Qty, $UOM, $DecimalPlaces, $ReportDate) {
 
 	if ($PageNumber > 1) {
-		$pdf->newPage();
+		$PDF->newPage();
 	}
 	$line_height = 12;
 	$FontSize = 10;
 	$YPos = $Page_Height - $Top_Margin;
 
-	$pdf->addTextWrap($Left_Margin, $YPos, 300, $FontSize, $_SESSION['CompanyRecord']['coyname']);
-	$pdf->addTextWrap(190, $YPos, 100, $FontSize, $ReportDate);
-	$pdf->addTextWrap($Page_Width - $Right_Margin - 150, $YPos, 160, $FontSize, _('Printed') . ': ' . Date($_SESSION['DefaultDateFormat']) . '   ' . _('Page') . ' ' . $PageNumber, 'left');
+	$PDF->addTextWrap($Left_Margin, $YPos, 300, $FontSize, $_SESSION['CompanyRecord']['coyname']);
+	$PDF->addTextWrap(190, $YPos, 100, $FontSize, $ReportDate);
+	$PDF->addTextWrap($Page_Width - $Right_Margin - 150, $YPos, 160, $FontSize, _('Printed') . ': ' . Date($_SESSION['DefaultDateFormat']) . '   ' . _('Page') . ' ' . $PageNumber, 'left');
 	$YPos-= $line_height;
 
-	$pdf->addTextWrap($Left_Margin, $YPos, 150, $FontSize, _('Work Order Item Production Slip'));
+	$PDF->addTextWrap($Left_Margin, $YPos, 150, $FontSize, _('Work Order Item Production Slip'));
 	$YPos-= (2 * $line_height);
 
-	$pdf->addTextWrap($Left_Margin, $YPos, 150, $FontSize, _('WO') . ': ' . $WO);
+	$PDF->addTextWrap($Left_Margin, $YPos, 150, $FontSize, _('WO') . ': ' . $WO);
 	$YPos-= $line_height;
 
-	$pdf->addTextWrap($Left_Margin, $YPos, 500, $FontSize, _('Item Code') . ': ' . $StockId . ' --> ' . $Description);
+	$PDF->addTextWrap($Left_Margin, $YPos, 500, $FontSize, _('Item Code') . ': ' . $StockId . ' --> ' . $Description);
 	$YPos-= $line_height;
 
-	$pdf->addTextWrap($Left_Margin, $YPos, 150, $FontSize, _('Quantity') . ': ' . locale_number_format($Qty, $DecimalPlaces) . ' ' . $UOM);
+	$PDF->addTextWrap($Left_Margin, $YPos, 150, $FontSize, _('Quantity') . ': ' . locale_number_format($Qty, $DecimalPlaces) . ' ' . $UOM);
 	$YPos-= (2 * $line_height);
 
 	if (file_exists($_SESSION['part_pics_dir'] . '/' . $StockId . '.jpg')) {
-		$pdf->Image($_SESSION['part_pics_dir'] . '/' . $StockId . '.jpg', 135, $Page_Height - $Top_Margin - $YPos + 10, 200, 200);
+		$PDF->Image($_SESSION['part_pics_dir'] . '/' . $StockId . '.jpg', 135, $Page_Height - $Top_Margin - $YPos + 10, 200, 200);
 		$YPos-= (16 * $line_height);
 	} /*end checked file exist*/
 
 	/*set up the headings */
 	$Xpos = $Left_Margin + 1;
 
-	$pdf->addTextWrap($Xpos, $YPos, 150, $FontSize, _('Component Code'), 'left');
-	$pdf->addTextWrap(150, $YPos, 50, $FontSize, _('Qty BOM'), 'right');
-	$pdf->addTextWrap(200, $YPos, 30, $FontSize, '', 'left');
-	$pdf->addTextWrap(230, $YPos, 50, $FontSize, _('Qty Needed'), 'right');
-	$pdf->addTextWrap(280, $YPos, 30, $FontSize, '', 'left');
-	$pdf->addTextWrap(310, $YPos, 50, $FontSize, _('Shrinkage'), 'right');
-	$pdf->addTextWrap(360, $YPos, 30, $FontSize, '', 'left');
+	$PDF->addTextWrap($Xpos, $YPos, 150, $FontSize, _('Component Code'), 'left');
+	$PDF->addTextWrap(150, $YPos, 50, $FontSize, _('Qty BOM'), 'right');
+	$PDF->addTextWrap(200, $YPos, 30, $FontSize, '', 'left');
+	$PDF->addTextWrap(230, $YPos, 50, $FontSize, _('Qty Needed'), 'right');
+	$PDF->addTextWrap(280, $YPos, 30, $FontSize, '', 'left');
+	$PDF->addTextWrap(310, $YPos, 50, $FontSize, _('Shrinkage'), 'right');
+	$PDF->addTextWrap(360, $YPos, 30, $FontSize, '', 'left');
 
 	$FontSize = 10;
 	$YPos-= $line_height;
@@ -169,39 +169,39 @@ function PrintHeader(&$pdf, &$YPos, &$PageNumber, $Page_Height, $Top_Margin, $Le
 	$PageNumber++;
 }
 
-function PrintFooterSlip($pdf, $Column1, $Column2, $Column3, $YPos, $FontSize, $fill) {
+function PrintFooterSlip($PDF, $Column1, $Column2, $Column3, $YPos, $FontSize, $fill) {
 	//add column 1
-	$pdf->addTextWrap(40, $YPos - 50, 100, $FontSize, $Column1 . ':', 'left');
-	$pdf->addTextWrap(40, $YPos - 70, 100, $FontSize, _('Name'), 'left');
-	$pdf->addTextWrap(80, $YPos - 70, 200, $FontSize, ':__________________', 'left', 0, $fill);
-	$pdf->addTextWrap(40, $YPos - 90, 100, $FontSize, _('Date'), 'left');
-	$pdf->addTextWrap(80, $YPos - 90, 200, $FontSize, ':__________________', 'left', 0, $fill);
-	$pdf->addTextWrap(40, $YPos - 110, 100, $FontSize, _('Hour'), 'left');
-	$pdf->addTextWrap(80, $YPos - 110, 200, $FontSize, ':__________________', 'left', 0, $fill);
-	$pdf->addTextWrap(40, $YPos - 150, 100, $FontSize, _('Signature'), 'left');
-	$pdf->addTextWrap(80, $YPos - 150, 200, $FontSize, ':__________________', 'left', 0, $fill);
+	$PDF->addTextWrap(40, $YPos - 50, 100, $FontSize, $Column1 . ':', 'left');
+	$PDF->addTextWrap(40, $YPos - 70, 100, $FontSize, _('Name'), 'left');
+	$PDF->addTextWrap(80, $YPos - 70, 200, $FontSize, ':__________________', 'left', 0, $fill);
+	$PDF->addTextWrap(40, $YPos - 90, 100, $FontSize, _('Date'), 'left');
+	$PDF->addTextWrap(80, $YPos - 90, 200, $FontSize, ':__________________', 'left', 0, $fill);
+	$PDF->addTextWrap(40, $YPos - 110, 100, $FontSize, _('Hour'), 'left');
+	$PDF->addTextWrap(80, $YPos - 110, 200, $FontSize, ':__________________', 'left', 0, $fill);
+	$PDF->addTextWrap(40, $YPos - 150, 100, $FontSize, _('Signature'), 'left');
+	$PDF->addTextWrap(80, $YPos - 150, 200, $FontSize, ':__________________', 'left', 0, $fill);
 
 	//add column 2
-	$pdf->addTextWrap(220, $YPos - 50, 100, $FontSize, $Column2 . ':', 'left');
-	$pdf->addTextWrap(220, $YPos - 70, 100, $FontSize, _('Name'), 'left');
-	$pdf->addTextWrap(260, $YPos - 70, 200, $FontSize, ':__________________', 'left', 0, $fill);
-	$pdf->addTextWrap(220, $YPos - 90, 100, $FontSize, _('Date'), 'left');
-	$pdf->addTextWrap(260, $YPos - 90, 200, $FontSize, ':__________________', 'left', 0, $fill);
-	$pdf->addTextWrap(220, $YPos - 110, 100, $FontSize, _('Hour'), 'left');
-	$pdf->addTextWrap(260, $YPos - 110, 200, $FontSize, ':__________________', 'left', 0, $fill);
-	$pdf->addTextWrap(220, $YPos - 150, 100, $FontSize, _('Signature'), 'left');
-	$pdf->addTextWrap(260, $YPos - 150, 200, $FontSize, ':__________________', 'left', 0, $fill);
+	$PDF->addTextWrap(220, $YPos - 50, 100, $FontSize, $Column2 . ':', 'left');
+	$PDF->addTextWrap(220, $YPos - 70, 100, $FontSize, _('Name'), 'left');
+	$PDF->addTextWrap(260, $YPos - 70, 200, $FontSize, ':__________________', 'left', 0, $fill);
+	$PDF->addTextWrap(220, $YPos - 90, 100, $FontSize, _('Date'), 'left');
+	$PDF->addTextWrap(260, $YPos - 90, 200, $FontSize, ':__________________', 'left', 0, $fill);
+	$PDF->addTextWrap(220, $YPos - 110, 100, $FontSize, _('Hour'), 'left');
+	$PDF->addTextWrap(260, $YPos - 110, 200, $FontSize, ':__________________', 'left', 0, $fill);
+	$PDF->addTextWrap(220, $YPos - 150, 100, $FontSize, _('Signature'), 'left');
+	$PDF->addTextWrap(260, $YPos - 150, 200, $FontSize, ':__________________', 'left', 0, $fill);
 
 	//add column 3
-	$pdf->addTextWrap(400, $YPos - 50, 100, $FontSize, $Column3 . ':', 'left');
-	$pdf->addTextWrap(400, $YPos - 70, 100, $FontSize, _('Name'), 'left');
-	$pdf->addTextWrap(440, $YPos - 70, 200, $FontSize, ':__________________', 'left', 0, $fill);
-	$pdf->addTextWrap(400, $YPos - 90, 100, $FontSize, _('Date'), 'left');
-	$pdf->addTextWrap(440, $YPos - 90, 200, $FontSize, ':__________________', 'left', 0, $fill);
-	$pdf->addTextWrap(400, $YPos - 110, 100, $FontSize, _('Hour'), 'left');
-	$pdf->addTextWrap(440, $YPos - 110, 200, $FontSize, ':__________________', 'left', 0, $fill);
-	$pdf->addTextWrap(400, $YPos - 150, 100, $FontSize, _('Signature'), 'left');
-	$pdf->addTextWrap(440, $YPos - 150, 200, $FontSize, ':__________________', 'left', 0, $fill);
+	$PDF->addTextWrap(400, $YPos - 50, 100, $FontSize, $Column3 . ':', 'left');
+	$PDF->addTextWrap(400, $YPos - 70, 100, $FontSize, _('Name'), 'left');
+	$PDF->addTextWrap(440, $YPos - 70, 200, $FontSize, ':__________________', 'left', 0, $fill);
+	$PDF->addTextWrap(400, $YPos - 90, 100, $FontSize, _('Date'), 'left');
+	$PDF->addTextWrap(440, $YPos - 90, 200, $FontSize, ':__________________', 'left', 0, $fill);
+	$PDF->addTextWrap(400, $YPos - 110, 100, $FontSize, _('Hour'), 'left');
+	$PDF->addTextWrap(440, $YPos - 110, 200, $FontSize, ':__________________', 'left', 0, $fill);
+	$PDF->addTextWrap(400, $YPos - 150, 100, $FontSize, _('Signature'), 'left');
+	$PDF->addTextWrap(440, $YPos - 150, 200, $FontSize, ':__________________', 'left', 0, $fill);
 }
 
 ?>

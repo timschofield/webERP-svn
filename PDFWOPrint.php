@@ -282,8 +282,8 @@ if (isset($MakePDFThenDisplayIt) or isset($MakePDFThenEmailIt)) {
 	// Set the paper size/orintation
 	$PaperSize = $FormDesign->PaperSize;
 	include('includes/PDFStarter.php');
-	$pdf->addInfo('Title', _('Work Order'));
-	$pdf->addInfo('Subject', _('Work Order Number') . ' ' . $SelectedWO);
+	$PDF->addInfo('Title', _('Work Order'));
+	$PDF->addInfo('Subject', _('Work Order Number') . ' ' . $SelectedWO);
 	$line_height = $FormDesign->LineHeight;
 	$PageNumber = 1;
 	$FooterPrintedInPage = 0;
@@ -379,12 +379,12 @@ if (isset($MakePDFThenDisplayIt) or isset($MakePDFThenEmailIt)) {
 			else {
 				$DecimalPlaces = 2;
 			}
-			$LeftOvers = $pdf->addTextWrap($FormDesign->Data->Column1->x, $YPos, $FormDesign->Data->Column1->Length, $FormDesign->Data->Column1->FontSize, $WOLine[$i]['action'], 'left');
-			$LeftOvers = $pdf->addTextWrap($FormDesign->Data->Column2->x, $YPos, $FormDesign->Data->Column2->Length, $FormDesign->Data->Column2->FontSize, $WOLine[$i]['item'], 'left');
-			$LeftOvers = $pdf->addTextWrap($FormDesign->Data->Column3->x, $YPos, $FormDesign->Data->Column3->Length, $FormDesign->Data->Column3->FontSize, $WOLine[$i]['description'], 'left');
-			$LeftOvers = $pdf->addTextWrap($FormDesign->Data->Column4->x, $YPos, $FormDesign->Data->Column4->Length, $FormDesign->Data->Column4->FontSize, locale_number_format($WOLine[$i]['qtyreqd'],$WOLine[$i]['decimalplaces']), 'right');
-			$LeftOvers = $pdf->addTextWrap($FormDesign->Data->Column5->x, $YPos, $FormDesign->Data->Column5->Length, $FormDesign->Data->Column5->FontSize, locale_number_format($WOLine[$i]['issued'],$WOLine[$i]['decimalplaces']), 'right');
-			$LeftOvers = $pdf->addTextWrap($FormDesign->Data->Column6->x, $YPos, $FormDesign->Data->Column6->Length, $FormDesign->Data->Column6->FontSize, $WOLine[$i]['units'], 'left');
+			$LeftOvers = $PDF->addTextWrap($FormDesign->Data->Column1->x, $YPos, $FormDesign->Data->Column1->Length, $FormDesign->Data->Column1->FontSize, $WOLine[$i]['action'], 'left');
+			$LeftOvers = $PDF->addTextWrap($FormDesign->Data->Column2->x, $YPos, $FormDesign->Data->Column2->Length, $FormDesign->Data->Column2->FontSize, $WOLine[$i]['item'], 'left');
+			$LeftOvers = $PDF->addTextWrap($FormDesign->Data->Column3->x, $YPos, $FormDesign->Data->Column3->Length, $FormDesign->Data->Column3->FontSize, $WOLine[$i]['description'], 'left');
+			$LeftOvers = $PDF->addTextWrap($FormDesign->Data->Column4->x, $YPos, $FormDesign->Data->Column4->Length, $FormDesign->Data->Column4->FontSize, locale_number_format($WOLine[$i]['qtyreqd'],$WOLine[$i]['decimalplaces']), 'right');
+			$LeftOvers = $PDF->addTextWrap($FormDesign->Data->Column5->x, $YPos, $FormDesign->Data->Column5->Length, $FormDesign->Data->Column5->FontSize, locale_number_format($WOLine[$i]['issued'],$WOLine[$i]['decimalplaces']), 'right');
+			$LeftOvers = $PDF->addTextWrap($FormDesign->Data->Column6->x, $YPos, $FormDesign->Data->Column6->Length, $FormDesign->Data->Column6->FontSize, $WOLine[$i]['units'], 'left');
 
 			$YPos -= $line_height;
 			if ($YPos - (2*$line_height) <= $Page_Height - $FormDesign->Comments->y) {
@@ -417,8 +417,8 @@ if (isset($MakePDFThenDisplayIt) or isset($MakePDFThenEmailIt)) {
 					$CurLot=$IssuedRow['locationname'];
 					$CurQty=-$IssuedRow['qty'];
 				}
-				$LeftOvers = $pdf->addTextWrap($FormDesign->Data->Column3->x, $YPos, $FormDesign->Data->Column3->Length, $FormDesign->Data->Column3->FontSize, $CurLot, 'left');
-				$LeftOvers = $pdf->addTextWrap($FormDesign->Data->Column5->x, $YPos, $FormDesign->Data->Column5->Length, $FormDesign->Data->Column5->FontSize, $CurQty, 'right');
+				$LeftOvers = $PDF->addTextWrap($FormDesign->Data->Column3->x, $YPos, $FormDesign->Data->Column3->Length, $FormDesign->Data->Column3->FontSize, $CurLot, 'left');
+				$LeftOvers = $PDF->addTextWrap($FormDesign->Data->Column5->x, $YPos, $FormDesign->Data->Column5->Length, $FormDesign->Data->Column5->FontSize, $CurQty, 'right');
 				$YPos -= $line_height;
 				if ($YPos - (2*$line_height) <= $Page_Height - $FormDesign->Comments->y) {
 					$PageNumber++;
@@ -450,9 +450,9 @@ if (isset($MakePDFThenDisplayIt) or isset($MakePDFThenEmailIt)) {
 					//remove display of very small number raised due to rounding error
 					$MinalQtyAllowed = 1/pow(10,$DecimalPlaces)/10;
 					if ($CurQty > $MinalQtyAllowed) {
-						$LeftOvers = $pdf->addTextWrap($FormDesign->Data->Column3->x, $YPos, $FormDesign->Data->Column3->Length, $FormDesign->Data->Column3->FontSize, $CurLot, 'left');
-						$LeftOvers = $pdf->addTextWrap($FormDesign->Data->Column3->x, $YPos, $FormDesign->Data->Column3->Length, $FormDesign->Data->Column3->FontSize, $CurQty, 'right');
-						$LeftOvers = $pdf->addTextWrap($FormDesign->Data->Column5->x, $YPos, $FormDesign->Data->Column5->Length, $FormDesign->Data->Column5->FontSize, '________', 'right');
+						$LeftOvers = $PDF->addTextWrap($FormDesign->Data->Column3->x, $YPos, $FormDesign->Data->Column3->Length, $FormDesign->Data->Column3->FontSize, $CurLot, 'left');
+						$LeftOvers = $PDF->addTextWrap($FormDesign->Data->Column3->x, $YPos, $FormDesign->Data->Column3->Length, $FormDesign->Data->Column3->FontSize, $CurQty, 'right');
+						$LeftOvers = $PDF->addTextWrap($FormDesign->Data->Column5->x, $YPos, $FormDesign->Data->Column5->Length, $FormDesign->Data->Column5->FontSize, '________', 'right');
 						$YPos -= $line_height;
 						if ($YPos - (2*$line_height) <= $Page_Height - $FormDesign->Comments->y) {
 							$PageNumber++;
@@ -483,17 +483,17 @@ if (isset($MakePDFThenDisplayIt) or isset($MakePDFThenEmailIt)) {
 	if($FooterPrintedInPage == 0){
 			$Http = !empty($_SERVER['HTTPS']) ? 'https://' : 'http://';
 			$BaseURL = $Http . $_SERVER['HTTP_HOST'] . $RootPath;
-			$pdf->write2DBarcode($BaseURL.'/WorkOrderIssue.php?WO='.$SelectedWO.'&StockID='.$StockID,'QRCODE,H',60,650,100,100,'','N');
-			$pdf->write2DBarcode($StockID,'QRCODE,H',260,650,100,100,'','N');
-			$pdf->write2DBarcode($BaseURL.'/WorkOrderReceive.php?WO='.$SelectedWO.'&StockID='.$StockID,'QRCODE,H',440,650,100,100,'','N');
-			$LeftOvers = $pdf->addText($FormDesign->SignedDate->x,$Page_Height-$FormDesign->SignedDate->y,$FormDesign->SignedDate->FontSize, _('Date') . ' : ______________');
-			$LeftOvers = $pdf->addText($FormDesign->SignedBy->x,$Page_Height-$FormDesign->SignedBy->y,$FormDesign->SignedBy->FontSize, _('Signed for') . ': ____________________________________');
+			$PDF->write2DBarcode($BaseURL.'/WorkOrderIssue.php?WO='.$SelectedWO.'&StockID='.$StockID,'QRCODE,H',60,650,100,100,'','N');
+			$PDF->write2DBarcode($StockID,'QRCODE,H',260,650,100,100,'','N');
+			$PDF->write2DBarcode($BaseURL.'/WorkOrderReceive.php?WO='.$SelectedWO.'&StockID='.$StockID,'QRCODE,H',440,650,100,100,'','N');
+			$LeftOvers = $PDF->addText($FormDesign->SignedDate->x,$Page_Height-$FormDesign->SignedDate->y,$FormDesign->SignedDate->FontSize, _('Date') . ' : ______________');
+			$LeftOvers = $PDF->addText($FormDesign->SignedBy->x,$Page_Height-$FormDesign->SignedBy->y,$FormDesign->SignedBy->FontSize, _('Signed for') . ': ____________________________________');
 
 			$FooterPrintedInPage= 1;
 	}
 
 	$PrintingComments=true;
-	$LeftOvers = $pdf->addTextWrap($FormDesign->Comments->x, $Page_Height - $FormDesign->Comments->y,$FormDesign->Comments->Length,$FormDesign->Comments->FontSize, $WOHeader['comments'], 'left');
+	$LeftOvers = $PDF->addTextWrap($FormDesign->Comments->x, $Page_Height - $FormDesign->Comments->y,$FormDesign->Comments->Length,$FormDesign->Comments->FontSize, $WOHeader['comments'], 'left');
 	$YPos=$Page_Height - $FormDesign->Comments->y;
 	while (mb_strlen($LeftOvers) > 1) {
 		$YPos -= $line_height;
@@ -502,17 +502,17 @@ if (isset($MakePDFThenDisplayIt) or isset($MakePDFThenEmailIt)) {
 			$YPos = $Page_Height - $FormDesign->Headings->Column1->y;
 			include('includes/PDFWOPageHeader.inc');
 		}
-		$LeftOvers = $pdf->addTextWrap($FormDesign->Comments->x, $YPos,$FormDesign->Comments->Length,$FormDesign->Comments->FontSize, $LeftOvers, 'left');
+		$LeftOvers = $PDF->addTextWrap($FormDesign->Comments->x, $YPos,$FormDesign->Comments->Length,$FormDesign->Comments->FontSize, $LeftOvers, 'left');
 	}
 
 	$Success = 1; //assume the best and email goes - has to be set to 1 to allow update status
 	if ($MakePDFThenDisplayIt) {
-		$pdf->OutputD($_SESSION['DatabaseName'] . '_WorkOrder_' . $SelectedWO . '_' . date('Y-m-d') . '.pdf');
-		$pdf->__destruct();
+		$PDF->OutputD($_SESSION['DatabaseName'] . '_WorkOrder_' . $SelectedWO . '_' . date('Y-m-d') . '.pdf');
+		$PDF->__destruct();
 	} else {
 		$PdfFileName = $_SESSION['DatabaseName'] . '_WorkOrder_' . $SelectedWO . '_' . date('Y-m-d') . '.pdf';
-		$pdf->Output($_SESSION['reports_dir'] . '/' . $PdfFileName, 'F');
-		$pdf->__destruct();
+		$PDF->Output($_SESSION['reports_dir'] . '/' . $PdfFileName, 'F');
+		$PDF->__destruct();
 		include('includes/htmlMimeMail.php');
 		$mail = new htmlMimeMail();
 		$attachment = $mail->getFile($_SESSION['reports_dir'] . '/' . $PdfFileName);

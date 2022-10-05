@@ -2,13 +2,13 @@
 /*PDF page header for aged analysis reports */
 $PageNumber++;
 if ($PageNumber>1){
-	$pdf->newPage();
+	$PDF->newPage();
 }
 
 $FontSize=8;
 $YPos= $Page_Height-$Top_Margin;
 
-$pdf->addText($Left_Margin, $YPos,$FontSize, $_SESSION['CompanyRecord']['coyname']);
+$PDF->addText($Left_Margin, $YPos,$FontSize, $_SESSION['CompanyRecord']['coyname']);
 
 $YPos -=$line_height;
 
@@ -59,30 +59,30 @@ if (in_array('All', $_POST['SalesPeople'])){
 	}
 }
 
-$pdf->setFont('','B');
+$PDF->setFont('','B');
 
-$pdf->addText($Left_Margin, $YPos, $FontSize, $Heading);
+$PDF->addText($Left_Margin, $YPos, $FontSize, $Heading);
 
-$pdf->setFont('','');
+$PDF->setFont('','');
 
 $FontSize = 8;
-$pdf->addText($Page_Width-$Right_Margin-120,$YPos,$FontSize, _('Printed'). ': ' . Date($_SESSION['DefaultDateFormat']) . '   '. _('Page'). ' ' . $PageNumber);
+$PDF->addText($Page_Width-$Right_Margin-120,$YPos,$FontSize, _('Printed'). ': ' . Date($_SESSION['DefaultDateFormat']) . '   '. _('Page'). ' ' . $PageNumber);
 
 $YPos -=(3*$line_height);
 
 /*Draw a rectangle to put the headings in     */
-$pdf->line($Page_Width-$Right_Margin, $YPos-5,$Left_Margin, $YPos-5);
-$pdf->line($Page_Width-$Right_Margin, $YPos+$line_height,$Left_Margin, $YPos+$line_height);
-$pdf->line($Page_Width-$Right_Margin, $YPos+$line_height,$Page_Width-$Right_Margin, $YPos-5);
-$pdf->line($Left_Margin, $YPos+$line_height,$Left_Margin, $YPos-5);
+$PDF->line($Page_Width-$Right_Margin, $YPos-5,$Left_Margin, $YPos-5);
+$PDF->line($Page_Width-$Right_Margin, $YPos+$line_height,$Left_Margin, $YPos+$line_height);
+$PDF->line($Page_Width-$Right_Margin, $YPos+$line_height,$Page_Width-$Right_Margin, $YPos-5);
+$PDF->line($Left_Margin, $YPos+$line_height,$Left_Margin, $YPos-5);
 
 /*set up the headings */
 
-$LeftOvers = $pdf->addTextWrap(40,$YPos,40,$FontSize, _('Act Code'),'left');
-$LeftOvers = $pdf->addTextWrap(80,$YPos,150,$FontSize, _('Postal Address'),'left');
-$LeftOvers = $pdf->addTextWrap(230,$YPos,60,$FontSize,_('Branch Code'),'left');
-$LeftOvers = $pdf->addTextWrap(290,$YPos,150,$FontSize,_('Branch Contact Information'),'left');
-$LeftOvers = $pdf->addTextWrap(440,$YPos,150,$FontSize,_('Branch Delivery Address'),'left');
+$LeftOvers = $PDF->addTextWrap(40,$YPos,40,$FontSize, _('Act Code'),'left');
+$LeftOvers = $PDF->addTextWrap(80,$YPos,150,$FontSize, _('Postal Address'),'left');
+$LeftOvers = $PDF->addTextWrap(230,$YPos,60,$FontSize,_('Branch Code'),'left');
+$LeftOvers = $PDF->addTextWrap(290,$YPos,150,$FontSize,_('Branch Contact Information'),'left');
+$LeftOvers = $PDF->addTextWrap(440,$YPos,150,$FontSize,_('Branch Delivery Address'),'left');
 
 $YPos =$YPos - (2*$line_height);
 ?>

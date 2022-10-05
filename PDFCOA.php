@@ -155,8 +155,8 @@ if ($QASampleID>'') {
 	DB_data_seek($result,0);
 }
 include('includes/PDFStarter.php');
-$pdf->addInfo('Title', _('Certificate of Analysis') );
-$pdf->addInfo('Subject', _('Certificate of Analysis') . ' ' . $SelectedCOA);
+$PDF->addInfo('Title', _('Certificate of Analysis') );
+$PDF->addInfo('Subject', _('Certificate of Analysis') . ' ' . $SelectedCOA);
 $FontSize=12;
 $PageNumber = 1;
 $HeaderPrinted=0;
@@ -195,7 +195,7 @@ while ($myrow=DB_fetch_array($result)){
 	if ($CurSection!=$myrow['groupby']) {
 		$SectionHeading=0;
 		if ($CurSection!='NULL' AND $PrintTrailer==1) {
-			$pdf->line($XPos+1, $YPos+$RectHeight,$XPos+506, $YPos+$RectHeight);
+			$PDF->line($XPos+1, $YPos+$RectHeight,$XPos+506, $YPos+$RectHeight);
 		}
 		$PrevTrailer=$SectionTrailer;
 		$CurSection=$myrow['groupby'];
@@ -213,7 +213,7 @@ while ($myrow=DB_fetch_array($result)){
 			$PrevFontSize=$FontSize;
 			$FontSize=8;
 			$line_height=$FontSize*1.25;
-			$LeftOvers = $pdf->addTextWrap($XPos+5,$YPos,500,$FontSize,$PrevTrailer,'left');
+			$LeftOvers = $PDF->addTextWrap($XPos+5,$YPos,500,$FontSize,$PrevTrailer,'left');
 			$FontSize=$PrevFontSize;
 			$line_height=$FontSize*1.25;
 			$YPos -= $line_height;
@@ -224,21 +224,21 @@ while ($myrow=DB_fetch_array($result)){
 			$PageNumber++;
 			include ('includes/PDFCOAHeader.inc');
 		}
-		$LeftOvers = $pdf->addTextWrap($XPos,$YPos,500,$FontSize,$SectionTitle,'center');
+		$LeftOvers = $PDF->addTextWrap($XPos,$YPos,500,$FontSize,$SectionTitle,'center');
 		$YPos -= $line_height;
-		$pdf->setFont('','B');
-		$pdf->SetFillColor(200,200,200);
+		$PDF->setFont('','B');
+		$PDF->SetFillColor(200,200,200);
 		$x=0;
 		foreach($SectionColLabs as $CurColLab) {
 			$ColLabel=$CurColLab;
 			$ColWidth=$SectionColSizes[$x];
 			$x++;
-			$LeftOvers = $pdf->addTextWrap($XPos+1,$YPos,$ColWidth,$FontSize,$ColLabel,'center',1,'fill');
+			$LeftOvers = $PDF->addTextWrap($XPos+1,$YPos,$ColWidth,$FontSize,$ColLabel,'center',1,'fill');
 			$XPos+=$ColWidth;
 		}
 		$SectionHeading=1;
 		$YPos -= $line_height;
-		$pdf->setFont('','');
+		$PDF->setFont('','');
 	} //$SectionHeading==0
 	$XPos=65;
 	$Value='';
@@ -266,7 +266,7 @@ while ($myrow=DB_fetch_array($result)){
 				$DispValue=$myrow['method'];
 				break;
 		}
-		$LeftOvers = $pdf->addTextWrap($XPos+1,$YPos,$ColWidth,$FontSize,$DispValue,$ColAlign,1);
+		$LeftOvers = $PDF->addTextWrap($XPos+1,$YPos,$ColWidth,$FontSize,$DispValue,$ColAlign,1);
 		$XPos+=$ColWidth;
 		$x++;
 	}
@@ -275,7 +275,7 @@ while ($myrow=DB_fetch_array($result)){
 	$XPos=65;
 	$PrintTrailer=1;
 	if ($YPos < ($Bottom_Margin + 80)){ // Begins new page
-		$pdf->line($XPos+1, $YPos+$RectHeight,$XPos+506, $YPos+$RectHeight);
+		$PDF->line($XPos+1, $YPos+$RectHeight,$XPos+506, $YPos+$RectHeight);
 		$PrintTrailer=0;
 		$PageNumber++;
 		include ('includes/PDFCOAHeader.inc');
@@ -283,12 +283,12 @@ while ($myrow=DB_fetch_array($result)){
 	//echo 'PrintTrailer'.$PrintTrailer.' '.$PrevTrailer.'<br>' ;
 } //while loop
 
-$pdf->line($XPos+1, $YPos+$RectHeight,$XPos+506, $YPos+$RectHeight);
+$PDF->line($XPos+1, $YPos+$RectHeight,$XPos+506, $YPos+$RectHeight);
 if ($SectionTrailer>'') {
 	$PrevFontSize=$FontSize;
 	$FontSize=8;
 	$line_height=$FontSize*1.25;
-	$LeftOvers = $pdf->addTextWrap($XPos+5,$YPos,500,$FontSize,$SectionTrailer,'left');
+	$LeftOvers = $PDF->addTextWrap($XPos+5,$YPos,500,$FontSize,$SectionTrailer,'left');
 	$FontSize=$PrevFontSize;
 	$line_height=$FontSize*1.25;
 	$YPos -= $line_height;
@@ -310,13 +310,13 @@ $sql = "SELECT confvalue
 $result=DB_query($sql, $ErrMsg);
 $myrow=DB_fetch_array($result);
 $Disclaimer=$myrow[0];
-$LeftOvers = $pdf->addTextWrap($XPos+5,$YPos,500,$FontSize,$Disclaimer);
+$LeftOvers = $PDF->addTextWrap($XPos+5,$YPos,500,$FontSize,$Disclaimer);
 while (mb_strlen($LeftOvers) > 1) {
 	$YPos -= $line_height;
-	$LeftOvers = $pdf->addTextWrap($XPos+5,$YPos,500,$FontSize, $LeftOvers, 'left');
+	$LeftOvers = $PDF->addTextWrap($XPos+5,$YPos,500,$FontSize, $LeftOvers, 'left');
 }
 
-$pdf->OutputI($_SESSION['DatabaseName'] . 'COA' . date('Y-m-d') . '.pdf');
-$pdf->__destruct();
+$PDF->OutputI($_SESSION['DatabaseName'] . 'COA' . date('Y-m-d') . '.pdf');
+$PDF->__destruct();
 
 ?>

@@ -198,8 +198,8 @@ if (isset($MakePDFThenDisplayIt) or isset($MakePDFThenEmailIt)) {
 	// Set the paper size/orintation
 	$PaperSize = $FormDesign->PaperSize;
 	include('includes/PDFStarter.php');
-	$pdf->addInfo('Title', _('Purchase Order'));
-	$pdf->addInfo('Subject', _('Purchase Order Number') . ' ' . $OrderNo);
+	$PDF->addInfo('Title', _('Purchase Order'));
+	$PDF->addInfo('Subject', _('Purchase Order Number') . ' ' . $OrderNo);
 	$line_height = $FormDesign->LineHeight;
 	$PageNumber = 1;
 	/* Then there's an order to print and its not been printed already (or its been flagged for reprinting)
@@ -266,8 +266,8 @@ if (isset($MakePDFThenDisplayIt) or isset($MakePDFThenEmailIt)) {
 			}
 			$OrderTotal += ($POLine['unitprice'] * $POLine['quantityord']);
 
-			$LeftOvers = $pdf->addTextWrap($FormDesign->Data->Column1->x, $YPos, $FormDesign->Data->Column1->Length, $FormDesign->Data->Column1->FontSize, $ItemCode, 'left');
-			$LeftOvers = $pdf->addTextWrap($FormDesign->Data->Column2->x, $YPos, $FormDesign->Data->Column2->Length, $FormDesign->Data->Column2->FontSize, $POLine['itemdescription'], 'left');
+			$LeftOvers = $PDF->addTextWrap($FormDesign->Data->Column1->x, $YPos, $FormDesign->Data->Column1->Length, $FormDesign->Data->Column1->FontSize, $ItemCode, 'left');
+			$LeftOvers = $PDF->addTextWrap($FormDesign->Data->Column2->x, $YPos, $FormDesign->Data->Column2->Length, $FormDesign->Data->Column2->FontSize, $POLine['itemdescription'], 'left');
 			while (mb_strlen($LeftOvers) > 1) {
 				$YPos -= $line_height;
 				if ($YPos - $line_height <= $Bottom_Margin) {
@@ -276,15 +276,15 @@ if (isset($MakePDFThenDisplayIt) or isset($MakePDFThenEmailIt)) {
 					$YPos = $Page_Height - $FormDesign->Data->y;
 					include('includes/PO_PDFOrderPageHeader.inc');
 				} //end if we reached the end of page
-				$LeftOvers = $pdf->addTextWrap($FormDesign->Data->Column2->x, $YPos, $FormDesign->Data->Column2->Length, $FormDesign->Data->Column2->FontSize, $LeftOvers, 'left');
+				$LeftOvers = $PDF->addTextWrap($FormDesign->Data->Column2->x, $YPos, $FormDesign->Data->Column2->Length, $FormDesign->Data->Column2->FontSize, $LeftOvers, 'left');
 			} //end if need a new page headed up
-			$LeftOvers = $pdf->addTextWrap($FormDesign->Data->Column3->x, $YPos, $FormDesign->Data->Column3->Length, $FormDesign->Data->Column3->FontSize, $DisplayQty, 'left');
-			$LeftOvers = $pdf->addTextWrap($FormDesign->Data->Column4->x, $YPos, $FormDesign->Data->Column4->Length, $FormDesign->Data->Column4->FontSize, $POLine['suppliersunit'], 'left');
-			$LeftOvers = $pdf->addTextWrap($FormDesign->Data->Column5->x, $YPos, $FormDesign->Data->Column5->Length, $FormDesign->Data->Column5->FontSize, $DisplayDelDate, 'left');
-			$LeftOvers = $pdf->addTextWrap($FormDesign->Data->Column6->x, $YPos, $FormDesign->Data->Column6->Length, $FormDesign->Data->Column6->FontSize, $DisplayPrice, 'right');
-			$LeftOvers = $pdf->addTextWrap($FormDesign->Data->Column7->x, $YPos, $FormDesign->Data->Column7->Length, $FormDesign->Data->Column7->FontSize, $DisplayLineTotal, 'right');
+			$LeftOvers = $PDF->addTextWrap($FormDesign->Data->Column3->x, $YPos, $FormDesign->Data->Column3->Length, $FormDesign->Data->Column3->FontSize, $DisplayQty, 'left');
+			$LeftOvers = $PDF->addTextWrap($FormDesign->Data->Column4->x, $YPos, $FormDesign->Data->Column4->Length, $FormDesign->Data->Column4->FontSize, $POLine['suppliersunit'], 'left');
+			$LeftOvers = $PDF->addTextWrap($FormDesign->Data->Column5->x, $YPos, $FormDesign->Data->Column5->Length, $FormDesign->Data->Column5->FontSize, $DisplayDelDate, 'left');
+			$LeftOvers = $PDF->addTextWrap($FormDesign->Data->Column6->x, $YPos, $FormDesign->Data->Column6->Length, $FormDesign->Data->Column6->FontSize, $DisplayPrice, 'right');
+			$LeftOvers = $PDF->addTextWrap($FormDesign->Data->Column7->x, $YPos, $FormDesign->Data->Column7->Length, $FormDesign->Data->Column7->FontSize, $DisplayLineTotal, 'right');
 			if (mb_strlen($LeftOvers) > 1) {
-				$LeftOvers = $pdf->addTextWrap($Left_Margin + 1 + 94, $YPos - $line_height, 270, $FontSize, $LeftOvers, 'left');
+				$LeftOvers = $PDF->addTextWrap($Left_Margin + 1 + 94, $YPos - $line_height, 270, $FontSize, $LeftOvers, 'left');
 				$YPos -= $line_height;
 			}
 			if ($YPos - $line_height <= $Bottom_Margin) {
@@ -311,20 +311,20 @@ if (isset($MakePDFThenDisplayIt) or isset($MakePDFThenEmailIt)) {
 		} else {
 			$DisplayOrderTotal = '----';
 		}
-		$pdf->addText($FormDesign->OrderTotalCaption->x, $Page_Height - $FormDesign->OrderTotalCaption->y, $FormDesign->OrderTotalCaption->FontSize, _('Order Total - excl tax') . ' ' . $POHeader['currcode']);
-		$LeftOvers = $pdf->addTextWrap($FormDesign->OrderTotal->x, $Page_Height - $FormDesign->OrderTotal->y, $FormDesign->OrderTotal->Length, $FormDesign->OrderTotal->FontSize, $DisplayOrderTotal, 'right');
+		$PDF->addText($FormDesign->OrderTotalCaption->x, $Page_Height - $FormDesign->OrderTotalCaption->y, $FormDesign->OrderTotalCaption->FontSize, _('Order Total - excl tax') . ' ' . $POHeader['currcode']);
+		$LeftOvers = $PDF->addTextWrap($FormDesign->OrderTotal->x, $Page_Height - $FormDesign->OrderTotal->y, $FormDesign->OrderTotal->Length, $FormDesign->OrderTotal->FontSize, $DisplayOrderTotal, 'right');
 	} /*end if there are order details to show on the order - or its a preview*/
 
 	$Success = 1; //assume the best and email goes - has to be set to 1 to allow update status
 	if ($MakePDFThenDisplayIt) {
-		$pdf->OutputD($_SESSION['DatabaseName'] . '_PurchaseOrder_' . $OrderNo . '_' . date('Y-m-d') . '.pdf');
-		$pdf->__destruct();
+		$PDF->OutputD($_SESSION['DatabaseName'] . '_PurchaseOrder_' . $OrderNo . '_' . date('Y-m-d') . '.pdf');
+		$PDF->__destruct();
 	} else {
 		/* must be MakingPDF to email it */
 
 		$PdfFileName = $_SESSION['DatabaseName'] . '_PurchaseOrder_' . $OrderNo . '_' . date('Y-m-d') . '.pdf';
-		$pdf->Output($_SESSION['reports_dir'] . '/' . $PdfFileName, 'F');
-		$pdf->__destruct();
+		$PDF->Output($_SESSION['reports_dir'] . '/' . $PdfFileName, 'F');
+		$PDF->__destruct();
 		include('includes/htmlMimeMail.php');
 		$mail = new htmlMimeMail();
 		$attachment = $mail->getFile($_SESSION['reports_dir'] . '/' . $PdfFileName);

@@ -51,8 +51,8 @@ if (!isset($_GET['TransferNo'])){
 	exit;
 }
 
-$pdf->addInfo('Title', _('Inventory Location Transfer BOL') );
-$pdf->addInfo('Subject', _('Inventory Location Transfer BOL') . ' # ' . $_GET['TransferNo']);
+$PDF->addInfo('Title', _('Inventory Location Transfer BOL') );
+$PDF->addInfo('Subject', _('Inventory Location Transfer BOL') . ' # ' . $_GET['TransferNo']);
 $FontSize=10;
 $PageNumber=1;
 $line_height=30;
@@ -96,12 +96,12 @@ $FontSize=10;
 
 do {
 
-	$LeftOvers = $pdf->addTextWrap($Left_Margin, $YPos, 100, $FontSize, $TransferRow['stockid'], 'left');
-	$LeftOvers = $pdf->addTextWrap($Left_Margin+100, $YPos, 250, $FontSize, $TransferRow['description'], 'left');
-	$LeftOvers = $pdf->addTextWrap($Page_Width-$Right_Margin-100-100, $YPos, 100, $FontSize, locale_number_format($TransferRow['shipqty'],$TransferRow['decimalplaces']), 'right');
-	$LeftOvers = $pdf->addTextWrap($Page_Width-$Right_Margin-100, $YPos, 100, $FontSize, locale_number_format($TransferRow['recqty'],$TransferRow['decimalplaces']), 'right');
+	$LeftOvers = $PDF->addTextWrap($Left_Margin, $YPos, 100, $FontSize, $TransferRow['stockid'], 'left');
+	$LeftOvers = $PDF->addTextWrap($Left_Margin+100, $YPos, 250, $FontSize, $TransferRow['description'], 'left');
+	$LeftOvers = $PDF->addTextWrap($Page_Width-$Right_Margin-100-100, $YPos, 100, $FontSize, locale_number_format($TransferRow['shipqty'],$TransferRow['decimalplaces']), 'right');
+	$LeftOvers = $PDF->addTextWrap($Page_Width-$Right_Margin-100, $YPos, 100, $FontSize, locale_number_format($TransferRow['recqty'],$TransferRow['decimalplaces']), 'right');
 
-	$pdf->line($Left_Margin, $YPos-2,$Page_Width-$Right_Margin, $YPos-2);
+	$PDF->line($Left_Margin, $YPos-2,$Page_Width-$Right_Margin, $YPos-2);
 
 	$YPos -= $line_height;
 
@@ -111,6 +111,6 @@ do {
 	}
 
 } while ($TransferRow = DB_fetch_array($result));
-$pdf->OutputD($_SESSION['DatabaseName'] . '_StockLocTrfShipment_' . date('Y-m-d') . '.pdf');
-$pdf->__destruct();
+$PDF->OutputD($_SESSION['DatabaseName'] . '_StockLocTrfShipment_' . date('Y-m-d') . '.pdf');
+$PDF->__destruct();
 ?>

@@ -27,21 +27,21 @@ if (isset($_POST['PrintPDF'])) {
 /* Standard PDF file creation header stuff */
 
 // Javier: better to not use references
-//	$pdf = & new Cpdf($PageSize);
-	$pdf = new Cpdf('L', 'pt', 'A4');
-	$pdf->addInfo('Creator','webERP http://www.weberp.org');
-	$pdf->addInfo('Author','webERP ' . $Version);
-	$pdf->addInfo('Title',_('Inventory Planning Report') . ' ' . Date($_SESSION['DefaultDateFormat']));
-	$pdf->addInfo('Subject',_('Inventory Planning'));
+//	$PDF = & new Cpdf($PageSize);
+	$PDF = new Cpdf('L', 'pt', 'A4');
+	$PDF->addInfo('Creator','webERP http://www.weberp.org');
+	$PDF->addInfo('Author','webERP ' . $Version);
+	$PDF->addInfo('Title',_('Inventory Planning Report') . ' ' . Date($_SESSION['DefaultDateFormat']));
+	$PDF->addInfo('Subject',_('Inventory Planning'));
 
 /* Javier: I have brought this piece from the pdf class constructor to get it closer to the admin/user,
 	I corrected it to match TCPDF, but it still needs some check, after which,
 	I think it should be moved to each report to provide flexible Document Header and Margins in a per-report basis. */
-	$pdf->setAutoPageBreak(0);	// Javier: needs check.
-	$pdf->setPrintHeader(false);	// Javier: I added this must be called before Add Page
-	$pdf->AddPage();
+	$PDF->setAutoPageBreak(0);	// Javier: needs check.
+	$PDF->setPrintHeader(false);	// Javier: I added this must be called before Add Page
+	$PDF->AddPage();
 //	$this->SetLineWidth(1); 	   Javier: It was ok for FPDF but now is too gross with TCPDF. TCPDF defaults to 0'57 pt (0'2 mm) which is ok.
-	$pdf->cMargin = 0;		// Javier: needs check.
+	$PDF->cMargin = 0;		// Javier: needs check.
 /* END Brought from class.pdf.php constructor */
 
 // Javier:
@@ -131,11 +131,11 @@ if (isset($_POST['PrintPDF'])) {
 			if ($Category!=''){ /*Then it's NOT the first time round */
 				/*draw a line under the CATEGORY TOTAL*/
 				$YPos -=$line_height;
-		   		$pdf->line($Left_Margin, $YPos,$Page_Width-$Right_Margin, $YPos);
+		   		$PDF->line($Left_Margin, $YPos,$Page_Width-$Right_Margin, $YPos);
 				$YPos -=(2*$line_height);
 			}
 
-			$LeftOvers = $pdf->addTextWrap($Left_Margin, $YPos, 260-$Left_Margin,$FontSize,$InventoryPlan['categoryid'] . ' - ' . $InventoryPlan['categorydescription'],'left');
+			$LeftOvers = $PDF->addTextWrap($Left_Margin, $YPos, 260-$Left_Margin,$FontSize,$InventoryPlan['categoryid'] . ' - ' . $InventoryPlan['categorydescription'],'left');
 			$Category = $InventoryPlan['categoryid'];
 			$FontSize=8;
 		}
@@ -284,14 +284,14 @@ if (isset($_POST['PrintPDF'])) {
 		$BOMDemandRow = DB_fetch_array($BOMDemandResult);
 		$TotalDemand = $DemandRow['qtydemand'] + $BOMDemandRow['dem'];
 
-		$LeftOvers = $pdf->addTextWrap($Left_Margin, $YPos, 110, $FontSize, $InventoryPlan['stockid'], 'left');
-		$LeftOvers = $pdf->addTextWrap(130, $YPos, 120,6,$InventoryPlan['description'],'left');
-		$LeftOvers = $pdf->addTextWrap(251, $YPos, 40,$FontSize,locale_number_format($SalesRow['prd5'],0),'right');
-		$LeftOvers = $pdf->addTextWrap(292, $YPos, 40,$FontSize,locale_number_format($SalesRow['prd4'],0),'right');
-		$LeftOvers = $pdf->addTextWrap(333, $YPos, 40,$FontSize,locale_number_format($SalesRow['prd3'],0),'right');
-		$LeftOvers = $pdf->addTextWrap(374, $YPos, 40,$FontSize,locale_number_format($SalesRow['prd2'],0),'right');
-		$LeftOvers = $pdf->addTextWrap(415, $YPos, 40,$FontSize,locale_number_format($SalesRow['prd1'],0),'right');
-		$LeftOvers = $pdf->addTextWrap(456, $YPos, 40,$FontSize,locale_number_format($SalesRow['prd0'],0),'right');
+		$LeftOvers = $PDF->addTextWrap($Left_Margin, $YPos, 110, $FontSize, $InventoryPlan['stockid'], 'left');
+		$LeftOvers = $PDF->addTextWrap(130, $YPos, 120,6,$InventoryPlan['description'],'left');
+		$LeftOvers = $PDF->addTextWrap(251, $YPos, 40,$FontSize,locale_number_format($SalesRow['prd5'],0),'right');
+		$LeftOvers = $PDF->addTextWrap(292, $YPos, 40,$FontSize,locale_number_format($SalesRow['prd4'],0),'right');
+		$LeftOvers = $PDF->addTextWrap(333, $YPos, 40,$FontSize,locale_number_format($SalesRow['prd3'],0),'right');
+		$LeftOvers = $PDF->addTextWrap(374, $YPos, 40,$FontSize,locale_number_format($SalesRow['prd2'],0),'right');
+		$LeftOvers = $PDF->addTextWrap(415, $YPos, 40,$FontSize,locale_number_format($SalesRow['prd1'],0),'right');
+		$LeftOvers = $PDF->addTextWrap(456, $YPos, 40,$FontSize,locale_number_format($SalesRow['prd0'],0),'right');
 
 		if ($_POST['NumberMonthsHolding']>10){
 			$NumberMonths=$_POST['NumberMonthsHolding']-10;
@@ -305,19 +305,19 @@ if (isset($_POST['PrintPDF'])) {
 
 
 		$IdealStockHolding = ceil($MaxMthSales * $NumberMonths);
-		$LeftOvers = $pdf->addTextWrap(497, $YPos, 40,$FontSize,locale_number_format($IdealStockHolding,0),'right');
-		$LeftOvers = $pdf->addTextWrap(597, $YPos, 40,$FontSize,locale_number_format($InventoryPlan['qoh'],0),'right');
-		$LeftOvers = $pdf->addTextWrap(638, $YPos, 40,$FontSize,locale_number_format($TotalDemand,0),'right');
+		$LeftOvers = $PDF->addTextWrap(497, $YPos, 40,$FontSize,locale_number_format($IdealStockHolding,0),'right');
+		$LeftOvers = $PDF->addTextWrap(597, $YPos, 40,$FontSize,locale_number_format($InventoryPlan['qoh'],0),'right');
+		$LeftOvers = $PDF->addTextWrap(638, $YPos, 40,$FontSize,locale_number_format($TotalDemand,0),'right');
 
-		$LeftOvers = $pdf->addTextWrap(679, $YPos, 40,$FontSize,locale_number_format($QOO,0),'right');
+		$LeftOvers = $PDF->addTextWrap(679, $YPos, 40,$FontSize,locale_number_format($QOO,0),'right');
 
 		$SuggestedTopUpOrder = $IdealStockHolding - $InventoryPlan['qoh'] + $TotalDemand - $QOO;
 		if ($SuggestedTopUpOrder <=0){
-			$LeftOvers = $pdf->addTextWrap(720, $YPos, 40,$FontSize,'   ','right');
+			$LeftOvers = $PDF->addTextWrap(720, $YPos, 40,$FontSize,'   ','right');
 
 		} else {
 
-			$LeftOvers = $pdf->addTextWrap(720, $YPos, 40,$FontSize,locale_number_format($SuggestedTopUpOrder,0),'right');
+			$LeftOvers = $PDF->addTextWrap(720, $YPos, 40,$FontSize,locale_number_format($SuggestedTopUpOrder,0),'right');
 		}
 
 
@@ -331,7 +331,7 @@ if (isset($_POST['PrintPDF'])) {
 
 	$YPos -= (2*$line_height);
 
-	$pdf->line($Left_Margin, $YPos+$line_height,$Page_Width-$Right_Margin, $YPos+$line_height);
+	$PDF->line($Left_Margin, $YPos+$line_height,$Page_Width-$Right_Margin, $YPos+$line_height);
 
 	if ($ListCount == 0){
 		$Title = _('Print Inventory Planning Report Empty');
@@ -341,8 +341,8 @@ if (isset($_POST['PrintPDF'])) {
 		include('includes/footer.php');
 		exit;
 	} else {
-		$pdf->OutputD($_SESSION['DatabaseName'] . '_Inventory_Planning_' . Date('Y-m-d') . '.pdf');
-		$pdf-> __destruct();
+		$PDF->OutputD($_SESSION['DatabaseName'] . '_Inventory_Planning_' . Date('Y-m-d') . '.pdf');
+		$PDF-> __destruct();
 	}
 
 } elseif (isset($_POST['ExportToCSV'])){ //send the data to a CSV

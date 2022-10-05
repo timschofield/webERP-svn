@@ -93,8 +93,8 @@ $Terms = $_SESSION['TermsAndConditions'];
 $PaperSize = 'Letter';
 
 include('includes/PDFStarter.php');
-$pdf->addInfo('Title', _('Customer Acknowledgement'));
-$pdf->addInfo('Subject', _('Acknowledgement') . ' ' . $_GET['AcknowledgementNo']);
+$PDF->addInfo('Title', _('Customer Acknowledgement'));
+$PDF->addInfo('Subject', _('Acknowledgement') . ' ' . $_GET['AcknowledgementNo']);
 $FontSize = 12;
 $PageNumber = 1;
 $line_height = $FontSize * 1.25;
@@ -185,18 +185,18 @@ if (DB_num_rows($Result) > 0) {
 
 		$FontSize = 10;
 
-		$LeftOvers = $pdf->addTextWrap($XPos + 1, $YPos, 100, $FontSize, $MyRow2['stkcode']);
-		$LeftOvers = $pdf->addTextWrap(120, $YPos, 295, $FontSize, $MyRow2['description']);
-		$LeftOvers = $pdf->addTextWrap(270, $YPos, 85, $FontSize, ConvertSQLDate($MyRow2['itemdue']), right);
-		$LeftOvers = $pdf->addTextWrap(340, $YPos, 85, $FontSize, $DisplayQty, 'right');
-		$LeftOvers = $pdf->addTextWrap(420, $YPos, 85, $FontSize, $DisplayUOM, 'left');
-		$LeftOvers = $pdf->addTextWrap(420, $YPos, 85, $FontSize, $DisplayPrice, 'right');
-		$LeftOvers = $pdf->addTextWrap($Page_Width - $Right_Margin - 90, $YPos, 90, $FontSize, $DisplayTotal, 'right');
+		$LeftOvers = $PDF->addTextWrap($XPos + 1, $YPos, 100, $FontSize, $MyRow2['stkcode']);
+		$LeftOvers = $PDF->addTextWrap(120, $YPos, 295, $FontSize, $MyRow2['description']);
+		$LeftOvers = $PDF->addTextWrap(270, $YPos, 85, $FontSize, ConvertSQLDate($MyRow2['itemdue']), right);
+		$LeftOvers = $PDF->addTextWrap(340, $YPos, 85, $FontSize, $DisplayQty, 'right');
+		$LeftOvers = $PDF->addTextWrap(420, $YPos, 85, $FontSize, $DisplayUOM, 'left');
+		$LeftOvers = $PDF->addTextWrap(420, $YPos, 85, $FontSize, $DisplayPrice, 'right');
+		$LeftOvers = $PDF->addTextWrap($Page_Width - $Right_Margin - 90, $YPos, 90, $FontSize, $DisplayTotal, 'right');
 
 		if ($MyRow2['cust_part'] > '') {
 			$YPos -= $line_height;
-			$LeftOvers = $pdf->addTextWrap($XPos + 10, $YPos, 300, $FontSize, _('Customer Part') . ': ' . $MyRow2['cust_part'] . ' ' . $MyRow2['cust_description']);
-			//$LeftOvers = $pdf->addTextWrap(190,$YPos,186,$FontSize,$MyRow2['cust_description']);
+			$LeftOvers = $PDF->addTextWrap($XPos + 10, $YPos, 300, $FontSize, _('Customer Part') . ': ' . $MyRow2['cust_part'] . ' ' . $MyRow2['cust_description']);
+			//$LeftOvers = $PDF->addTextWrap(190,$YPos,186,$FontSize,$MyRow2['cust_description']);
 		}
 
 		// Prints salesorderdetails.narrative
@@ -207,7 +207,7 @@ if (DB_num_rows($Result) > 0) {
 				$PageNumber++;
 				include('includes/PDFAckPageHeader.php');
 			}
-			$LeftOvers = $pdf->addTextWrap($XPos + 1, $YPos, 750, 10, $TextLine);
+			$LeftOvers = $PDF->addTextWrap($XPos + 1, $YPos, 750, 10, $TextLine);
 		}
 		$YPos -= $line_height;
 
@@ -225,47 +225,47 @@ if (DB_num_rows($Result) > 0) {
 		include('includes/PDFAckPageHeader.php');
 	} //end if need a new page headed up
 
-	$LeftOvers = $pdf->addTextWrap($XPos, $YPos - 80, 30, 10, _('Notes:'));
-	$LeftOvers = $pdf->addText($XPos, $YPos - 95, 10, $MyRow['comments']);
+	$LeftOvers = $PDF->addTextWrap($XPos, $YPos - 80, 30, 10, _('Notes:'));
+	$LeftOvers = $PDF->addText($XPos, $YPos - 95, 10, $MyRow['comments']);
 
 	if (mb_strlen($LeftOvers) > 1) {
 		$YPos -= 10;
-		$LeftOvers = $pdf->addTextWrap($XPos, $YPos, 700, 10, $LeftOvers);
+		$LeftOvers = $PDF->addTextWrap($XPos, $YPos, 700, 10, $LeftOvers);
 		if (mb_strlen($LeftOvers) > 1) {
 			$YPos -= 10;
-			$LeftOvers = $pdf->addTextWrap($XPos, $YPos, 700, 10, $LeftOvers);
+			$LeftOvers = $PDF->addTextWrap($XPos, $YPos, 700, 10, $LeftOvers);
 			if (mb_strlen($LeftOvers) > 1) {
 				$YPos -= 10;
-				$LeftOvers = $pdf->addTextWrap($XPos, $YPos, 700, 10, $LeftOvers);
+				$LeftOvers = $PDF->addTextWrap($XPos, $YPos, 700, 10, $LeftOvers);
 				if (mb_strlen($LeftOvers) > 1) {
 					$YPos -= 10;
-					$LeftOvers = $pdf->addTextWrap($XPos, $YPos, 10, $FontSize, $LeftOvers);
+					$LeftOvers = $PDF->addTextWrap($XPos, $YPos, 10, $FontSize, $LeftOvers);
 				}
 			}
 		}
 	}
 	$YPos -= ($line_height);
-	$LeftOvers = $pdf->addTextWrap($Page_Width - $Right_Margin - 70 - 655, $YPos, 655, $FontSize, _('Total Excluding Tax'), 'right');
-	$LeftOvers = $pdf->addTextWrap($Page_Width - $Right_Margin - 90, $YPos, 90, $FontSize, locale_number_format($AcknowledgementTotalEx, $MyRow['currdecimalplaces']), 'right');
+	$LeftOvers = $PDF->addTextWrap($Page_Width - $Right_Margin - 70 - 655, $YPos, 655, $FontSize, _('Total Excluding Tax'), 'right');
+	$LeftOvers = $PDF->addTextWrap($Page_Width - $Right_Margin - 90, $YPos, 90, $FontSize, locale_number_format($AcknowledgementTotalEx, $MyRow['currdecimalplaces']), 'right');
 	$YPos -= 12;
-	$LeftOvers = $pdf->addTextWrap($Page_Width - $Right_Margin - 70 - 655, $YPos, 655, $FontSize, _('Tax'), 'right');
-	$LeftOvers = $pdf->addTextWrap($Page_Width - $Right_Margin - 90, $YPos, 90, $FontSize, locale_number_format($TaxTotal, $MyRow['currdecimalplaces']), 'right');
+	$LeftOvers = $PDF->addTextWrap($Page_Width - $Right_Margin - 70 - 655, $YPos, 655, $FontSize, _('Tax'), 'right');
+	$LeftOvers = $PDF->addTextWrap($Page_Width - $Right_Margin - 90, $YPos, 90, $FontSize, locale_number_format($TaxTotal, $MyRow['currdecimalplaces']), 'right');
 	$YPos -= 12;
-	$LeftOvers = $pdf->addTextWrap($Page_Width - $Right_Margin - 70 - 655, $YPos, 655, $FontSize, _('Freight'), 'right');
-	$LeftOvers = $pdf->addTextWrap($Page_Width - $Right_Margin - 90, $YPos, 90, $FontSize, locale_number_format($MyRow['freightcost'], $MyRow['currdecimalplaces']), 'right');
+	$LeftOvers = $PDF->addTextWrap($Page_Width - $Right_Margin - 70 - 655, $YPos, 655, $FontSize, _('Freight'), 'right');
+	$LeftOvers = $PDF->addTextWrap($Page_Width - $Right_Margin - 90, $YPos, 90, $FontSize, locale_number_format($MyRow['freightcost'], $MyRow['currdecimalplaces']), 'right');
 	$YPos -= 12;
-	$LeftOvers = $pdf->addTextWrap($Page_Width - $Right_Margin - 70 - 655, $YPos, 655, $FontSize, _('Total Including Tax and Freight'), 'right');
-	$LeftOvers = $pdf->addTextWrap($Page_Width - $Right_Margin - 90, $YPos, 90, $FontSize, locale_number_format($AcknowledgementTotal, $MyRow['currdecimalplaces']), 'right');
+	$LeftOvers = $PDF->addTextWrap($Page_Width - $Right_Margin - 70 - 655, $YPos, 655, $FontSize, _('Total Including Tax and Freight'), 'right');
+	$LeftOvers = $PDF->addTextWrap($Page_Width - $Right_Margin - 90, $YPos, 90, $FontSize, locale_number_format($AcknowledgementTotal, $MyRow['currdecimalplaces']), 'right');
 
 	//now print T&C
 	//$PageNumber++;
 	//include ('includes/PDFAckPageHeader.php');
-	//$LeftOvers = $pdf->addTextWrap($XPos, $YPos,700,$FontSize, $Terms, 'left');
+	//$LeftOvers = $PDF->addTextWrap($XPos, $YPos,700,$FontSize, $Terms, 'left');
 
 	//while (mb_strlen($LeftOvers) > 1) {
 	//$YPos -= $line_height;
 	//check page break here
-	//$LeftOvers = $pdf->addTextWrap($XPos, $YPos,700,$FontSize, $LeftOvers, 'left');
+	//$LeftOvers = $PDF->addTextWrap($XPos, $YPos,700,$FontSize, $LeftOvers, 'left');
 	//}
 
 }
@@ -279,7 +279,7 @@ if ($ListCount == 0) {
 	include('includes/footer.php');
 	exit;
 } else {
-	$pdf->OutputI($_SESSION['DatabaseName'] . '_Acknowledgement_' . date('Y-m-d') . '.pdf');
-	$pdf->__destruct();
+	$PDF->OutputI($_SESSION['DatabaseName'] . '_Acknowledgement_' . date('Y-m-d') . '.pdf');
+	$PDF->__destruct();
 }
 ?>
