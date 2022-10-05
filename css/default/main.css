@@ -104,10 +104,12 @@ background:#eee;
 border-bottom:thin solid #000;
 }
 .page_title_text {
+position:relative;
 font-weight:700;
 color:#FFFFFF;
 text-align:center;
 padding:1px;
+top:-22%;
 clear: both;
 }
 .page_title_text img{
@@ -117,7 +119,21 @@ padding-right:9px;
 vertical-align:middle;
 }
 div.toplink {
+margin:4px;
+padding:4px;
+padding-left:30px;
+padding-right:15px;
+border-radius:7px;
+border: solid 1px #B1CBE1;
+background-image:url(images/previous.png);
+background-repeat: no-repeat;
+background-size:18px 18px;
+background-position:5px center;
+text-align:right;
 float:left;
+}
+.toplink a {
+color:#FFFFFF;
 }
 .clearfix {
 overflow: auto;
