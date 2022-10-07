@@ -182,13 +182,10 @@ if (!isset($_GET['OrderNumber']) and !isset($_SESSION['ProcessingOrder'])) {
 								salesorderdetails.orderlineno,
 								salesorderdetails.poline,
 								salesorderdetails.itemdue,
-								stockcosts.materialcost + stockcosts.labourcost + stockcosts.overheadcost AS standardcost
+								materialcost + labourcost + overheadcost AS standardcost
 							FROM salesorderdetails
 							INNER JOIN stockmaster
 							 	ON salesorderdetails.stkcode = stockmaster.stockid
-							LEFT JOIN stockcosts
-								ON stockcosts.stockid=stockmaster.stockid
-								AND succeeded=0
 							WHERE salesorderdetails.orderno ='" . $_GET['OrderNumber'] . "'
 							AND salesorderdetails.quantity - salesorderdetails.qtyinvoiced >0
 							ORDER BY salesorderdetails.orderlineno";
@@ -256,7 +253,7 @@ if (!isset($_GET['OrderNumber']) and !isset($_SESSION['ProcessingOrder'])) {
 		include ('includes/footer.php');
 		exit;
 	} //valid order returned from the entered order number
-	
+
 } else {
 
 	/* if processing, a dispatch page has been called and ${$StkItm->LineNumber} would have been set from the post
@@ -311,7 +308,7 @@ if (!isset($_GET['OrderNumber']) and !isset($_SESSION['ProcessingOrder'])) {
 			++$i;
 		}
 	} //end foreach lineitem
-	
+
 }
 
 /* Always display dispatch quantities and recalc freight for items being dispatched */
@@ -441,7 +438,7 @@ foreach ($_SESSION['Items' . $Identifier]->LineItems as $LnItm) {
 
 	$i = 1; // initialise the number of taxes iterated through
 	$TaxLineTotal = 0; //initialise tax total for the line
-	
+
 
 	foreach ($LnItm->Taxes as $Tax) {
 		if (empty($TaxTotals[$Tax->TaxAuthID])) {
@@ -567,7 +564,7 @@ if ($_SESSION['DoFreightCalc'] == True) {
 		<td class="number">', locale_number_format($FreightCost, $_SESSION['Items' . $Identifier]->CurrDecimalPlaces), '</td>';
 } else {
 	//	echo '<td colspan="1"></td>';
-	
+
 }
 ++$j;
 if (!isset($_POST['ChargeFreightCost'])) {
@@ -657,7 +654,7 @@ echo '</tbody>
 if (isset($_POST['ProcessInvoice']) and $_POST['ProcessInvoice'] != '') {
 
 	/* SQL to process the postings for sales invoices...
-	
+
 	/*First check there are lines on the dipatch with quantities to invoice
 	invoices can have a zero amount but there must be a quantity to invoice */
 
@@ -718,11 +715,11 @@ if (isset($_POST['ProcessInvoice']) and $_POST['ProcessInvoice'] != '') {
 						prnMsg(_('Invoicing the selected order would result in negative stock for a component of an assembly item on the order. The system parameters are set to prohibit negative stocks from occurring. This invoice cannot be created until the stock on hand is corrected.'), 'error', $NegRow['component'] . ' ' . $NegRow['description'] . ' - ' . _('Negative Stock Prohibited'));
 						$NegativesFound = true;
 					} // end if negative would result
-					
+
 				} //loop around the components of an assembly item
-				
+
 			} //end if its an assembly item - check component stock
-			
+
 		} //end of loop around items on the order for negative check
 		if ($NegativesFound) {
 			echo '</form>';
@@ -734,7 +731,7 @@ if (isset($_POST['ProcessInvoice']) and $_POST['ProcessInvoice'] != '') {
 		}
 
 	} //end of testing for negative stocks
-	
+
 
 	/* Now Get the area where the sale is to from the branches table */
 
@@ -1093,11 +1090,8 @@ if (isset($_POST['ProcessInvoice']) and $_POST['ProcessInvoice'] != '') {
 				/*To start with - accumulate the cost of the comoponents for use in journals later on */
 				$SQL = "SELECT bom.component,
 								bom.quantity,
-								stockcosts.materialcost+stockcosts.labourcost+stockcosts.overheadcost AS standard
+								materialcost+labourcost+overheadcost AS standard
 							FROM bom
-							LEFT JOIN stockcosts
-								ON bom.component=stockcosts.stockid
-								AND stockcosts.succeeeded=0
 							WHERE bom.parent='" . $OrderLine->StockID . "'
 								AND bom.effectiveto > CURRENT_DATE
 								AND bom.effectiveafter <= CURRENT_DATE";
@@ -1698,7 +1692,7 @@ if (isset($_POST['ProcessInvoice']) and $_POST['ProcessInvoice'] != '') {
 					$Result = DB_query($SQL, $ErrMsg, $DbgMsg, true);
 
 				} // end if the item being sold was an asset
-				
+
 			}
 			/*end of if sales integrated with debtors */
 
