@@ -367,7 +367,7 @@ function EnsureGLEntriesBalance ($TransType, $TransTypeNo) {
 	If Location is empty, it returns the QOO for all locations
 	If location is NOT empty, returns the QOO for that specific location.
 */
-function GetQuantityOnOrderDueToPurchaseOrders($StockID, $Location){
+function GetQuantityOnOrderDueToPurchaseOrders($StockID, $Location = ""){
 	if ($Location == ""){
 		// All locations to be considered
 		$WhereLocation = "";
@@ -409,7 +409,7 @@ function GetQuantityOnOrderDueToPurchaseOrders($StockID, $Location){
 	If Location is empty, it returns the QOO for all locations
 	If location is NOT empty, returns the QOO for that specific location.
 */
-function GetQuantityOnOrderDueToWorkOrders($StockID, $Location){
+function GetQuantityOnOrderDueToWorkOrders($StockID, $Location=""){
 	if ($Location == ''){
 		// All locations to be considered
 		$WhereLocation = '';

@@ -13,10 +13,10 @@ items into the cart as well as plain vanilla items outside of the kitset loop
 
 $AlreadyOnThisOrder =0;
 
-if (count($_SESSION['Items'.$identifier]->LineItems)>0
+if (count($_SESSION['Items'.$Identifier]->LineItems)>0
 	AND $_SESSION['SO_AllowSameItemMultipleTimes']==0){
 
-	foreach ($_SESSION['Items'.$identifier]->LineItems AS $OrderItem) {
+	foreach ($_SESSION['Items'.$Identifier]->LineItems AS $OrderItem) {
 
 	/* do a loop round the items on the order to see that the item
 	is not already on this order */
@@ -48,7 +48,7 @@ if ($AlreadyOnThisOrder!=1){
 					stockmaster.taxcatid
 			FROM stockmaster INNER JOIN locstock
 			ON stockmaster.stockid=locstock.stockid
-			WHERE locstock.loccode='" . $_SESSION['Items'.$identifier]->Location . "'
+			WHERE locstock.loccode='" . $_SESSION['Items'.$Identifier]->Location . "'
 			AND stockmaster.stockid = '". $NewItem . "'";
 
     $ErrMsg = _('The details for') . ' ' . $NewItem . ' ' . _('could not be retrieved because');
@@ -76,9 +76,9 @@ if ($AlreadyOnThisOrder!=1){
 		/*these checks above ensure that the item has a cost if the
 		config.php variable AllowSalesOfZeroCostItems is set to false */
 
-		   	if ($_SESSION['ExistingOrder' . $identifier]!=0){
+		   	if ($_SESSION['ExistingOrder' . $Identifier]!=0){
 				$UpdateDB = 'Yes';
-				$result = DB_query("SELECT MAX(orderlineno) AS newlineno FROM salesorderdetails WHERE orderno='" . $_SESSION['ExistingOrder' . $identifier] . "'");
+				$result = DB_query("SELECT MAX(orderlineno) AS newlineno FROM salesorderdetails WHERE orderno='" . $_SESSION['ExistingOrder' . $Identifier] . "'");
 				$MaxNumRow = DB_fetch_row($result);
 				if ($MaxNumRow[0] != '' AND $MaxNumRow[0] >= 0) {
 					$NewLineNo = $MaxNumRow[0]+1;
@@ -95,7 +95,7 @@ if ($AlreadyOnThisOrder!=1){
 				$QuantityOfDiscCat =0;
 				$result = DB_query("SELECT MAX(discountrate) AS discount
 										FROM discountmatrix
-										WHERE salestype='" .  $_SESSION['Items'.$identifier]->DefaultSalesType . "'
+										WHERE salestype='" .  $_SESSION['Items'.$Identifier]->DefaultSalesType . "'
 										AND discountcategory ='" . $myrow['discountcategory'] . "'
 										AND quantitybreak <" . $NewItemQty);
 				$DiscCatRow = DB_fetch_row($result);
@@ -108,7 +108,7 @@ if ($AlreadyOnThisOrder!=1){
 				$Discount = 0;
 			}
 
-			$Price = GetPrice($NewItem, $_SESSION['Items'.$identifier]->DebtorNo,$_SESSION['Items'.$identifier]->Branch, $NewItemQty);
+			$Price = GetPrice($NewItem, $_SESSION['Items'.$Identifier]->DebtorNo,$_SESSION['Items'.$Identifier]->Branch, $NewItemQty);
 
 			/* Need to check for sell through support deals */
 
@@ -119,7 +119,7 @@ if ($AlreadyOnThisOrder!=1){
 					INNER JOIN currencies
 						ON currencies.currabrev=suppliers.currcode
 					WHERE stockid='" . $NewItem . "'
-					AND (debtorno='" . $_SESSION['Items'.$identifier]->DebtorNo . "'
+					AND (debtorno='" . $_SESSION['Items'.$Identifier]->DebtorNo . "'
 						OR debtorno='')
 					AND effectivefrom <='" . Date('Y-m-d') . "'
 					AND effectiveto >='" . Date('Y-m-d') . "'";
@@ -149,7 +149,7 @@ if ($AlreadyOnThisOrder!=1){
 					INNER JOIN currencies
 					ON currencies.currabrev=suppliers.currcode
 					WHERE stockmaster.stockid='" . $NewItem . "'
-					AND (debtorno='" . $_SESSION['Items'.$identifier]->DebtorNo . "'
+					AND (debtorno='" . $_SESSION['Items'.$Identifier]->DebtorNo . "'
 						OR debtorno='')
 					AND effectivefrom <='" . Date('Y-m-d') . "'
 					AND effectiveto >='" . Date('Y-m-d') . "'";
@@ -165,10 +165,10 @@ if ($AlreadyOnThisOrder!=1){
 					}
 				}
 			}
-			if ($_SESSION['Items'.$identifier]->DefaultCurrency != $_SESSION['CompanyRecord']['currencydefault'] AND $SellSupportDiscount != 0) {
+			if ($_SESSION['Items'.$Identifier]->DefaultCurrency != $_SESSION['CompanyRecord']['currencydefault'] AND $SellSupportDiscount != 0) {
 				/* Customer currency is not the same as the functional/home currency so need to convert the rebate amount */
 				/* Would be better to have the currency rate held in the cart object so only have to run this query once - this is a hack for this purpose! */
-				$CurrResult = DB_query("SELECT rate FROM currencies WHERE currabrev='" . $_SESSION['Items'.$identifier]->DefaultCurrency . "'");
+				$CurrResult = DB_query("SELECT rate FROM currencies WHERE currabrev='" . $_SESSION['Items'.$Identifier]->DefaultCurrency . "'");
 				$CurrRow = DB_fetch_array($CurrResult);
 				$SellSupportDiscount *= $CurrRow['rate'];
 			}
@@ -183,17 +183,17 @@ if ($AlreadyOnThisOrder!=1){
 
 			$WithinCreditLimit = true;
 
-			if ($_SESSION['Items'.$identifier]->SpecialInstructions) {
-			  	prnMsg($_SESSION['Items'.$identifier]->SpecialInstructions,'warn');
+			if ($_SESSION['Items'.$Identifier]->SpecialInstructions) {
+			  	prnMsg($_SESSION['Items'.$Identifier]->SpecialInstructions,'warn');
             }
 			if ($_SESSION['CheckCreditLimits'] > 0 AND $AlreadyWarnedAboutCredit==false){
 				/*Check credit limits is 1 for warn	and 2 for prohibit sales */
-				$_SESSION['Items'.$identifier]->CreditAvailable -= round(($NewItemQty * $Price * (1- $Discount)),$_SESSION['Items'.$identifier]->CurrDecimalPlaces);
+				$_SESSION['Items'.$Identifier]->CreditAvailable -= round(($NewItemQty * $Price * (1- $Discount)),$_SESSION['Items'.$Identifier]->CurrDecimalPlaces);
 
-				if ($_SESSION['CheckCreditLimits']==1 AND $_SESSION['Items'.$identifier]->CreditAvailable <=0){
+				if ($_SESSION['CheckCreditLimits']==1 AND $_SESSION['Items'.$Identifier]->CreditAvailable <=0){
 					prnMsg(_('The customer account will breach their credit limit'),'warn');
 					$AlreadyWarnedAboutCredit = true;
-				} elseif ($_SESSION['CheckCreditLimits']==2 AND $_SESSION['Items'.$identifier]->CreditAvailable <=0){
+				} elseif ($_SESSION['CheckCreditLimits']==2 AND $_SESSION['Items'.$Identifier]->CreditAvailable <=0){
 					prnMsg(_('No more lines can be added to this order the customer account is currently at or over their credit limit'),'warn');
 					$WithinCreditLimit = false;
 					$AlreadyWarnedAboutCredit = true;
@@ -202,7 +202,7 @@ if ($AlreadyOnThisOrder!=1){
 
 
 			if ($WithinCreditLimit == true){
-				$_SESSION['Items'.$identifier]->add_to_cart ($NewItem,
+				$_SESSION['Items'.$Identifier]->add_to_cart ($NewItem,
 															$NewItemQty,
 															$myItemRow['description'],
 															$myItemRow['longdescription'],
@@ -230,7 +230,7 @@ if ($AlreadyOnThisOrder!=1){
 															$myItemRow['eoq'],
 															$myItemRow['nextserialno'],
 															$ExRate,
-															$identifier);
+															$Identifier);
 
 			}
          } else {
