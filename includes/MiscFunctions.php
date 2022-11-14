@@ -12,6 +12,10 @@ function prnMsg($Msg, $Type = 'info', $Prefix = '') {
 }
 
 function reverse_escape($str) {
+	if (is_null($str)) {
+		$str = '';
+	}
+
 	$search = array("\\\\", "\\0", "\\n", "\\r", "\Z", "\'", '\"');
 	$replace = array("\\", "\0", "\n", "\r", "\x1a", "'", '"');
 	return str_replace($search, $replace, $str);
