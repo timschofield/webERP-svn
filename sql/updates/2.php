@@ -5,10 +5,13 @@ AddColumn('groupcode', 'chartmaster', 'INT(11)', 'NOT NULL', "0", 'group_');
 AddColumn('parentgroupcode', 'accountgroups', 'INT(11)', 'NOT NULL', "0", 'parentgroupname');
 
 $i = 1;
-$SQL = "SELECT parentgroupname, groupname FROM accountgroups";
+$SQL = "SELECT parentgroupname, groupname , groupcode  FROM accountgroups";
 $Result = DB_query($SQL);
 while ($MyRow = DB_fetch_array($Result)) {
-	UpdateField('accountgroups', 'groupcode', ($i * 10), 'groupname=\'"' . $MyRow['groupname'] . '"\'');
+	if ($MyRow['groupcode'] == 0) {
+		$GroupCodeSQL = "UPDATE accountgroups SET groupcode='" . ($i * 10) . "' WHERE groupname='" . $MyRow['groupname']  . "'";
+		$GroupCodeResult = DB_query($GroupCodeSQL);
+	}
 	if ($MyRow['parentgroupname'] == '') {
 		$ParentGroupCode = 0;
 	} else {
@@ -17,7 +20,8 @@ while ($MyRow = DB_fetch_array($Result)) {
 		$ParentCodeRow = DB_fetch_array($ParentCodeResult);
 		$ParentGroupCode = $ParentCodeRow['groupcode'];
 	}
-	UpdateField('accountgroups', 'parentgroupcode', $ParentGroupCode, 'groupname=\'"' . $MyRow['groupname'] . '"\'');
+	$ParentGroupCodeSQL = "UPDATE accountgroups SET parentgroupcode='" . ($ParentGroupCode) . "' WHERE parentgroupname='" . $MyRow['groupname']  . "'";
+	$ParentGroupCodeResult = DB_query($ParentGroupCodeSQL);
 	++$i;
 }
 
@@ -36,9 +40,6 @@ ChangeColumnType('parentgroupname', 'accountgroups', 'VARCHAR(150)', 'NOT NULL',
 ChangeColumnType('groupcode', 'accountgroups', 'CHAR(10)', 'NOT NULL', '');
 ChangeColumnType('groupcode', 'chartmaster', 'CHAR(10)', 'NOT NULL', '');
 ChangeColumnType('parentgroupcode', 'accountgroups', 'CHAR(10)', 'NOT NULL', '');
-
-DropPrimaryKey('accountgroups', array('groupname'));
-AddPrimaryKey('accountgroups', array('groupcode'));
 
 DropIndex('chartmaster', 'Group_');
 AddIndex(array('groupcode'),'chartmaster', 'Group');

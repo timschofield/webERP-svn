@@ -36,9 +36,9 @@ CreateTable('salescommissions', "CREATE TABLE salescommissions (
   KEY (paid)
 )");
 
+AddColumn('commissionperiod', 'salesman', 'int(1)', 'NOT NULL', '0', 'current');
 AddColumn('glaccount', 'salesman', 'varchar(20)', 'NOT NULL', '1', 'commissionperiod');
 AddColumn('commissiontypeid', 'salesman', 'tinyint(4)', 'NOT NULL', '0', 'commissionperiod');
-AddColumn('commissionperiod', 'salesman', 'int(1)', 'NOT NULL', '0', 'current');
 
 AddColumn('commissionsact', 'companies', 'varchar(20)', 'NOT NULL', '1', 'grnact');
 AddColumn('npo', 'companies', 'TINYINT(1)', 'NOT NULL', '0', 'currencydefault');

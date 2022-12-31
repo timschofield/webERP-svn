@@ -280,7 +280,7 @@ function DropColumn($Column, $Table) {
 		$SQL = "desc " . $Table . " " . $Column;
 		$Result = DB_query($SQL);
 		if (isset($SQLFile) or DB_num_rows($Result) != 0) {
-			$Response = executeSQL("ALTER TABLE `" . $Table . "` DROP `" . $Column, False);
+			$Response = executeSQL("ALTER TABLE `" . $Table . "` DROP `" . $Column . "`", False);
 			if ($Response == 0) {
 				OutputResult(_('The column') . ' ' . $Column . ' ' . _('has been removed'), 'success');
 			} else {
