@@ -1,11 +1,10 @@
 <?php
-// DailyBankTransactions.php
-// Allows you to view all bank transactions for a selected date range, and the inquiry can be filtered by matched or unmatched transactions, or all transactions can be chosen.
+/* Allows you to view all bank transactions for a selected date range, and the inquiry can be filtered by matched or unmatched transactions, or all transactions can be chosen. */
+
 include ('includes/session.php');
 $Title = _('Bank Transactions Inquiry');
 $ViewTopic = 'GeneralLedger';
 $BookMark = 'DailyBankTransactions';
-
 include ('includes/header.php');
 
 if (isset($_GET['BankAccount'])) {
@@ -24,71 +23,81 @@ if (isset($_GET['ToTransDate'])) {
 
 if (!isset($_POST['Show'])) {
 
-	$SQL = "SELECT
-				bankaccounts.bankaccountname,
-				bankaccounts.accountcode,
-				bankaccounts.currcode
-			FROM bankaccounts
-			INNER JOIN chartmaster
-				ON bankaccounts.accountcode=chartmaster.accountcode
-			INNER JOIN bankaccountusers
-				ON bankaccounts.accountcode=bankaccountusers.accountcode
-			WHERE bankaccountusers.userid = '" . $_SESSION['UserID'] . "'
-			ORDER BY bankaccounts.bankaccountname";
+	$SQL = "SELECT 	bankaccountname,
+					bankaccounts.accountcode,
+					bankaccounts.currcode
+				FROM bankaccounts
+				INNER JOIN chartmaster
+					ON bankaccounts.accountcode=chartmaster.accountcode
+				INNER JOIN bankaccountusers
+					ON bankaccounts.accountcode=bankaccountusers.accountcode
+				WHERE bankaccountusers.userid = '" . $_SESSION['UserID'] . "'
+					AND chartmaster.language='" . $_SESSION['ChartLanguage'] . "'
+				ORDER BY bankaccountname";
+
 	$ErrMsg = _('The bank accounts could not be retrieved because');
 	$DbgMsg = _('The SQL used to retrieve the bank accounts was');
 	$AccountsResults = DB_query($SQL, $ErrMsg, $DbgMsg);
 
-	echo '<p class="page_title_text"><img alt="" src="', $RootPath, '/css/', $Theme, '/images/bank.png" title="', // Icon image.
-	$Title, '" /> ', // Icon title.
-	$Title, '</p>', // Page title.
-	'<form action="', htmlspecialchars(basename(__FILE__), ENT_QUOTES, 'UTF-8'), '" method="post">', '<input type="hidden" name="FormID" value="', $_SESSION['FormID'], '" />', '<table>
-			<tr>
-				<td>', _('Bank Account'), ':</td>
-				<td><select name="BankAccount">';
+	echo '<p class="page_title_text">
+			<img alt="" src="', $RootPath, '/css/', $_SESSION['Theme'], '/images/bank.png" title="', _('Bank Transactions Inquiry'), '" />', _('Bank Transactions Inquiry'), '
+		</p>'; // Page title.
+	echo '<form action="', htmlspecialchars(basename(__FILE__), ENT_QUOTES, 'UTF-8'), '" method="post">';
+	echo '<input type="hidden" name="FormID" value="', $_SESSION['FormID'], '" />';
+
+	echo '<fieldset>
+			<legend>', _('Select Report Criteria'), '</legend>
+			<field>
+				<label for="BankAccount">', _('Bank Account'), ':</label>
+				<select name="BankAccount" autofocus="autofocus">';
 
 	if (DB_num_rows($AccountsResults) == 0) {
-		echo '</select></td>
-				</tr>
-			</table>';
+		echo '</select>
+			</field>
+		</fieldset>';
 		prnMsg(_('Bank Accounts have not yet been defined. You must first') . ' <a href="' . $RootPath . '/BankAccounts.php">' . _('define the bank accounts') . '</a> ' . _('and general ledger accounts to be affected'), 'warn');
 		include ('includes/footer.php');
 		exit;
 	} else {
 		while ($MyRow = DB_fetch_array($AccountsResults)) {
-			// Lists bank accounts order by bankaccountname
+			/*list the bank account names */
 			if (!isset($_POST['BankAccount']) and $MyRow['currcode'] == $_SESSION['CompanyRecord']['currencydefault']) {
 				$_POST['BankAccount'] = $MyRow['accountcode'];
 			}
-			echo '<option', ((isset($_POST['BankAccount']) and $_POST['BankAccount'] == $MyRow['accountcode']) ? ' selected="selected"' : ''), ' value="', $MyRow['accountcode'], '">', $MyRow['bankaccountname'], ' - ', $MyRow['currcode'], '</option>';
+			if (isset($_POST['BankAccount']) and $_POST['BankAccount'] == $MyRow['accountcode']) {
+				echo '<option selected="selected" value="', $MyRow['accountcode'], '">', $MyRow['bankaccountname'], ' - ', $MyRow['currcode'], '</option>';
+			} else {
+				echo '<option value="', $MyRow['accountcode'], '">', $MyRow['bankaccountname'], ' - ', $MyRow['currcode'], '</option>';
+			}
 		}
 		echo '</select>
-				</td>
-			</tr>';
+			<fieldhelp>', _('Select the bank account to report on.'), '</fieldhelp>
+		</field>';
 	}
-	echo '<tr>
-			<td>', _('Transactions Dated From'), ':</td>
-			<td><input type="text" name="FromTransDate" class="date" required="required" maxlength="10" size="11" onchange="isDate(this, this.value, ', "'", $_SESSION['DefaultDateFormat'], "'", ')" value="', date($_SESSION['DefaultDateFormat']), '" /></td>
-		</tr>
-		<tr>
-			<td>' . _('Transactions Dated To') . ':</td>
-			<td><input type="text" name="ToTransDate" class="date" required="required" maxlength="10" size="11" onchange="isDate(this, this.value, ', "'", $_SESSION['DefaultDateFormat'], "'", ')" value="', date($_SESSION['DefaultDateFormat']), '" /></td>
-		</tr>
-		<tr>
-			<td>', _('Show transactions'), '</td>
-			<td>
-				<select name="ShowType">
-					<option value="All">', _('All'), '</option>
-					<option value="Unmatched">', _('Unmatched'), '</option>
-					<option value="Matched">', _('Matched'), '</option>
-				</select>
-			</td>
-		</tr>
-		</table>
+	echo '<field>
+			<label for="FromTransDate">', _('Transactions Dated From'), ':</label>
+			<input type="text" name="FromTransDate" class="date" required="required" maxlength="10" size="11" onchange="isDate(this, this.value, ', "'", $_SESSION['DefaultDateFormat'], "'", ')" value="', date($_SESSION['DefaultDateFormat']), '" />
+			<fieldhelp>', _('Choose the starting date for the report. Transactions on this date will be included.'), '</fieldhelp>
+		</field>
+		<field>
+			<label for="ToTransDate">', _('Transactions Dated To'), ':</label>
+			<input type="text" name="ToTransDate" class="date" required="required" maxlength="10" size="11" onchange="isDate(this, this.value, ', "'", $_SESSION['DefaultDateFormat'], "'", ')" value="', date($_SESSION['DefaultDateFormat']), '" />
+			<fieldhelp>', _('Select the closing date for the report. Transactions on this date will be included.'), '</fieldhelp>
+		</field>
+		<field>
+			<label for="ShowType">', _('Show transactions'), '</label>
+			<select name="ShowType">
+				<option value="All">', _('All'), '</option>
+				<option value="Unmatched">', _('Unmatched'), '</option>
+				<option value="Matched">', _('Matched'), '</option>
+			</select>
+			<fieldhelp>', _('Select whether to show only matched or unmatched transactions. To show all transactions choose All.'), '</fieldhelp>
+		</field>
+		</fieldset>
 		<div class="centre">
 			<input type="submit" name="Show" value="', _('Show transactions'), '" />
 		</div>
-		</form>';
+	</form>';
 } else {
 	$SQL = "SELECT 	bankaccountname,
 					bankaccounts.currcode,
@@ -149,37 +158,37 @@ if (!isset($_POST['Show'])) {
 		echo '<table>
 				<thead>
 					<tr>
-						<th>' . _('Date') . '</th>
-						<th>' . _('Transaction type') . '</th>
-						<th>' . _('Number') . '</th>
-						<th>' . _('Type') . '</th>
-						<th>' . _('Reference') . '</th>
-						<th>' . _('Narrative') . '</th>
-						<th>' . _('Number') . '</th>
-						<th>' . _('Amount in') . ' ' . $BankDetailRow['currcode'] . '</th>
-						<th>' . _('Balance') . ' ' . $BankDetailRow['currcode'] . '</th>';
+						<th>', _('Date'), '</th>
+						<th>', _('Transaction type'), '</th>
+						<th>', _('Number'), '</th>
+						<th>', _('Type'), '</th>
+						<th>', _('Reference'), '</th>
+						<th>', _('Narrative'), '</th>
+						<th>', _('Number'), '</th>
+						<th>', _('Amount in'), ' ', $BankDetailRow['currcode'], '</th>
+						<th>', _('Balance'), ' ', $BankDetailRow['currcode'], '</th>';
 		if ($BankDetailRow['currcode'] != $_SESSION['CompanyRecord']['currencydefault']) {
-			echo '<th>' . _('Amount in') . ' ' . $_SESSION['CompanyRecord']['currencydefault'] . '</th>
-				<th>' . _('Balance') . ' ' . $_SESSION['CompanyRecord']['currencydefault'] . '</th>';
+			echo '<th>', _('Amount in'), ' ', $_SESSION['CompanyRecord']['currencydefault'], '</th>
+				<th>', _('Balance'), ' ', $_SESSION['CompanyRecord']['currencydefault'], '</th>';
 		}
-		echo '<th>' . _('Matched') . '</th>
+		echo '<th>', _('Matched'), '</th>
 			</tr>
 		</thead>';
 
 		$AccountCurrTotal = $BalancesRow['balance'];
 		$LocalCurrTotal = $BalancesRow['fbalance'];
 		if ($BankDetailRow['currcode'] != $_SESSION['CompanyRecord']['currencydefault']) {
-			echo '<tr class="striped_row">
-					<td colspan="8">' . _('Balances Brought Forward') . '</td>
-					<td class="number">' . locale_number_format($BalancesRow['balance'], $BankDetailRow['decimalplaces']) . '</td>
+			echo '<tr class="total_row">
+					<td colspan="8">', _('Balances Brought Forward'), '</td>
+					<td class="number">', locale_number_format($BalancesRow['balance'], $BankDetailRow['decimalplaces']), '</td>
 					<td></td>
-					<td class="number">' . locale_number_format($BalancesRow['fbalance'], $_SESSION['CompanyRecord']['decimalplaces']) . '</td>
+					<td class="number">', locale_number_format($BalancesRow['fbalance'], $_SESSION['CompanyRecord']['decimalplaces']), '</td>
 					<td></td>
 				</tr>';
 		} else {
-			echo '<tr class="striped_row">
-					<td colspan="8">' . _('Balances Brought Forward') . '</td>
-					<td class="number">' . locale_number_format($BalancesRow['balance'], $BankDetailRow['decimalplaces']) . '</td>
+			echo '<tr class="total_row">
+					<td colspan="8">', _('Balances Brought Forward'), '</td>
+					<td class="number">', locale_number_format($BalancesRow['balance'], $BankDetailRow['decimalplaces']), '</td>
 					<td></td>
 				</tr>';
 		}
@@ -199,44 +208,45 @@ if (!isset($_POST['Show'])) {
 
 			if ($_POST['ShowType'] == 'All' or ($_POST['ShowType'] == 'Unmatched' and $Matched == _('No')) or ($_POST['ShowType'] == 'Matched' and $Matched == _('Yes'))) {
 				echo '<tr class="striped_row">
-						<td>' . ConvertSQLDate($MyRow['transdate']) . '</td>
-						<td>' . _($MyRow['typename']) . '</td>
-						<td class="number"><a href="' . $RootPath . '/GLTransInquiry.php?TypeID=' . $MyRow['typeid'] . '&amp;TransNo=' . $MyRow['transno'] . '">' . $MyRow['transno'] . '</a></td>
-						<td>' . $MyRow['banktranstype'] . '</td>
-						<td>' . $MyRow['ref'] . '</td>
-						<td>' . $MyRow['narrative'] . '</td>
-						<td>' . $MyRow['chequeno'] . '</td>
-						<td class="number">' . locale_number_format($MyRow['amount'], $BankDetailRow['decimalplaces']) . '</td>
-						<td class="number">' . locale_number_format($AccountCurrTotal, $BankDetailRow['decimalplaces']) . '</td>';
+						<td>', ConvertSQLDate($MyRow['transdate']), '</td>
+						<td>', _($MyRow['typename']), '</td>
+						<td class="number"><a href="', $RootPath, '/GLTransInquiry.php?TypeID=', $MyRow['typeid'], '&amp;TransNo=', $MyRow['transno'], '">', $MyRow['transno'], '</a></td>
+						<td>', $MyRow['banktranstype'], '</td>
+						<td>', $MyRow['ref'], '</td>
+						<td>', $MyRow['narrative'], '</td>
+						<td>', $MyRow['chequeno'], '</td>
+						<td class="number">', locale_number_format($MyRow['amount'], $BankDetailRow['decimalplaces']), '</td>
+						<td class="number">', locale_number_format($AccountCurrTotal, $BankDetailRow['decimalplaces']), '</td>';
 				if ($BankDetailRow['currcode'] != $_SESSION['CompanyRecord']['currencydefault']) {
-					echo '<td class="number">' . locale_number_format($MyRow['amount'] / $MyRow['functionalexrate'] / $MyRow['exrate'], $_SESSION['CompanyRecord']['decimalplaces']) . '</td>
-						<td class="number">' . locale_number_format($LocalCurrTotal, $_SESSION['CompanyRecord']['decimalplaces']) . '</td>';
+					echo '<td class="number">', locale_number_format($MyRow['amount'] / $MyRow['functionalexrate'] / $MyRow['exrate'], $_SESSION['CompanyRecord']['decimalplaces']), '</td>
+						<td class="number">', locale_number_format($LocalCurrTotal, $_SESSION['CompanyRecord']['decimalplaces']), '</td>';
 				}
-				echo '<td class="number">' . $Matched . '</td>
+				echo '<td class="number">', $Matched, '</td>
 					</tr>';
 			}
 		}
 		if ($BankDetailRow['currcode'] != $_SESSION['CompanyRecord']['currencydefault']) {
-			echo '<tr class="striped_row">
-					<td colspan="8">' . _('Balances Brought Forward') . '</td>
-					<td class="number">' . locale_number_format($AccountCurrTotal, $BankDetailRow['decimalplaces']) . '</td>
+			echo '<tr class="total_row">
+					<td colspan="8">', _('Balances Brought Forward'), '</td>
+					<td class="number">', locale_number_format($AccountCurrTotal, $BankDetailRow['decimalplaces']), '</td>
 					<td></td>
-					<td class="number">' . locale_number_format($BalancesRow['fbalance'], $_SESSION['CompanyRecord']['decimalplaces']) . '</td>
+					<td class="number">', locale_number_format($BalancesRow['fbalance'], $_SESSION['CompanyRecord']['decimalplaces']), '</td>
 					<td></td>
 				</tr>';
 		} else {
-			echo '<tr class="striped_row">
-					<td colspan="8">' . _('Balances Brought Forward') . '</td>
-					<td class="number">' . locale_number_format($LocalCurrTotal, $BankDetailRow['decimalplaces']) . '</td>
+			echo '<tr class="total_row">
+					<td colspan="8">', _('Balances Brought Forward'), '</td>
+					<td class="number">', locale_number_format($LocalCurrTotal, $BankDetailRow['decimalplaces']), '</td>
 					<td></td>
 				</tr>';
 		}
 		echo '</table>';
 	} //end if no bank trans in the range to show
-	echo '<form action="' . htmlspecialchars(basename(__FILE__), ENT_QUOTES, 'UTF-8') . '" method="post">';
-	echo '<input type="hidden" name="FormID" value="' . $_SESSION['FormID'] . '" />';
-	echo '<div class="centre"><input type="submit" name="Return" value="' . _('Select Another Date') . '" /></div>';
+	echo '<form action="', htmlspecialchars(basename(__FILE__), ENT_QUOTES, 'UTF-8'), '" method="post">';
+	echo '<input type="hidden" name="FormID" value="', $_SESSION['FormID'], '" />';
+	echo '<div class="centre"><input type="submit" name="Return" value="', _('Select Another Date'), '" /></div>';
 	echo '</form>';
 }
 include ('includes/footer.php');
+
 ?>
