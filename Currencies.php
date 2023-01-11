@@ -319,6 +319,9 @@ if (!isset($SelectedCurrency)) {
 		} else {
 			$ShowInWebText = _('No');
 		}
+		if ($MyRow['rate'] == 0) {
+			$MyRow['rate'] = 1;
+		}
 
 		if ($MyRow['currabrev'] != $FunctionalCurrency) {
 			echo '<tr class="striped_row">
