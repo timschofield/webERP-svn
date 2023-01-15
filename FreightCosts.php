@@ -1,85 +1,104 @@
 <?php
-
-
-include('includes/session.php');
+include ('includes/session.php');
 $Title = _('Freight Costs Maintenance');
-include('includes/header.php');
-include('includes/CountriesArray.php');
+include ('includes/header.php');
+include ('includes/CountriesArray.php');
 
-if (isset($_GET['LocationFrom'])){
+if (isset($_GET['LocationFrom'])) {
 	$LocationFrom = $_GET['LocationFrom'];
-} elseif (isset($_POST['LocationFrom'])){
+} elseif (isset($_POST['LocationFrom'])) {
 	$LocationFrom = $_POST['LocationFrom'];
 }
-if (isset($_GET['ShipperID'])){
+if (isset($_GET['ShipperID'])) {
 	$ShipperID = $_GET['ShipperID'];
-} elseif (isset($_POST['ShipperID'])){
+} elseif (isset($_POST['ShipperID'])) {
 	$ShipperID = $_POST['ShipperID'];
 }
-if (isset($_GET['SelectedFreightCost'])){
+if (isset($_GET['SelectedFreightCost'])) {
 	$SelectedFreightCost = $_GET['SelectedFreightCost'];
-} elseif (isset($_POST['SelectedFreightCost'])){
+} elseif (isset($_POST['SelectedFreightCost'])) {
 	$SelectedFreightCost = $_POST['SelectedFreightCost'];
 }
 
-if (!isset($LocationFrom) OR !isset($ShipperID)) {
-	echo '<div class="centre"><p class="page_title_text"><img src="'.$RootPath.'/css/'.$Theme.'/images/supplier.png" title="' .
-		_('Freight Costs') . '" alt="" />' . ' ' . $Title . '</p></div>';
+if (!isset($LocationFrom) or !isset($ShipperID)) {
+	echo '<p class="page_title_text">
+			<img src="', $RootPath, '/css/', $_SESSION['Theme'], '/images/supplier.png" title="', _('Freight Costs'), '" alt="" />', ' ', $Title, '
+		</p>';
 
-	echo '<form method="post" action="' . htmlspecialchars($_SERVER['PHP_SELF'],ENT_QUOTES,'UTF-8') . '">';
-    echo '<div>';
-	echo '<input type="hidden" name="FormID" value="' . $_SESSION['FormID'] . '" />';
-	$sql = "SELECT shippername, shipper_id FROM shippers";
-	$ShipperResults = DB_query($sql);
+	echo '<form method="post" action="', htmlspecialchars(basename(__FILE__), ENT_QUOTES, 'UTF-8'), '">';
+	echo '<input type="hidden" name="FormID" value="', $_SESSION['FormID'], '" />';
+	$SQL = "SELECT shippername, shipper_id FROM shippers";
+	$ShipperResults = DB_query($SQL);
 
-	echo '<table class="selection">
-		<tr>
-			<td>' . _('Select A Freight Company to set up costs for') . '</td>
-			<td><select name="ShipperID">';
+	echo '<fieldset>
+			<legend>', _('Criteria for Freight Cost record'), '</legend>
+				<field>
+					<label for="ShipperID">', _('Select A Freight Company to set up costs for'), '</label>
+					<select name="ShipperID" autofocus="autofocus">';
 
-	while ($myrow = DB_fetch_array($ShipperResults)){
-		echo '<option value="' . $myrow['shipper_id'] . '">' . $myrow['shippername'] . '</option>';
+	while ($MyRow = DB_fetch_array($ShipperResults)) {
+		if ($MyRow['shipper_id'] == $_SESSION['Default_Shipper']) {
+			echo '<option selected="selected" value="', $MyRow['shipper_id'], '">', $MyRow['shippername'], '</option>';
+		} else {
+			echo '<option value="', $MyRow['shipper_id'], '">', $MyRow['shippername'], '</option>';
+		}
 	}
-	echo '</select></td></tr>
-			<tr>
-				<td>' . _('Select the warehouse') . ' (' . _('ship from location') . ')</td>
-				<td><select name="LocationFrom">';
+	echo '</select>
+		<fieldhelp>', _('Select a shipper whose costs you want to maintain.'), '</fieldhelp>
+	</field>';
 
-	$sql = "SELECT locations.loccode,
-					locationname
-			FROM locations INNER JOIN locationusers ON locationusers.loccode=locations.loccode AND locationusers.userid='" .  $_SESSION['UserID'] . "' AND locationusers.canupd=1";
-	$LocationResults = DB_query($sql);
+	echo '<field>
+			<label for="LocationFrom">', _('Select the warehouse'), ' (', _('ship from location'), ')</label>
+			<select name="LocationFrom">';
 
-	while ($myrow = DB_fetch_array($LocationResults)){
-		echo '<option value="' . $myrow['loccode'] . '">' . $myrow['locationname'] . '</option>';
+	$SQL = "SELECT locationname,
+					locations.loccode
+				FROM locations
+				INNER JOIN locationusers
+					ON locationusers.loccode=locations.loccode
+					AND locationusers.userid='" . $_SESSION['UserID'] . "'
+					AND locationusers.canupd=1";
+	$LocationResults = DB_query($SQL);
+
+	while ($MyRow = DB_fetch_array($LocationResults)) {
+		if ($MyRow['loccode'] == $_SESSION['UserStockLocation']) {
+			echo '<option selected="selected" value="', $MyRow['loccode'], '">', $MyRow['locationname'], '</option>';
+		} else {
+			echo '<option value="', $MyRow['loccode'], '">', $MyRow['locationname'], '</option>';
+		}
 	}
 
-	echo '</select></td></tr>
-			</table>
-			<br /><div class="centre"><input type="submit" value="' . _('Accept') . '" name="Accept" /></div>
-            </div>
-			</form>';
+	echo '</select>
+		<fieldhelp>', _('Select a location for this shipper to ship from/to.'), '</fieldhelp>
+	</field>';
+
+	echo '</fieldset>';
+
+	echo '<div class="centre">
+			<input type="submit" value="', _('Accept'), '" name="Accept" />
+		</div>';
+	echo '</form>';
 
 } else {
 
-	$sql = "SELECT shippername FROM shippers WHERE shipper_id = '".$ShipperID."'";
-	$ShipperResults = DB_query($sql);
-	$myrow = DB_fetch_row($ShipperResults);
-	$ShipperName = $myrow[0];
-	$sql = "SELECT locationname FROM locations WHERE loccode = '".$LocationFrom."'";
-	$LocationResults = DB_query($sql);
-	$myrow = DB_fetch_row($LocationResults);
-	$LocationName = $myrow[0];
-
-	if (isset($ShipperID)){
-		$Title .= ' ' . _('For') . ' ' . $ShipperName;
+	$SQL = "SELECT shippername FROM shippers WHERE shipper_id = '" . $ShipperID . "'";
+	$ShipperResults = DB_query($SQL);
+	$MyRow = DB_fetch_row($ShipperResults);
+	$ShipperName = $MyRow[0];
+	$SQL = "SELECT locationname FROM locations WHERE loccode = '" . $LocationFrom . "'";
+	$LocationResults = DB_query($SQL);
+	$MyRow = DB_fetch_row($LocationResults);
+	$LocationName = $MyRow[0];
+	if (isset($ShipperID)) {
+		$Title.= ' ' . _('For') . ' ' . $ShipperName;
 	}
-	if (isset($LocationFrom)){
-		$Title .= ' ' . _('From') . ' ' . $LocationName;
+	if (isset($LocationFrom)) {
+		$Title.= ' ' . _('From') . ' ' . $LocationName;
 	}
 
-	echo '<div class="centre"><p class="page_title_text"><img src="'.$RootPath.'/css/'.$Theme.'/images/supplier.png" title="' .
-		_('Freight Costs') . '" alt="" />' . ' ' . $Title . '</p></div>';
+	echo '<p class="page_title_text">
+			<img src="', $RootPath, '/css/', $_SESSION['Theme'], '/images/supplier.png" title="', _('Freight Costs'), '" alt="" />', ' ', $Title, '
+		</p>';
 
 }
 
@@ -89,38 +108,37 @@ if (isset($_POST['submit'])) {
 	$InputError = 0;
 
 	//first off validate inputs sensible
-
-	if (trim($_POST['DestinationCountry']) == '' ) {
+	if (trim($_POST['DestinationCountry']) == '') {
 		$_POST['DestinationCountry'] = $CountriesArray[$_SESSION['CountryOfOperation']];
 	}
-	if (trim($_POST['CubRate']) == '' ) {
+	if (trim($_POST['CubRate']) == '') {
 		$_POST['CubRate'] = 0;
 	}
-	if (trim($_POST['KGRate']) == '' ) {
+	if (trim($_POST['KGRate']) == '') {
 		$_POST['KGRate'] = 0;
 	}
-	if (trim($_POST['MAXKGs']) == '' ) {
+	if (trim($_POST['MAXKGs']) == '') {
 		$_POST['MAXKGs'] = 0;
 	}
-	if (trim($_POST['MAXCub']) == '' ) {
+	if (trim($_POST['MAXCub']) == '') {
 		$_POST['MAXCub'] = 0;
 	}
-	if (trim($_POST['FixedPrice']) == '' ){
+	if (trim($_POST['FixedPrice']) == '') {
 		$_POST['FixedPrice'] = 0;
 	}
-	if (trim($_POST['MinimumChg']) == '' ) {
+	if (trim($_POST['MinimumChg']) == '') {
 		$_POST['MinimumChg'] = 0;
 	}
 
-	if (!is_double((double) $_POST['CubRate']) OR !is_double((double) $_POST['KGRate']) OR !is_double((double) $_POST['MAXKGs']) OR !is_double((double) $_POST['MAXCub']) OR !is_double((double) $_POST['FixedPrice']) OR !is_double((double) $_POST['MinimumChg'])) {
-		$InputError=1;
-		prnMsg(_('The entries for Cubic Rate, KG Rate, Maximum Weight, Maximum Volume, Fixed Price and Minimum charge must be numeric'),'warn');
+	if (!is_double((double)$_POST['CubRate']) or !is_double((double)$_POST['KGRate']) or !is_double((double)$_POST['MAXKGs']) or !is_double((double)$_POST['MAXCub']) or !is_double((double)$_POST['FixedPrice']) or !is_double((double)$_POST['MinimumChg'])) {
+		$InputError = 1;
+		prnMsg(_('The entries for Cubic Rate, KG Rate, Maximum Weight, Maximum Volume, Fixed Price and Minimum charge must be numeric'), 'warn');
 	}
 
-	if (isset($SelectedFreightCost) AND $InputError !=1) {
+	if (isset($SelectedFreightCost) and $InputError != 1) {
 
-		$sql = "UPDATE freightcosts
-				SET	locationfrom='".$LocationFrom."',
+		$SQL = "UPDATE freightcosts
+				SET	locationfrom='" . $LocationFrom . "',
 					destinationcountry='" . $_POST['DestinationCountry'] . "',
 					destination='" . $_POST['Destination'] . "',
 					shipperid='" . $ShipperID . "',
@@ -132,13 +150,13 @@ if (isset($_POST['submit'])) {
 					minimumchg= '" . $_POST['MinimumChg'] . "'
 			WHERE shipcostfromid='" . $SelectedFreightCost . "'";
 
-		$msg = _('Freight cost record updated');
+		$Msg = _('Freight cost record updated');
 
-	} elseif ($InputError !=1) {
+	} elseif ($InputError != 1) {
 
-	/*Selected freight cost is null cos no item selected on first time round so must be adding a record must be submitting new entries */
-
-		$sql = "INSERT INTO freightcosts (locationfrom,
+		/*Selected freight cost is null cos no item selected on first time round so must be adding a record must be submitting new entries */
+		$LocationFrom = stripslashes($LocationFrom);
+		$SQL = "INSERT INTO freightcosts (locationfrom,
 											destinationcountry,
 											destination,
 											shipperid,
@@ -149,7 +167,7 @@ if (isset($_POST['submit'])) {
 											fixedprice,
 											minimumchg)
 										VALUES (
-											'".$LocationFrom."',
+											'" . $LocationFrom . "',
 											'" . $_POST['DestinationCountry'] . "',
 											'" . $_POST['Destination'] . "',
 											'" . $ShipperID . "',
@@ -157,21 +175,22 @@ if (isset($_POST['submit'])) {
 											'" . $_POST['KGRate'] . "',
 											'" . $_POST['MAXKGs'] . "',
 											'" . $_POST['MAXCub'] . "',
-											'" . $_POST['FixedPrice'] ."',
+											'" . $_POST['FixedPrice'] . "',
 											'" . $_POST['MinimumChg'] . "'
 										)";
 
-		$msg = _('Freight cost record inserted');
+		$Msg = _('Freight cost record inserted');
 
 	}
 	//run the SQL from either of the above possibilites
-
 	$ErrMsg = _('The freight cost record could not be updated because');
-	$result = DB_query($sql,$ErrMsg);
+	$Result = DB_query($SQL, $ErrMsg);
 
-	prnMsg($msg,'success');
+	prnMsg($Msg, 'success');
 
 	unset($SelectedFreightCost);
+	unset($_POST['Destination']);
+	unset($_POST['DestinationCountry']);
 	unset($_POST['CubRate']);
 	unset($_POST['KGRate']);
 	unset($_POST['MAXKGs']);
@@ -181,16 +200,16 @@ if (isset($_POST['submit'])) {
 
 } elseif (isset($_GET['delete'])) {
 
-	$sql = "DELETE FROM freightcosts WHERE shipcostfromid='" . $SelectedFreightCost . "'";
-	$result = DB_query($sql);
-	prnMsg( _('Freight cost record deleted'),'success');
-	unset ($SelectedFreightCost);
+	$SQL = "DELETE FROM freightcosts WHERE shipcostfromid='" . $SelectedFreightCost . "'";
+	$Result = DB_query($SQL);
+	prnMsg(_('Freight cost record deleted'), 'success');
+	unset($SelectedFreightCost);
 	unset($_GET['delete']);
 }
 
-if (!isset($SelectedFreightCost) AND isset($LocationFrom) AND isset($ShipperID)){
+if (!isset($SelectedFreightCost) and isset($LocationFrom) and isset($ShipperID)) {
 
-	$sql = "SELECT shipcostfromid,
+	$SQL = "SELECT shipcostfromid,
 					destinationcountry,
 					destination,
 					cubrate,
@@ -200,171 +219,175 @@ if (!isset($SelectedFreightCost) AND isset($LocationFrom) AND isset($ShipperID))
 					fixedprice,
 					minimumchg
 				FROM freightcosts
-				WHERE freightcosts.locationfrom = '".$LocationFrom. "'
+				WHERE freightcosts.locationfrom = '" . $LocationFrom . "'
 				AND freightcosts.shipperid = '" . $ShipperID . "'
 				ORDER BY destinationcountry,
 						destination,
 						maxkgs,
 						maxcub";
 
-	$result = DB_query($sql);
+	$Result = DB_query($SQL);
 
-	echo '<br /><table class="selection">';
-	$TableHeader = '<tr>
-					<th>' . _('Country') . '</th>
-					<th>' . _('Destination') . '</th>
-					<th>' . _('Cubic Rate') . '</th>
-					<th>' . _('KG Rate') . '</th>
-					<th>' . _('MAX KGs') . '</th>
-					<th>' . _('MAX Volume') . '</th>
-					<th>' . _('Fixed Price') . '</th>
-					<th>' . _('Minimum Charge') . '</th>
-					</tr>';
+	if (DB_num_rows($Result) > 0) {
+		echo '<table>
+				<thead>
+					<tr>
+						<th>', _('Country'), '</th>
+						<th>', _('Zone'), '</th>
+						<th>', _('Cubic Rate'), '</th>
+						<th>', _('KG Rate'), '</th>
+						<th>', _('MAX KGs'), '</th>
+						<th>', _('MAX Volume'), '</th>
+						<th>', _('Fixed Price'), '</th>
+						<th>', _('Minimum Charge'), '</th>
+						<th colspan="2"></th>
+					</tr>
+				</thead>';
+		echo '<tbody>';
+		$k = 0; //row counter to determine background colour
+		while ($MyRow = DB_fetch_array($Result)) {
 
-	echo $TableHeader;
-
-	$PageFullCounter=0;
-
-	while ($myrow = DB_fetch_row($result)) {
-		$PageFullCounter++;
-		if ($PageFullCounter==15){
-				$PageFullCounter=0;
-				echo $TableHeader;
-
+			echo '<tr class="striped_row">
+					<td>', $MyRow['destinationcountry'], '</td>
+					<td>', $MyRow['destination'], '</td>
+					<td class="number">', locale_number_format($MyRow['cubrate'], $_SESSION['CompanyRecord']['decimalplaces']), '</td>
+					<td class="number">', locale_number_format($MyRow['kgrate'], $_SESSION['CompanyRecord']['decimalplaces']), '</td>
+					<td class="number">', locale_number_format($MyRow['maxkgs'], 2), '</td>
+					<td class="number">', locale_number_format($MyRow['maxcub'], 3), '</td>
+					<td class="number">', locale_number_format($MyRow['fixedprice'], $_SESSION['CompanyRecord']['decimalplaces']), '</td>
+					<td class="number">', locale_number_format($MyRow['minimumchg'], $_SESSION['CompanyRecord']['decimalplaces']), '</td>
+					<td><a href="', htmlspecialchars(basename(__FILE__), ENT_QUOTES, 'UTF-8'), '?&amp;SelectedFreightCost=', urlencode($MyRow['shipcostfromid']), '&amp;LocationFrom=', urlencode($LocationFrom), '&amp;ShipperID=', urlencode($ShipperID), '">', _('Edit'), '</a></td>
+					<td><a href="', htmlspecialchars(basename(__FILE__), ENT_QUOTES, 'UTF-8'), '?&amp;SelectedFreightCost=', urlencode($MyRow['shipcostfromid']), '&amp;LocationFrom=', urlencode($LocationFrom), '&amp;ShipperID=', urlencode($ShipperID), '&amp;delete=yes" onclick="return MakeConfirm(\'', _('Are you sure you wish to delete this freight cost'), '\', \'Confirm Delete\', this);">', _('Delete'), '</a></td>
+				</tr>';
 		}
-
-		printf('<tr class="striped_row">
-			<td>%s</td>
-			<td>%s</td>
-			<td class="number">%s</td>
-			<td class="number">%s</td>
-			<td class="number">%s</td>
-			<td class="number">%s</td>
-			<td class="number">%s</td>
-			<td class="number">%s</td>
-			<td><a href="%s&amp;SelectedFreightCost=%s&amp;LocationFrom=%s&amp;ShipperID=%s">' . _('Edit') . '</a></td>
-			<td><a href="%s&amp;SelectedFreightCost=%s&amp;LocationFrom=%s&amp;ShipperID=%s&amp;delete=yes" onclick="return confirm(\'' . _('Are you sure you wish to delete this freight cost') . '\');">' . _('Delete') . '</a></td></tr>',
-			$myrow[1],
-			$myrow[2],
-			locale_number_format($myrow[3],$_SESSION['CompanyRecord']['decimalplaces']),
-			locale_number_format($myrow[4],$_SESSION['CompanyRecord']['decimalplaces']),
-			locale_number_format($myrow[5],2),
-			locale_number_format($myrow[6],3),
-			locale_number_format($myrow[7],$_SESSION['CompanyRecord']['decimalplaces']),
-			locale_number_format($myrow[8],$_SESSION['CompanyRecord']['decimalplaces']),
-			htmlspecialchars($_SERVER['PHP_SELF'],ENT_QUOTES,'UTF-8') . '?',
-			$myrow[0],
-			$LocationFrom,
-			$ShipperID,
-			htmlspecialchars($_SERVER['PHP_SELF'],ENT_QUOTES,'UTF-8') . '?',
-			$myrow[0],
-			$LocationFrom,
-			$ShipperID);
-
 	}
 
 	//END WHILE LIST LOOP
-	echo '</table>';
+	echo '</tbody>
+		</table>';
 }
 
 //end of ifs and buts!
-
 if (isset($SelectedFreightCost)) {
-	echo '<div class="centre"><a href="' . htmlspecialchars($_SERVER['PHP_SELF'],ENT_QUOTES,'UTF-8') . '?LocationFrom=' . $LocationFrom . '&amp;ShipperID=' . $ShipperID . '">' . _('Show all freight costs for') . ' ' . $ShipperName  . ' ' . _('from') . ' ' . $LocationName . '</a></div>';
+	echo '<div class="centre">
+			<a href="', htmlspecialchars(basename(__FILE__), ENT_QUOTES, 'UTF-8'), '?LocationFrom=', urlencode($LocationFrom), '&amp;ShipperID=', urlencode($ShipperID), '">', _('Show all freight costs for'), ' ', $ShipperName, ' ', _('from'), ' ', $LocationName, '</a>
+		</div>';
 }
 
-if (isset($LocationFrom) AND isset($ShipperID)) {
+if (isset($LocationFrom) and isset($ShipperID)) {
 
-	echo '<form method="post" action="' . htmlspecialchars($_SERVER['PHP_SELF'],ENT_QUOTES,'UTF-8') . '">';
-    echo '<div>';
-	echo '<input type="hidden" name="FormID" value="' . $_SESSION['FormID'] . '" />';
+	echo '<form method="post" action="', htmlspecialchars(basename(__FILE__), ENT_QUOTES, 'UTF-8'), '">';
+	echo '<input type="hidden" name="FormID" value="', $_SESSION['FormID'], '" />';
 
 	if (isset($SelectedFreightCost)) {
 		//editing an existing freight cost item
+		$SQL = "SELECT locationfrom,
+						destinationcountry,
+						destination,
+						shipperid,
+						cubrate,
+						kgrate,
+						maxkgs,
+						maxcub,
+						fixedprice,
+						minimumchg
+					FROM freightcosts
+					WHERE shipcostfromid='" . $SelectedFreightCost . "'";
 
-		$sql = "SELECT locationfrom,
-					destinationcountry,
-					destination,
-					shipperid,
-					cubrate,
-					kgrate,
-					maxkgs,
-					maxcub,
-					fixedprice,
-					minimumchg
-				FROM freightcosts
-				WHERE shipcostfromid='" . $SelectedFreightCost ."'";
+		$Result = DB_query($SQL);
+		$MyRow = DB_fetch_array($Result);
 
-		$result = DB_query($sql);
-		$myrow = DB_fetch_array($result);
+		$LocationFrom = $MyRow['locationfrom'];
+		$_POST['DestinationCountry'] = $MyRow['destinationcountry'];
+		$_POST['Destination'] = $MyRow['destination'];
+		$ShipperID = $MyRow['shipperid'];
+		$_POST['CubRate'] = $MyRow['cubrate'];
+		$_POST['KGRate'] = $MyRow['kgrate'];
+		$_POST['MAXKGs'] = $MyRow['maxkgs'];
+		$_POST['MAXCub'] = $MyRow['maxcub'];
+		$_POST['FixedPrice'] = $MyRow['fixedprice'];
+		$_POST['MinimumChg'] = $MyRow['minimumchg'];
 
-		$LocationFrom  = $myrow['locationfrom'];
-		$_POST['DestinationCountry']	= $myrow['destinationcountry'];
-		$_POST['Destination']	= $myrow['destination'];
-		$ShipperID  = $myrow['shipperid'];
-		$_POST['CubRate']  = $myrow['cubrate'];
-		$_POST['KGRate'] = $myrow['kgrate'];
-		$_POST['MAXKGs'] = $myrow['maxkgs'];
-		$_POST['MAXCub'] = $myrow['maxcub'];
-		$_POST['FixedPrice'] = $myrow['fixedprice'];
-		$_POST['MinimumChg'] = $myrow['minimumchg'];
-
-		echo '<input type="hidden" name="SelectedFreightCost" value="' . $SelectedFreightCost . '" />';
+		echo '<input type="hidden" name="SelectedFreightCost" value="', $SelectedFreightCost, '" />';
 
 	} else {
 		$_POST['FixedPrice'] = 0;
 		$_POST['MinimumChg'] = 0;
+		$_POST['CubRate'] = 0;
+		$_POST['KGRate'] = 0;
+		$_POST['MAXKGs'] = 0;
+		$_POST['MAXCub'] = 0;
+
+	}
+	echo '<input type="hidden" name="LocationFrom" value="', $LocationFrom, '" />';
+	echo '<input type="hidden" name="ShipperID" value="', $ShipperID, '" />';
+
+	if (!isset($_POST['DestinationCountry'])) {
+		$_POST['DestinationCountry'] = $CountriesArray[$_SESSION['CountryOfOperation']];
+	}
+	if (!isset($_POST['Destination'])) {
+		$_POST['Destination'] = '';
 	}
 
-	echo '<input type="hidden" name="LocationFrom" value="' . $LocationFrom . '" />';
-	echo '<input type="hidden" name="ShipperID" value="' . $ShipperID . '" />';
-
-	if (!isset($_POST['DestinationCountry'])) {$_POST['DestinationCountry']=$CountriesArray[$_SESSION['CountryOfOperation']];}
-	if (!isset($_POST['Destination'])) {$_POST['Destination']='';}
-	if (!isset($_POST['CubRate'])) {$_POST['CubRate']='';}
-	if (!isset($_POST['KGRate'])) {$_POST['KGRate']='';}
-	if (!isset($_POST['MAXKGs'])) {$_POST['MAXKGs']='';}
-	if (!isset($_POST['MAXCub'])) {$_POST['MAXCub']='';}
-
-	echo '<br /><table class="selection">';
-	echo '<tr><th colspan="2">' . _('For Deliveries From') . ' ' . $LocationName . ' ' . _('using') . ' ' .
-		$ShipperName . '</th></tr>';
-
-	echo '<tr>
-			<td>' . _('Destination Country') . ':</td>
-			<td><select name="DestinationCountry">';
-	foreach ($CountriesArray as $CountryEntry => $CountryName){
-		if (isset($_POST['DestinationCountry']) AND (strtoupper($_POST['DestinationCountry']) == strtoupper($CountryName))){
-			echo '<option selected="selected" value="' . $CountryName . '">' . $CountryName  . '</option>';
+	echo '<fieldset>
+			<legend>', _('For Deliveries From'), ' ', $LocationName, ' ', _('using'), ' ', $ShipperName, '</legend>';
+	echo '<field>
+			<label for="DestinationCountry">', _('Destination Country'), ':</label>
+			<select name="DestinationCountry" autofocus="autofocus">';
+	foreach ($CountriesArray as $CountryEntry => $CountryName) {
+		if (isset($_POST['DestinationCountry']) and (strtoupper($_POST['DestinationCountry']) == strtoupper($CountryName))) {
+			echo '<option selected="selected" value="', $CountryName, '">', $CountryName, '</option>';
 		} else {
-			echo '<option value="' . $CountryName . '">' . $CountryName  . '</option>';
+			echo '<option value="', $CountryName, '">', $CountryName, '</option>';
 		}
 	}
-	echo '</select></td>
-		</tr>';
+	echo '</select>
+		<fieldhelp>', _('Select the country to be delivered to'), '</fieldhelp>
+	</field>';
 
-	echo'<tr><td>' . _('Destination Zone') . ':</td>
-		<td><input type="text" maxlength="20" size="20" name="Destination" value="' . $_POST['Destination'] . '" /></td></tr>';
-	echo '<tr><td>' . _('Rate per Cubic Metre') . ':</td>
-		<td><input type="text" name="CubRate" class="number" size="6" maxlength="5" value="' . $_POST['CubRate'] . '" /></td></tr>';
-	echo '<tr><td>' . _('Rate Per KG') . ':</td>
-		<td><input type="text" name="KGRate" class="number" size="6" maxlength="5" value="' . $_POST['KGRate'] . '" /></td></tr>';
-	echo '<tr><td>' . _('Maximum Weight Per Package (KGs)') . ':</td>
-		<td><input type="text" name="MAXKGs" class="number" size="8" maxlength="7" value="' . $_POST['MAXKGs'] . '" /></td></tr>';
-	echo '<tr><td>' . _('Maximum Volume Per Package (cubic metres)') . ':</td>
-		<td><input type="text" name="MAXCub" class="number" size="8" maxlength="7" value="' . $_POST['MAXCub'] . '" /></td></tr>';
-	echo '<tr><td>' . _('Fixed Price (zero if rate per KG or Cubic)') . ':</td>
-		<td><input type="text" name="FixedPrice" class="number" size="11" maxlength="10" value="' . $_POST['FixedPrice'] . '" /></td></tr>';
-	echo '<tr><td>' . _('Minimum Charge (0 is N/A)') . ':</td>
-		<td><input type="text" name="MinimumChg" class="number" size="11" maxlength="10" value="' . $_POST['MinimumChg'] . '" /></td></tr>';
+	echo '<field>
+			<label for="Destination">', _('Destination Zone'), ':</label>
+			<input type="text" required="required" maxlength="20" size="20" name="Destination" value="', $_POST['Destination'], '" />
+			<fieldhelp>', _('Enter the zone defined by the shipper where this delivery is destined for.'), '</fieldhelp>
+		</field>';
+	echo '<field>
+			<label for="CubRate">', _('Rate per Cubic Metre'), ':</label>
+			<input type="text" name="CubRate" class="number" size="6" required="required" maxlength="5" value="', $_POST['CubRate'], '" />
+			<fieldhelp>', _('Enter the rate per cubic metre charged by this shipper.'), '</fieldhelp>
+		</field>';
+	echo '<field>
+			<label for="KGRate">', _('Rate Per KG'), ':</label>
+			<input type="text" name="KGRate" class="number" size="6" required="required" maxlength="5" value="', $_POST['KGRate'], '" />
+			<fieldhelp>', _('Enter the rate kilogram charged by this shipper.'), '</fieldhelp>
+		</field>';
+	echo '<field>
+			<label for="MAXKGs">', _('Maximum Weight Per Package (KGs)'), ':</label>
+			<input type="text" name="MAXKGs" class="number" size="8" required="required" maxlength="7" value="', $_POST['MAXKGs'], '" />
+			<fieldhelp>', _('Enter the maximum weight in kilograms allowed per package by this shipper.'), '</fieldhelp>
+		</field>';
+	echo '<field>
+			<label for="MAXCub">', _('Maximum Volume Per Package (cubic metres)'), ':</label>
+			<input type="text" name="MAXCub" class="number" size="8" required="required" maxlength="7" value="', $_POST['MAXCub'], '" />
+			<fieldhelp>', _('Enter the maximum volume in cubic metres allowed per package by this shipper.'), '</fieldhelp>
+		</field>';
+	echo '<field>
+			<label for="FixedPrice">', _('Fixed Price (zero if rate per KG or Cubic)'), ':</label>
+			<input type="text" name="FixedPrice" class="number" size="11" required="required" maxlength="10" value="', $_POST['FixedPrice'], '" />
+			<fieldhelp>', _('If the shipper has a fixed price per package enter that here, or enter zero if the price is based on size and weight.'), '</fieldhelp>
+		</field>';
+	echo '<field>
+			<label for="MinimumChg">', _('Minimum Charge (0 is N/A)'), ':</label>
+			<input type="text" name="MinimumChg" class="number" size="11" required="required" maxlength="10" value="', $_POST['MinimumChg'], '" />
+			<fieldhelp>', _('If the shipper has a minimum charge per package enter that here, or enter zero if no mimimum chage applies.'), '</fieldhelp>
+		</field>';
 
-	echo '</table><br />';
+	echo '</fieldset>';
 
-	echo '<div class="centre"><input type="submit" name="submit" value="' . _('Enter Information') . '" /></div>';
-    echo '</div>';
+	echo '<div class="centre">
+			<input type="submit" name="submit" value="', _('Enter Information'), '" />
+		</div>';
 	echo '</form>';
 
 } //end if record deleted no point displaying form to add record
-
-include('includes/footer.php');
+include ('includes/footer.php');
 ?>
