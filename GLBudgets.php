@@ -1,284 +1,233 @@
 <?php
+include ('includes/session.php');
+include ('includes/SQL_CommonFunctions.inc');
 
-include('includes/session.php');
-include('includes/SQL_CommonFunctions.inc');
+$Title = _('Enter GL Budget amounts');
 
-$Title = _('Create GL Budgets');
+if (isset($_POST['SelectedBudget'])) {
+	$SelectedBudget = $_POST['SelectedBudget'];
+} elseif (isset($_GET['SelectedBudget'])) {
+	$SelectedBudget = $_GET['SelectedBudget'];
+}
 
 $ViewTopic = 'GeneralLedger';
 $BookMark = 'GLBudgets';
+include ('includes/header.php');
 
-include('includes/header.php');
-
-if (isset($_POST['SelectedAccount'])) {
-	$SelectedAccount = $_POST['SelectedAccount'];
-} elseif (isset($_GET['SelectedAccount'])) {
-	$SelectedAccount = $_GET['SelectedAccount'];
+if (isset($_POST['Update'])) {
+	$UpdateSQL = array();
+	foreach ($_POST as $Key => $Value) {
+		if (mb_substr($Key, 0, 6) == 'Period') {
+			$Period = mb_substr($Key, 6);
+			$Amount = $Value;
+			$UpdateSQL[] = "UPDATE glbudgetdetails SET amount='" . $Amount . "'
+							WHERE headerid='" . $SelectedBudget . "'
+								AND account='" . $_POST['SelectedAccount'] . "'
+								AND period='" . $Period . "'";
+		}
+	}
+	$Errors = 0;
+	foreach ($UpdateSQL as $SQL) {
+		$UpdateResult = DB_query($SQL);
+		$Errors+= DB_error_no();
+	}
+	if ($Errors == 0) {
+		prnMsg(_('The budget figures were update successfully'), 'success');
+	} else {
+		prnMsg(_('There was a problem updating the budget figures'), 'error');
+	}
 }
 
-if (isset($_POST['Previous'])) {
-	$SelectedAccount = $_POST['PrevAccount'];
-} elseif (isset($_POST['Next'])) {
-	$SelectedAccount = $_POST['NextAccount'];
-}
+if (!isset($SelectedBudget)) {
+	echo '<form action="', htmlspecialchars(basename(__FILE__), ENT_QUOTES, 'UTF-8'), '" method="post" id="createbudget">';
+	echo '<input type="hidden" name="FormID" value="', $_SESSION['FormID'], '" />';
 
-if (isset($_POST['update'])) {
-	prnMsg(_('Budget updated successfully'), 'success');
-}
+	echo '<p class="page_title_text" >
+			<img src="', $RootPath, '/css/', $_SESSION['Theme'], '/images/magnifier.png" title="', _('Budgets'), '" alt="', _('Budgets'), '" />', ' ', _('Select Budget'), '
+		</p>';
 
-//If an account has not been selected then select one here.
-echo '<p class="page_title_text">
-		<img src="'.$RootPath, '/css/', $Theme, '/images/maintenance.png" title="' . _('Search') . '" alt="" />' . ' ' . $Title.'
-	</p>';
-echo '<form action="' . htmlspecialchars($_SERVER['PHP_SELF'],ENT_QUOTES,'UTF-8') . '" method="post" id="selectaccount">
-	<div>
-		<input type="hidden" name="FormID" value="' . $_SESSION['FormID'] . '" />
-		<br />
-		<table>
-		<tr>
-			<td>' .   _('Select GL Account').  ':</td>
-			<td><select name="SelectedAccount" required="required" onchange="ReloadForm(selectaccount.Select)">';
+	echo '<fieldset>
+			<legend>', _('Select a Budget'), '</legend>';
 
-$SQL = "SELECT accountcode,
-				accountname
-			FROM chartmaster
-			ORDER BY accountcode";
+	$SQL = "SELECT `id`,
+					`name`
+				FROM glbudgetheaders";
+	$Result = DB_query($SQL);
+	echo '<field>
+			<label for="SelectedBudget">', _('Budget to enter amounts in'), '</label>
+			<select name="SelectedBudget">';
+	while ($MyRow = DB_fetch_array($Result)) {
+		echo '<option value="', $MyRow['id'], '">', $MyRow['name'], '</option>';
+	}
+	echo '</select>
+		</field>
+	</fieldset>';
 
-$result=DB_query($SQL);
-if (DB_num_rows($result)==0) {
-	echo '</select></td>
-		</tr>';
-	prnMsg(_('No General ledger accounts have been set up yet') . ' - ' . _('budgets cannot be allocated until the GL accounts are set up'),'warn');
+	echo '<div class="centre">
+			<input type="submit" name="Select" value="', _('Select'), '" />
+		</div>';
+
+	echo '</form>';
+
 } else {
-	while ($myrow=DB_fetch_array($result)) {
-		$Account = $myrow['accountcode'] . ' - ' . htmlspecialchars($myrow['accountname'],ENT_QUOTES,'UTF-8',false);
-		if (isset($SelectedAccount) AND isset($LastCode) AND $SelectedAccount==$myrow['accountcode']) {
-			echo '<option selected="selected" value="' . $myrow['accountcode'] . '">' . $Account . '</option>';
-			$PrevCode=$LastCode;
-		} else {
-			echo '<option value="' . $myrow['accountcode'] . '">' . $Account . '</option>';
-			if (isset($SelectedAccount) AND isset($LastCode) AND $SelectedAccount == $LastCode) {
-				$NextCode=$myrow['accountcode'];
-			}
-		}
-		$LastCode=$myrow['accountcode'];
+	echo '<form action="', htmlspecialchars(basename(__FILE__), ENT_QUOTES, 'UTF-8'), '" method="post" id="createbudget">';
+	echo '<input type="hidden" name="FormID" value="', $_SESSION['FormID'], '" />';
+	echo '<input type="hidden" name="SelectedBudget" value="', $SelectedBudget, '" />';
+
+	echo '<p class="page_title_text" >
+			<img src="', $RootPath, '/css/', $_SESSION['Theme'], '/images/gl.png" title="', _('Enter Budget Amounts'), '" alt="', _('Enter Budget Amounts'), '" />', ' ', _('Enter Budget Amounts'), '
+		</p>';
+
+	echo '<fieldset>
+			<legend>', _('General ledger account selection'), '</legend>';
+
+	$SQL = "SELECT accountcode
+				FROM chartmaster
+				INNER JOIN accountgroups
+					ON accountgroups.groupcode=chartmaster.groupcode
+					AND accountgroups.language=chartmaster.language
+				WHERE pandl=1
+					AND chartmaster.language='" . $_SESSION['ChartLanguage'] . "'
+				ORDER BY accountcode";
+	$Result = DB_query($SQL);
+	$AccountList = array();
+	while ($MyRow = DB_fetch_array($Result)) {
+		$AccountList[] = $MyRow['accountcode'];
 	}
-	echo '</select></td>
-		</tr>';
+
+	foreach ($_POST as $Key => $Value) {
+		if (mb_substr($Key, 0, 8) == 'Previous') {
+			$AccountIndex = mb_substr($Key, 8);
+			$_POST['SelectedAccount'] = $AccountList[$AccountIndex - 1];
+		}
+		if (mb_substr($Key, 0, 4) == 'Next') {
+			$AccountIndex = mb_substr($Key, 4);
+			$_POST['SelectedAccount'] = $AccountList[$AccountIndex + 1];
+		}
+	}
+
+	if (!isset($_POST['SelectedAccount'])) {
+		$_POST['SelectedAccount'] = $AccountList[0];
+		$AccountIndex = 0;
+	} else {
+		$AccountIndex = array_search($_POST['SelectedAccount'], $AccountList);
+	}
+
+	if (isset($_POST['Update'])) {
+		$AccountIndex++;
+		$_POST['SelectedAccount'] = $AccountList[$AccountIndex];
+	}
+
+	echo '<input type="hidden" name="SelectedAccount" value="', $_POST['SelectedAccount'], '" />';
+
+	echo '<field>
+			<label for="SelectedAccount">', _('Select GL Account'), ':</label>';
+
+	GLSelect(1, 'SelectedAccount');
+
+	echo '</field>';
+
+	echo '</fieldset>';
+
+	echo '<div class="centre">';
+	if ($AccountIndex == 0) {
+		echo '<input type="submit" disabled="true" class="previous_button" name="Previous', $AccountIndex, '" value="', _('Prev Account'), '" />';
+	} else {
+		echo '<input type="submit" class="previous_button" name="Previous', $AccountIndex, '" value="', _('Prev Account'), '" />';
+	}
+	echo '<input type="submit" name="Select" value="', _('Select Account'), '" />';
+	if ($AccountIndex == array_search(end($AccountList), $AccountList)) {
+		echo '<input type="submit" disabled="true" class="next_button" name="Next', $AccountIndex, '" value="', _('Next Account'), '" />';
+	} else {
+		echo '<input type="submit" class="next_button" name="Next', $AccountIndex, '" value="', _('Next Account'), '" />';
+	}
+	echo '</div>';
+
+	$SQL = "SELECT accountname
+				FROM chartmaster
+				INNER JOIN accountgroups
+					ON accountgroups.groupcode=chartmaster.groupcode
+					AND accountgroups.language=chartmaster.language
+				WHERE pandl=1
+					AND chartmaster.language='" . $_SESSION['ChartLanguage'] . "'
+					AND accountcode='" . $_POST['SelectedAccount'] . "'";
+	$Result = DB_query($SQL);
+	$MyRow = DB_fetch_array($Result);
+
+	echo '<fieldset>
+			<legend>', _('Budget values for account'), ' ', $_POST['SelectedAccount'], ' - ', $MyRow['accountname'], '</legend>';
+
+	$SQL = "SELECT `owner`,
+					`name`,
+					`description`,
+					`startperiod`,
+					`endperiod`,
+					`current`
+				FROM glbudgetheaders
+				WHERE id='" . $SelectedBudget . "'";
+	$Result = DB_query($SQL);
+	$MyRow = DB_fetch_array($Result);
+
+	$Total = 0;
+
+	for ($CurrentPeriod = $MyRow['startperiod'];$CurrentPeriod <= $MyRow['endperiod'];$CurrentPeriod++) {
+		$PeriodSQL = "SELECT lastdate_in_period FROM periods WHERE periodno='" . $CurrentPeriod . "'";
+		$PeriodResult = DB_query($PeriodSQL);
+		$MyPeriodRow = DB_fetch_array($PeriodResult);
+
+		$AmountSQL = "SELECT amount
+						FROM glbudgetdetails
+						WHERE headerid='" . $SelectedBudget . "'
+							AND account='" . $_POST['SelectedAccount'] . "'
+							AND period='" . $CurrentPeriod . "'";
+		$AmountResult = DB_query($AmountSQL);
+		$AmountRow = DB_fetch_array($AmountResult);
+		if (!isset($AmountRow['amount'])) {
+			$AmountRow['amount'] = 0;
+			$InsertSQL = "INSERT INTO glbudgetdetails (id,
+														headerid,
+														account,
+														period,
+														amount
+													) VALUES (
+														NULL,
+														'" . $SelectedBudget . "',
+														'" . $_POST['SelectedAccount'] . "',
+														'" . $CurrentPeriod . "',
+														'" . $AmountRow['amount'] . "'
+													)";
+			$InsertResult = DB_query($InsertSQL);
+		}
+		$Total+= $AmountRow['amount'];
+		echo '<field>
+				<label for="', $CurrentPeriod, '">', MonthAndYearFromSQLDate($MyPeriodRow['lastdate_in_period']), '</label>
+				<input type="text" class="number" name="Period', $CurrentPeriod, '" id="Period', $CurrentPeriod, '" value="', $AmountRow['amount'], '" onkeyup="UpdateTotal(', $MyRow['startperiod'], ', ', $MyRow['endperiod'], ')" />
+			</field>';
+	}
+	echo '<field>
+			<label for="Total">', _('Total'), '</label>
+			<input readonly="readonly" type="text" class="number" id="Total" name="Total" value="', $Total, '" />
+		</field>';
+
+	echo '</fieldset>';
+
+	echo '<div class="centre">
+			<input type="submit" name="Update" value="', _('Update Budget'), '" />
+		</div>';
+
+	echo '</form>';
 }
 
-if (!isset($PrevCode)) {$PrevCode='';}
-if (!isset($NextCode)) {$NextCode='';}
-
-echo '</table>';
-echo '<input type="hidden" name="PrevAccount" value="'.$PrevCode.'" />';
-echo '<input type="hidden" name="NextAccount" value="'.$NextCode.'" />';
-
-echo '<br />
-		<table>
-		<tr>
-			<td><input type="submit" name="Previous" value="' . _('Prev Account') . '" /></td>
-			<td><input type="submit" name="Select" value="' . _('Select Account') . '" /></td>
-			<td><input type="submit" name="Next" value="' . _('Next Account') . '" /></td>
-		</tr>
-		</table>
-		<br />
-    </div>
-	</form>';
-
-// End of account selection
-
-if (isset($SelectedAccount) and $SelectedAccount != '') {
-
-	$CurrentYearEndPeriod = GetPeriod(Date($_SESSION['DefaultDateFormat'],YearEndDate($_SESSION['YearEnd'],0)));
-
-// If the update button has been hit, then update chartdetails with the budget figures
-// for this year and next.
-	if (isset($_POST['update'])) {
-		$ErrMsg = _('Cannot update GL budgets');
-		$DbgMsg = _('The SQL that failed to update the GL budgets was');
-		for ($i=1; $i<=12; $i++) {
-			$SQL="UPDATE chartdetails SET budget='" . round(filter_number_format($_POST[$i.'last']),$_SESSION['CompanyRecord']['decimalplaces']). "'
-					WHERE period='" . ($CurrentYearEndPeriod-(24-$i)) ."'
-					AND  accountcode = '" . $SelectedAccount."'";
-			$result=DB_query($SQL,$ErrMsg,$DbgMsg);
-			$SQL="UPDATE chartdetails SET budget='" . round(filter_number_format($_POST[$i.'this']),$_SESSION['CompanyRecord']['decimalplaces']). "'
-					WHERE period='" . ($CurrentYearEndPeriod-(12-$i)) ."'
-					AND  accountcode = '" . $SelectedAccount."'";
-			$result=DB_query($SQL,$ErrMsg,$DbgMsg);
-			$SQL="UPDATE chartdetails SET budget='". round(filter_number_format($_POST[$i.'next']),$_SESSION['CompanyRecord']['decimalplaces'])."'
-					WHERE period='" .  ($CurrentYearEndPeriod+$i) ."'
-					AND  accountcode = '" . $SelectedAccount."'";
-			$result=DB_query($SQL,$ErrMsg,$DbgMsg);
+echo '<script>
+		function UpdateTotal(start, end) {
+		total = 0;
+		for (i = start; i <= end; i++) {
+			total = total + Number(document.getElementById(\'Period\' + i).value);
 		}
+		document.getElementById(\'Total\').value = total
 	}
-// End of update
+	</script>';
 
-	$YearEndYear=Date('Y', YearEndDate($_SESSION['YearEnd'],0));
-
-/* If the periods dont exist then create them */
-	for ($i=1; $i <=36; $i++) {
-		$MonthEnd=mktime(0,0,0,$_SESSION['YearEnd']+1+$i,0,$YearEndYear-2);
-		$period=GetPeriod(Date($_SESSION['DefaultDateFormat'],$MonthEnd), false);
-		$PeriodEnd[$period]=Date('M Y',$MonthEnd);
-	}
-	include('includes/GLPostings.inc'); //creates chartdetails with correct values
-// End of create periods
-
-	$SQL="SELECT period,
-					budget,
-					actual
-				FROM chartdetails
-				WHERE accountcode='" . $SelectedAccount . "'";
-
-	$result=DB_query($SQL);
-	while ($myrow=DB_fetch_array($result)) {
-		$Budget[$myrow['period']]=$myrow['budget'];
-		$Actual[$myrow['period']]=$myrow['actual'];
-	}
-
-
-	if (isset($_POST['Apportion'])) {
-		for ($i=1; $i<=12; $i++) {
-			if (filter_number_format($_POST['AnnualAmountLY']) != '0' AND is_numeric(filter_number_format($_POST['AnnualAmountLY']))) {
-				$Budget[$CurrentYearEndPeriod+$i-24]	=round(filter_number_format( $_POST['AnnualAmountLY'])/12,0);
-			}
-			if (filter_number_format($_POST['AnnualAmountTY']) != '0' AND is_numeric(filter_number_format($_POST['AnnualAmountTY']))) {
-				$Budget[$CurrentYearEndPeriod+$i-12]	= round(filter_number_format($_POST['AnnualAmountTY'])/12,0);
-			}
-			if (filter_number_format($_POST['AnnualAmount']) != '0' AND is_numeric(filter_number_format($_POST['AnnualAmount']))) {
-				$Budget[$CurrentYearEndPeriod+$i]	= round(filter_number_format($_POST['AnnualAmount'])/12,0);
-			}
-		}
-	}
-
-	$LastYearActual=0;
-	$LastYearBudget=0;
-	$ThisYearActual=0;
-	$ThisYearBudget=0;
-	$NextYearActual=0;
-	$NextYearBudget=0;
-
-// Table Headers
-
-	echo '<form id="form" action="' . htmlspecialchars($_SERVER['PHP_SELF'],ENT_QUOTES,'UTF-8') . '" method="post">';
-    echo '<div>';
-	echo '<input type="hidden" name="FormID" value="' . $_SESSION['FormID'] . '" />';
-	echo '<br />
-			<table class="selection">
-			<tr>
-				<th colspan="3">' .  _('Last Financial Year')  . '</th>
-				<th colspan="3">' .  _('This Financial Year')  . '</th>
-				<th colspan="3">' .  _('Next Financial Year')  . '</th>
-			</tr>
-			<tr>
-				<th colspan="3">' .  _('Year ended').' - ' . Date($_SESSION['DefaultDateFormat'],YearEndDate($_SESSION['YearEnd'],-1))  . '</th>
-				<th colspan="3">' .  _('Year ended').' - ' . Date($_SESSION['DefaultDateFormat'],YearEndDate($_SESSION['YearEnd'],0))  . '</th>
-				<th colspan="3">' .  _('Year ended').' - ' . Date($_SESSION['DefaultDateFormat'],YearEndDate($_SESSION['YearEnd'],1))  . '</th>
-			</tr>
-			<tr>';
-	for ($i=0; $i<3; $i++) {
-		echo '<th>' .  _('Period'). '</th>
-				<th>' .  _('Actual') . '</th>
-				<th>' .  _('Budget') . '</th>';
-	}
-	echo '</tr>';
-
-// Main Table
-
-	for ($i=1; $i<=12; $i++) {
-		echo '<tr>';
-		echo '<th>' .  $PeriodEnd[$CurrentYearEndPeriod-(24-$i)]  . '</th>';
-		echo '<td style="background-color:d2e5e8" class="number">' . locale_number_format($Actual[$CurrentYearEndPeriod-(24-$i)],$_SESSION['CompanyRecord']['decimalplaces']) . '</td>';
-		echo '<td><input type="text" class="number" size="14" name="'.$i.'last" value="'.locale_number_format($Budget[$CurrentYearEndPeriod-(24-$i)],$_SESSION['CompanyRecord']['decimalplaces']) .'" /></td>';
-		echo '<th>' .  $PeriodEnd[$CurrentYearEndPeriod-(12-$i)]  . '</th>';
-		echo '<td style="background-color:d2e5e8" class="number">' . locale_number_format($Actual[$CurrentYearEndPeriod-(12-$i)],$_SESSION['CompanyRecord']['decimalplaces']) . '</td>';
-		echo '<td><input type="text" class="number" size="14" name="'.$i.'this" value="'. locale_number_format($Budget[$CurrentYearEndPeriod-(12-$i)],$_SESSION['CompanyRecord']['decimalplaces']) .'" /></td>';
-		echo '<th>' .  $PeriodEnd[$CurrentYearEndPeriod+($i)]  . '</th>';
-		echo '<td style="background-color:d2e5e8" class="number">' . locale_number_format($Actual[$CurrentYearEndPeriod+$i],$_SESSION['CompanyRecord']['decimalplaces']) . '</td>';
-		echo '<td><input type="text" class="number" size="14" name="'.$i.'next" value="'. locale_number_format($Budget[$CurrentYearEndPeriod+$i],$_SESSION['CompanyRecord']['decimalplaces']) .'" /></td>';
-		echo '</tr>';
-		$LastYearActual=$LastYearActual+$Actual[$CurrentYearEndPeriod-(24-$i)];
-		$LastYearBudget=$LastYearBudget+$Budget[$CurrentYearEndPeriod-(24-$i)];
-		$ThisYearActual=$ThisYearActual+$Actual[$CurrentYearEndPeriod-(12-$i)];
-		$ThisYearBudget=$ThisYearBudget+$Budget[$CurrentYearEndPeriod-(12-$i)];
-		$NextYearActual=$NextYearActual+$Actual[$CurrentYearEndPeriod+($i)];
-		$NextYearBudget=$NextYearBudget+$Budget[$CurrentYearEndPeriod+($i)];
-	}
-
-// Total Line
-
-	echo '<tr>
-			<th>' .  _('Total')  . '</th>
-			<th class="number">' . locale_number_format($LastYearActual,$_SESSION['CompanyRecord']['decimalplaces']). '</th>
-			<th class="number">' . locale_number_format($LastYearBudget,$_SESSION['CompanyRecord']['decimalplaces']). '</th>
-			<th class="number"></th>
-			<th class="number">' . locale_number_format($ThisYearActual,$_SESSION['CompanyRecord']['decimalplaces']). '</th>
-			<th class="number">' . locale_number_format($ThisYearBudget,$_SESSION['CompanyRecord']['decimalplaces']). '</th>
-			<th class="number"></th>
-			<th class="number">' . locale_number_format($NextYearActual,$_SESSION['CompanyRecord']['decimalplaces']). '</th>
-			<th class="number">' . locale_number_format($NextYearBudget,$_SESSION['CompanyRecord']['decimalplaces']). '</th>
-		</tr>
-		<tr>
-			<td colspan="2">' . _('Annual Budget') . '</td>
-			<td><input class="number" type="text" size="14" name="AnnualAmountLY" value="0.00" /></td>
-			<td></td>
-			<td></td>
-			<td><input class="number" type="text" size="14" name="AnnualAmountTY" value="0.00" /></td>
-			<td></td>
-			<td><input onchange="numberFormat(this,' . $_SESSION['CompanyRecord']['decimalplaces'] . ')" class="number" type="text" size="14" name="AnnualAmount" value="0.00" /></td>
-			<td><input type="submit" name="Apportion" value="' . _('Apportion Budget') . '" /></td>
-		</tr>
-		</table>';
-
-	echo '<input type="hidden" name="SelectedAccount" value="'.$SelectedAccount.'" />';
-
-	echo '<script  type="text/javascript">defaultControl(document.form.1next);</script>';
-	echo '<br />
-		<div class="centre">
-			<input type="submit" name="update" value="' . _('Update') . '" />
-		</div>
-		</div>
-		</form>';
-
-	$SQL="SELECT MIN(periodno) FROM periods";
-	$result=DB_query($SQL);
-	$MyRow=DB_fetch_array($result);
-	$FirstPeriod=$MyRow[0];
-
-	$SQL="SELECT MAX(periodno) FROM periods";
-	$result=DB_query($SQL);
-	$MyRow=DB_fetch_array($result);
-	$LastPeriod=$MyRow[0];
-
-	for ($i=$FirstPeriod;$i<=$LastPeriod;$i++) {
-		$sql="SELECT accountcode,
-					period,
-					budget,
-					actual,
-					bfwd,
-					bfwdbudget
-				FROM chartdetails
-				WHERE period ='". $i . "'
-				AND  accountcode = '" . $SelectedAccount . "'";
-
-		$ErrMsg = _('Could not retrieve the ChartDetail records because');
-		$result = DB_query($sql,$ErrMsg);
-
-		while ($myrow=DB_fetch_array($result)) {
-
-			$CFwdBudget = $myrow['bfwdbudget'] + $myrow['budget'];
-			$sql = "UPDATE chartdetails
-					SET bfwdbudget='" . $CFwdBudget . "'
-					WHERE period='" . ($myrow['period'] +1) . "'
-					AND  accountcode = '" . $SelectedAccount . "'";
-
-			$ErrMsg =_('Could not update the chartdetails record because');
-			$updresult = DB_query($sql,$ErrMsg);
-		}
-	} /* end of for loop */
-}
-
-include('includes/footer.php');
+include ('includes/footer.php');
 
 ?>

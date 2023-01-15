@@ -15,13 +15,13 @@ normally the lower case two character language code underscore uppercase
  * Improve language check to avoid potential LFI issue.
  * Reported by: https://lyhinslab.org
  */
-if (isset($_POST['Language']) && checkLanguageChoice($_POST['Language'])) {
-	$_SESSION['Language'] = $_POST['Language'];
-} elseif (!isset($_SESSION['Language'])) {
-	$_SESSION['Language'] = $DefaultLanguage;
+if (isset($_POST['DefaultLanguage']) && checkLanguageChoice($_POST['Language'])) {
+	$_SESSION['DefaultLanguage'] = $_POST['Language'];
+} elseif (!isset($_SESSION['DefaultLanguage']) or $_SESSION['DefaultLanguage'] == '') {
+	$_SESSION['DefaultLanguage'] = $DefaultLanguage;
 }
 
-$Language = $_SESSION['Language'];
+$Language = $_SESSION['DefaultLanguage'];
 
 //Check users' locale format via their language
 //Then pass this information to the js for number validation purpose
@@ -80,20 +80,20 @@ if (!function_exists('gettext')) {
 } else {
 	include($PathPrefix . 'includes/LanguagesArray.php');
 
-	$LocaleSet = setlocale (LC_ALL, $_SESSION['Language'],$LanguagesArray[$_SESSION['Language']]['WindowsLocale']);
+	$LocaleSet = setlocale (LC_ALL, $_SESSION['DefaultLanguage'],$LanguagesArray[$_SESSION['DefaultLanguage']]['WindowsLocale']);
 	$LocaleSet = setlocale (LC_NUMERIC, 'C','en_GB.utf8','en_GB','en_US','english-us');
 
 	if (defined('LC_MESSAGES')){ //it's a unix/linux server
 		$LocaleSet = setlocale (LC_MESSAGES, $_SESSION['Language']);
 	}
 	//Turkish seems to be a special case
-	if ($_SESSION['Language']=='tr_TR.utf8') {
+	if ($_SESSION['DefaultLanguage']=='tr_TR.utf8') {
 		$Locale = setlocale(LC_CTYPE, 'C');
 	}
 
 	// possibly even if locale fails the language will still switch by using Language instead of locale variable
-	putenv('LANG=' . $_SESSION['Language']);
-	putenv('LANGUAGE=' . $_SESSION['Language']);
+	putenv('LANG=' . $_SESSION['DefaultLanguage']);
+	putenv('LANGUAGE=' . $_SESSION['DefaultLanguage']);
 	bindtextdomain ('messages', $PathPrefix . 'locale');
 	textdomain ('messages');
 	bind_textdomain_codeset('messages', 'UTF-8');
