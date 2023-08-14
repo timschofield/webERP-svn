@@ -232,20 +232,10 @@ for ($i=1;$i<=2;$i++){  /*Print it out twice one copy for customer and one for o
 			if ($_SESSION['AllowOrderLineItemNarrative'] == 1) {
 				// Prints salesorderdetails.narrative:
 				$FontSize2 = $FontSize*0.8;// Font size to print salesorderdetails.narrative.
-				$Width2 = $Page_Width-$Right_Margin-145;// Width to print salesorderdetails.narrative.
-				$LeftOvers = trim($myrow2['narrative']);
-				//**********
-				$LeftOvers = str_replace('\n', ' ', $LeftOvers);// Replaces line feed character.
-				$LeftOvers = str_replace('\r', '', $LeftOvers);// Delete carriage return character
-				$LeftOvers = str_replace('\t', '', $LeftOvers);// Delete tabulator character
-				//**********
-				while (mb_strlen($LeftOvers) > 1) {
-					$YPos -= $FontSize2;
-					if ($YPos < ($Bottom_Margin)) {// Begins new page.
-						include ('includes/PDFOrderPageHeader_generic.inc');
-					}
-					$LeftOvers = $pdf->addTextWrap(147, $YPos, $Width2, $FontSize2, $LeftOvers);
-				}
+				$Width2 = $Page_Width-$Left_Margin-$Right_Margin-145;// Width to print salesorderdetails.narrative.
+
+				//XPos was 147, same as Description. Move it +10, slight tab in to improve readability
+				PrintDetail($pdf, $myrow2['narrative'], $Bottom_Margin, null, 'includes/PDFOrderPageHeader_generic.inc', 157, $YPos, $Width2, $FontSize2);
 			}
 
 			if ($YPos-$line_height <= 50){

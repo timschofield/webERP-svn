@@ -181,6 +181,136 @@ function google_currency_rate($CurrCode) {
 function AddCarriageReturns($str) {
 	return str_replace('\r\n', chr(10), $str);
 }
+//Replace all text/html line breaks with PHP_EOL(default) or given line break.
+function Convert_line_breaks($string, $line_break=PHP_EOL)
+{
+    $patterns = array(  "/(<br>|<br \/>|<br\/>)\s*/i",
+                        "/(\r\n|\r|\n)/" );
+    $replacements = array(  $line_break,
+                            $line_break );
+    $string = preg_replace($patterns, $replacements, $string);
+    return $string;
+}
+//Replace all text line breaks with PHP_EOL(default) or given line break.
+function Convert_CRLF($string, $line_break=PHP_EOL)
+{
+    $patterns = array(  "/(\r\n|\r|\n)/" );
+    $replacements = array(  $line_break );
+    $string = preg_replace($patterns, $replacements, $string);
+    return $string;
+}
+
+
+//NPFunc - New Page Function, can be a direct function call or an anonymous function for more complex behavior
+//         Null if not used
+//NPINC  - New Page Include, where a PHP script is included again to facilitate a new page
+//         Null if not used
+//&$YPos - return the updated value
+//         Coming in, YPos=prior line, so update it before we print anything, and don't update it if we don't print anything
+//Defaults come from addTextWrap                                                             
+function PrintDetail($pdf,$Text,$YLim,$NPFunc=null,$NPInc=null,$XPos,&$YPos,$Width,$FontSize,$Align='J',$border=0,$fill=0)
+{
+	$InitialExtraSpace=2;		//shift down slightly from above text
+
+	$Text=Convert_line_breaks(htmlspecialchars_decode($Text));
+	$Split = explode(PHP_EOL, $Text);
+	foreach ($Split as $LeftOvers) {
+		$LeftOvers = stripslashes($LeftOvers);
+		while(mb_strlen($LeftOvers)>1) {
+			if ($YPos < $YLim) {// If the description line reaches the bottom margin, do PageHeader(), PageInclude(), etc.
+				if($NPFunc!=null) {
+					$NPFunc();
+				}
+				if($NPInc!=null) {
+					include ($NPInc);
+				}
+			}
+			$YPos=$YPos-$FontSize-$InitialExtraSpace;
+			$InitialExtraSpace=0;
+			$LeftOvers = $pdf->addTextWrap($XPos, $YPos, $Width, $FontSize, $LeftOvers, $Align, $border, $fill);
+		}
+	}
+}
+
+function PrintOurCompanyInfo($pdf,$CompanyRecord,$XPos,$YPos)
+{
+	$CompanyRecord = array_map('html_entity_decode', $CompanyRecord);
+
+	$FontSize = 14;
+	$pdf->addText($XPos, $YPos, $FontSize, $CompanyRecord['coyname']);
+	$YPos -= $FontSize;
+	$FontSize = 10;
+
+	//webERP default:
+	$pdf->addText($XPos, $YPos, $FontSize, $_SESSION['CompanyRecord']['regoffice1']);
+	$pdf->addText($XPos, $YPos-$FontSize*1, $FontSize, $_SESSION['CompanyRecord']['regoffice2']);
+	$pdf->addText($XPos, $YPos-$FontSize*2, $FontSize, $_SESSION['CompanyRecord']['regoffice3']);
+	$pdf->addText($XPos, $YPos-$FontSize*3, $FontSize, $_SESSION['CompanyRecord']['regoffice4']);
+	$pdf->addText($XPos, $YPos-$FontSize*4, $FontSize, $_SESSION['CompanyRecord']['regoffice5'] .
+		' ' . $_SESSION['CompanyRecord']['regoffice6']);
+	$pdf->addText($XPos, $YPos-$FontSize*5, $FontSize,  _('Ph') . ': ' . $_SESSION['CompanyRecord']['telephone'] .
+		' ' . _('Fax'). ': ' . $_SESSION['CompanyRecord']['fax']);
+	$pdf->addText($XPos, $YPos-$FontSize*6, $FontSize, $_SESSION['CompanyRecord']['email']);
+
+}
+
+//Generically move down 82 units after printing this
+function PrintDeliverTo($pdf,$CompanyRecord,$Title,$XPos,$YPos)
+{
+	$CompanyRecord = array_map('html_entity_decode', $CompanyRecord);
+
+	$FontSize = 14;
+	$line_height=15;
+	$pdf->addText($XPos, $YPos,$FontSize, $Title . ':' );
+
+	//webERP default:
+	$pdf->addText($XPos, $YPos-15,$FontSize, $CompanyRecord['deliverto']);
+	$pdf->addText($XPos, $YPos-30,$FontSize, $CompanyRecord['deladd1']);
+	$pdf->addText($XPos, $YPos-45,$FontSize, $CompanyRecord['deladd2']);
+	$pdf->addText($XPos, $YPos-60,$FontSize, ltrim($CompanyRecord['deladd3'] . ' ' . $CompanyRecord['deladd4'] . ' ' . $CompanyRecord['deladd5'] . ' ' . $CompanyRecord['deladd6']));
+
+	// Draws a box with round corners around 'Delivery To' info:
+	$pdf->RoundRectangle(
+		$XPos-6,// RoundRectangle $XPos.
+		$YPos+2,// RoundRectangle $YPos.
+		245,// RoundRectangle $Width.
+		80,// RoundRectangle $Height.
+		10,// RoundRectangle $RadiusX.
+		10);// RoundRectangle $RadiusY.
+}
+
+//Generically move down 82 units after printing this
+function PrintCompanyTo($pdf,$CompanyRecord,$Title,$XPos,$YPos)
+{
+	$CompanyRecord = array_map('html_entity_decode', $CompanyRecord);
+
+	$FontSize = 14;
+	$line_height=15;
+	$pdf->addText($XPos, $YPos,$FontSize, $Title . ':' );
+
+	//webERP default:
+	$pdf->addText($XPos, $YPos-15,$FontSize, $CompanyRecord['name']);
+	$pdf->addText($XPos, $YPos-30,$FontSize, $CompanyRecord['address1']);
+	$pdf->addText($XPos, $YPos-45,$FontSize, $CompanyRecord['address2']);
+	$pdf->addText($XPos, $YPos-60,$FontSize, $CompanyRecord['address3'] . ' ' . $CompanyRecord['address4'] . ' ' . $CompanyRecord['address5']. ' ' . $CompanyRecord['address6']);
+
+	// Draws a box with round corners around 'Delivery To' info:
+	$pdf->RoundRectangle(
+		$XPos-6,// RoundRectangle $XPos.
+		$YPos+2,// RoundRectangle $YPos.
+		245,// RoundRectangle $Width.
+		80,// RoundRectangle $Height.
+		10,// RoundRectangle $RadiusX.
+		10);// RoundRectangle $RadiusY.
+}
+
+
+
+
+
+
+
+
 
 function wikiLink($WikiType, $WikiPageID) {
 	if (strstr($_SESSION['WikiPath'], 'http:')) {

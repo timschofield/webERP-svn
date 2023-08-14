@@ -362,20 +362,9 @@ If (isset($_POST['PrintPDF'])) {
 			}
 			// Prints stockmaster.longdescription:
 			$XPos = $Left_Margin+80;// Takes out this calculation from the loop.
-			$Width = $Page_Width-$Right_Margin-$XPos;// Takes out this calculation from the loop.
+			$Width = $Page_Width-$Left_Margin-$Right_Margin-$XPos;// Takes out this calculation from the loop.
 			$FontSize2 = $FontSize*0.80;// Font size and line height of Full Description section.
-			$Split = explode("\r\n", $PriceList['longdescription']);
-			foreach ($Split as $LeftOvers) {
-				$LeftOvers = stripslashes($LeftOvers);
-				while(mb_strlen($LeftOvers)>1) {
-					if ($YPos < $Bottom_Margin) {// If the description line reaches the bottom margin, do PageHeader().
-						PageHeader();
-						$YPosImage = $YPos;// Resets the image bottom $YPos.
-					}
-					$LeftOvers = $pdf->addTextWrap($XPos, $YPos-$FontSize2, $Width, $FontSize2, $LeftOvers, 'j', 0, $fill);
-					$YPos -= $FontSize2;
-				}
-			}
+			PrintDetail($pdf,$PriceList['longdescription'],$Bottom_Margin,'PageHeader',null,$XPos,$YPos,$Width,$FontSize2, 'j', 0, $fill);
 
 			// Assigns to $YPos the lowest $YPos value between the image and the description:
 			$YPos = min($YPosImage, $YPos);

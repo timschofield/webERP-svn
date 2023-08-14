@@ -146,7 +146,7 @@ if (DB_num_rows($result)>0){
 	$TaxTotal = 0;
 
 	while ($myrow2=DB_fetch_array($result)){
-
+	$line_height=15;
         $ListCount ++;
 
 		$YPos -= $line_height;// Increment a line down for the next line item.
@@ -206,20 +206,10 @@ if (DB_num_rows($result)>0){
 
 		// Prints salesorderdetails.narrative:
 		$FontSize2 = $FontSize*0.8;// Font size to print salesorderdetails.narrative.
-		$Width2 = $Page_Width-$Right_Margin-145;// Width to print salesorderdetails.narrative.
-		$LeftOvers = trim($myrow2['narrative']);
-		//**********
-		$LeftOvers = str_replace('\n', ' ', $LeftOvers);// Replaces line feed character.
-		$LeftOvers = str_replace('\r', '', $LeftOvers);// Delete carriage return character
-		$LeftOvers = str_replace('\t', '', $LeftOvers);// Delete tabulator character
-		//**********
-		while (mb_strlen($LeftOvers) > 1) {
-			$YPos -= $FontSize2;
-			if ($YPos < ($Bottom_Margin)) {// Begins new page.
-				include ('includes/PDFQuotationPageHeader.inc');
-			}
-			$LeftOvers = $pdf->addTextWrap(145, $YPos, $Width2, $FontSize2, $LeftOvers);
-		}
+		$Width2 = $Page_Width-$Left_Margin-$Right_Margin-145;// Width to print salesorderdetails.narrative.
+
+		//XPos was 145, same as Description. Move it +10, slight tab in to improve readability
+		PrintDetail($pdf, $myrow2['narrative'], $Bottom_Margin, null, 'includes/PDFQuotationPageHeader.inc', 155, $YPos, $Width2, $FontSize2);
 
 		$QuotationTotal += $LineTotal;
 		$QuotationTotalEx += $SubTot;

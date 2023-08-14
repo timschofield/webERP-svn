@@ -21,37 +21,19 @@ if ($Copy=='Customer'){
 /* if the deliver blind flag is set on the order, we do not want to output
 the company contact info */
 if ($DeliverBlind < 2) {
-    $FontSize=12;
     $YPos = 480;
-    $pdf->addText($XPos, $YPos,$FontSize, $_SESSION['CompanyRecord']['coyname']);
-    $FontSize=10;
-    $pdf->addText($XPos, $YPos-14,$FontSize, $_SESSION['CompanyRecord']['regoffice1']);
-    $pdf->addText($XPos, $YPos-26,$FontSize, $_SESSION['CompanyRecord']['regoffice2']);
-    $pdf->addText($XPos, $YPos-38,$FontSize, $_SESSION['CompanyRecord']['regoffice3'] . '  ' . $_SESSION['CompanyRecord']['regoffice4'] . '  ' . $_SESSION['CompanyRecord']['regoffice5']);
-    $pdf->addText($XPos, $YPos-50,$FontSize, $_SESSION['CompanyRecord']['regoffice6']);
-    $pdf->addText($XPos, $YPos-62,$FontSize, _('Ph') . ': ' . $_SESSION['CompanyRecord']['telephone'] . ' ' . _('Fax'). ': ' . $_SESSION['CompanyRecord']['fax']);
-    $pdf->addText($XPos, $YPos-74,$FontSize, $_SESSION['CompanyRecord']['email']);
+	PrintOurCompanyInfo($pdf,$_SESSION['CompanyRecord'],$XPos,$YPos);
 }
 
 $XPos = 46;
 $YPos = 566;
+PrintDeliverTo($pdf,$myrow,_('Delivered To'),$XPos,$YPos);
 
-$FontSize=14;
-$pdf->addText($XPos, $YPos,$FontSize, _('Delivered To').':' );
-$pdf->addText($XPos, $YPos-15,$FontSize, $myrow['deliverto']);
-$pdf->addText($XPos, $YPos-30,$FontSize, $myrow['deladd1']);
-$pdf->addText($XPos, $YPos-45,$FontSize, $myrow['deladd2']);
-$pdf->addText($XPos, $YPos-60,$FontSize, $myrow['deladd3'] . ' ' . $myrow['deladd4'] . ' ' . $myrow['deladd5'] . ' ' . $myrow['deladd6']);
-
-$YPos -= 80;
-
-$pdf->addText($XPos, $YPos,$FontSize, _('Customer').':');
-$pdf->addText($XPos, $YPos-15,$FontSize, $myrow['name']);
-$pdf->addText($XPos, $YPos-30,$FontSize, $myrow['address1']);
-$pdf->addText($XPos, $YPos-45,$FontSize, $myrow['address2']);
-$pdf->addText($XPos, $YPos-60,$FontSize, $myrow['address3'] . ' ' . $myrow['address4'] . ' ' . $myrow['address5']. ' ' . $myrow['address6']);
+$YPos -= 82;
+PrintCompanyTo($pdf,$myrow,_('Customer'),$XPos,$YPos);
 
 
+$FontSize = 14;
 $pdf->addText($XPos, $YPos-82,$FontSize, _('Customer No.'). ': ' . $myrow['debtorno']);
 $pdf->addText($XPos, $YPos-100,$FontSize, _('Shipped by'). ': ' . $myrow['shippername']);
 

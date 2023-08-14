@@ -394,26 +394,13 @@ if (isset($PrintPDF)
 							}
 						}
 					}
+
+					PrintDetail($pdf,$myrow2['narrative'],$Bottom_Margin,function(){
+							PrintLinesToBottom ();
+							include ('includes/PDFTransPageHeader.inc');
+						},null,$Left_Margin+100,$YPos,245,$FontSize);
+
 					$YPos -= ($line_height);
-
-					$lines=explode("\r\n",htmlspecialchars_decode($myrow2['narrative']));
-					for ($i=0;$i<sizeOf($lines);$i++) {
-						while (mb_strlen($lines[$i])>1) {
-							if ($YPos-$line_height <= $Bottom_Margin) {
-								/* head up a new invoice/credit note page */
-								/* draw the vertical column lines right to the bottom */
-								PrintLinesToBottom ();
-	   		        				include ('includes/PDFTransPageHeader.inc');
-			   				} //end if need a new page headed up
-
-			   				/* increment a line down for the next line item */
-			   				if (mb_strlen($lines[$i])>1){
-								$lines[$i] = $pdf->addTextWrap($Left_Margin+100,$YPos,245,$FontSize,stripslashes($lines[$i]));
-							}
-							$YPos -= ($line_height);
-						}
-					} //end for loop around lines of narrative to display
-
 
 					if ($YPos <= $Bottom_Margin) {
 						/* head up a new invoice/credit note page */

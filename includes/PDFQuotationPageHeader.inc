@@ -33,62 +33,21 @@ $pdf->addTextWrap($Page_Width-$Right_Margin-200, $Page_Height-$Top_Margin-$FontS
 // Prints company info:
 $XPos = $Page_Width/2+$Left_Margin;
 $YPos = 512;
-$FontSize = 14;
-$pdf->addText($XPos, $YPos, $FontSize, $_SESSION['CompanyRecord']['coyname']);
-$YPos -= $FontSize;
-$FontSize = 10;
-$pdf->addText($XPos, $YPos, $FontSize, $_SESSION['CompanyRecord']['regoffice1']);
-$pdf->addText($XPos, $YPos-$FontSize*1, $FontSize, $_SESSION['CompanyRecord']['regoffice2']);
-$pdf->addText($XPos, $YPos-$FontSize*2, $FontSize, $_SESSION['CompanyRecord']['regoffice3']);
-$pdf->addText($XPos, $YPos-$FontSize*3, $FontSize, $_SESSION['CompanyRecord']['regoffice4']);
-$pdf->addText($XPos, $YPos-$FontSize*4, $FontSize, $_SESSION['CompanyRecord']['regoffice5'] .
-	' ' . $_SESSION['CompanyRecord']['regoffice6']);
-$pdf->addText($XPos, $YPos-$FontSize*5, $FontSize,  _('Ph') . ': ' . $_SESSION['CompanyRecord']['telephone'] .
-	' ' . _('Fax'). ': ' . $_SESSION['CompanyRecord']['fax']);
-$pdf->addText($XPos, $YPos-$FontSize*6, $FontSize, $_SESSION['CompanyRecord']['email']);
+PrintOurCompanyInfo($pdf,$_SESSION['CompanyRecord'],$XPos,$YPos);
+
 
 // Prints 'Delivery To' info:
 $XPos = 46;
 $YPos = 566;
-$FontSize=14;
-$myrow = array_map('html_entity_decode', $myrow);
-$line_height = 15;
-$pdf->addText($XPos, $YPos, $FontSize, _('Delivery To').':' );
-$pdf->addText($XPos, $YPos-$line_height*1, $FontSize, $myrow['deliverto']);
-$pdf->addText($XPos, $YPos-$line_height*2, $FontSize, $myrow['deladd1']);
-$pdf->addText($XPos, $YPos-$line_height*3, $FontSize, $myrow['deladd2']);
-$pdf->addText($XPos, $YPos-$line_height*4, $FontSize, $myrow['deladd3'] . ' ' . $myrow['deladd4'] . ' ' . $myrow['deladd5']);
+PrintDeliverTo($pdf,$myrow,_('Delivery To'),$XPos,$YPos);
+
 
 // Prints 'Quotation For' info:
-$YPos -= 80;
-$line_height = 15;
-$pdf->addText($XPos, $YPos, $FontSize, _('Quotation For').':');
-$pdf->addText($XPos, $YPos-$line_height*1, $FontSize, $myrow['name']);
-$pdf->addText($XPos, $YPos-$line_height*2, $FontSize, $myrow['address1']);
-$pdf->addText($XPos, $YPos-$line_height*3, $FontSize, $myrow['address2']);
-$pdf->addText($XPos, $YPos-$line_height*4, $FontSize, $myrow['address3'] . ' ' . $myrow['address4'] . ' ' . $myrow['address5']);
-
-// Draws a box with round corners around 'Delivery To' info:
-$XPos= 50;
-$YPos += 12;
-$pdf->RoundRectangle(
-	$XPos-10,// RoundRectangle $XPos.
-	$YPos+70,// RoundRectangle $YPos.
-	245,// RoundRectangle $Width.
-	80,// RoundRectangle $Height.
-	10,// RoundRectangle $RadiusX.
-	10);// RoundRectangle $RadiusY.
-
-// Draws a box with round corners around around 'Quotation For' info:
 $YPos -= 82;
-$pdf->RoundRectangle(
-	$XPos-10,// RoundRectangle $XPos.
-	$YPos+70,// RoundRectangle $YPos.
-	245,// RoundRectangle $Width.
-	80,// RoundRectangle $Height.
-	10,// RoundRectangle $RadiusX.
-	10);// RoundRectangle $RadiusY.
+PrintCompanyTo($pdf,$myrow,_('Quotation For'),$XPos,$YPos);
 
+
+$YPos -= 75;
 $FontSize=10;
 
 // Prints the currency name:
