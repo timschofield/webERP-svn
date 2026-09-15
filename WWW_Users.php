@@ -1,6 +1,7 @@
 <?php
 
-// Entry of users and security settings of users.
+// user parameters
+// some "safe" parameters are duplicated for convenience in UserSettings.php
 
 require(__DIR__ . '/includes/session.php');
 
@@ -188,6 +189,8 @@ if (isset($_POST['submit'])) {
 						phone='" . $_POST['Phone'] ."',
 						email='" . $_POST['Email'] ."',
 						timeout='" . $_POST['Timeout'] . "',
+						displayrecordsmax='" . $_POST['DisplayRecordsMax'] . "',
+						fontsize='" . $_POST['FontSize'] . "',
 						" . $UpdatePassword . "
 						branchcode='" . $_POST['BranchCode'] . "',
 						supplierid='" . $_POST['SupplierID'] . "',
@@ -237,57 +240,59 @@ if (isset($_POST['submit'])) {
 					showpagehelp,
 					showfieldhelp,
 					displayrecordsmax,
+					fontsize,
 					theme,
 					language,
 					pdflanguage,
 					department)
-				VALUES ('" . $_POST['UserID'] . "',
-					'" . CryptPass($_POST['Password']) ."',
-					'1',
-					'" . $_POST['RealName'] ."',
-					'" . $_POST['Cust'] ."',
-					'" . $_POST['BranchCode'] ."',
-					'" . $_POST['SupplierID'] ."',
-					'" . $_POST['Salesman'] . "',
-					'" . $_POST['Phone'] . "',
-					'" . $_POST['Email'] ."',
-					'" . $_POST['Timeout'] ."',
-					'" . $_POST['PageSize'] ."',
-					'" . $_POST['Access'] . "',
-					'" . $_POST['CanCreateTender'] . "',
-					'" . $_POST['DefaultLocation'] ."',
-					'" . $ModulesAllowed . "',
-					'" . $_POST['ShowDashboard'] . "',
-					'" . $_POST['ShowPageHelp'] . "',
-					'" . $_POST['ShowFieldHelp'] . "',
-					'" . $_SESSION['DefaultDisplayRecordsMax'] . "',
-					'" . $_POST['Theme'] . "',
-					'". $_POST['UserLanguage'] ."',
-					'" . $_POST['PDFLanguage'] . "',
-					'" . $_POST['Department'] . "')";
+					VALUES ('" . $_POST['UserID'] . "',
+						'" . CryptPass($_POST['Password']) ."',
+						'1',
+						'" . $_POST['RealName'] ."',
+						'" . $_POST['Cust'] ."',
+						'" . $_POST['BranchCode'] ."',
+						'" . $_POST['SupplierID'] ."',
+						'" . $_POST['Salesman'] . "',
+						'" . $_POST['Phone'] . "',
+						'" . $_POST['Email'] ."',
+						'" . $_POST['Timeout'] ."',
+						'" . $_POST['PageSize'] ."',
+						'" . $_POST['Access'] . "',
+						'" . $_POST['CanCreateTender'] . "',
+						'" . $_POST['DefaultLocation'] ."',
+						'" . $ModulesAllowed . "',
+						'" . $_POST['ShowDashboard'] . "',
+						'" . $_POST['ShowPageHelp'] . "',
+						'" . $_POST['ShowFieldHelp'] . "',
+						'" . $_POST['DisplayRecordsMax'] . "',
+						'" . $_POST['FontSize'] . "',
+						'" . $_POST['Theme'] . "',
+						'" . $_POST['UserLanguage'] . "',
+						'" . $_POST['PDFLanguage'] . "',
+						'" . $_POST['Department'] . "')";
 
 		$ErrMsg = __('The user insertion could not be processed because');
 		$Result = DB_query($SQL, $ErrMsg);
 		prnMsg(__('A new user record has been inserted'), 'success');
 
 		$LocationSql = "INSERT INTO locationusers (loccode,
-													userid,
-													canview,
-													canupd
-												) VALUES (
-													'" . $_POST['DefaultLocation'] . "',
-													'" . $_POST['UserID'] . "',
-													1,
-													1
-												)";
+																 userid,
+																 canview,
+																 canupd
+															) VALUES (
+																'" . $_POST['DefaultLocation'] . "',
+																'" . $_POST['UserID'] . "',
+																1,
+																1
+															)";
 
 		$ErrMsg = __('The default user locations could not be processed because');
 		$Result = DB_query($LocationSql, $ErrMsg);
 		prnMsg(__('User has been authorized to use and update only his / her default location'), 'success' );
 
 		$GLAccountsSql = "INSERT INTO glaccountusers (userid, accountcode, canview, canupd)
-						 SELECT '" . $_POST['UserID'] . "', chartmaster.accountcode,1,1
-						 FROM chartmaster;	";
+							 SELECT '" . $_POST['UserID'] . "', chartmaster.accountcode,1,1
+							 FROM chartmaster;	";
 
 		$ErrMsg = __('The default user GL Accounts could not be processed because');
 		$Result = DB_query($GLAccountsSql, $ErrMsg);
@@ -306,6 +311,7 @@ if (isset($_POST['submit'])) {
 		unset($_POST['Timeout']);
 		unset($_POST['Password']);
 		unset($_POST['PageSize']);
+		unset($_POST['DisplayRecordsMax']);
 		unset($_POST['Access']);
 		unset($_POST['CanCreateTender']);
 		unset($_POST['DefaultLocation']);
@@ -315,6 +321,7 @@ if (isset($_POST['submit'])) {
 		unset($_POST['ShowFieldHelp']);
 		unset($_POST['Blocked']);
 		unset($_POST['Theme']);
+		unset($_POST['FontSize']);
 		unset($_POST['UserLanguage']);
 		unset($_POST['PDFLanguage']);
 		unset($_POST['Department']);
@@ -462,6 +469,7 @@ if (isset($SelectedUser)) {
 				phone,
 				email,
 				timeout,
+				displayrecordsmax,
 				customerid,
 				branchcode,
 				supplierid,
@@ -476,6 +484,7 @@ if (isset($SelectedUser)) {
 				showfieldhelp,
 				blocked,
 				theme,
+				fontsize,
 				language,
 				pdflanguage,
 				department
@@ -490,6 +499,7 @@ if (isset($SelectedUser)) {
 	$_POST['Phone'] = $MyRow['phone'];
 	$_POST['Email'] = $MyRow['email'];
 	$_POST['Timeout']	= $MyRow['timeout'];
+	$_POST['DisplayRecordsMax'] = $MyRow['displayrecordsmax'];
 	$_POST['Cust']	= $MyRow['customerid'];
 	$_POST['BranchCode'] = $MyRow['branchcode'];
 	$_POST['SupplierID'] = $MyRow['supplierid'];
@@ -504,6 +514,7 @@ if (isset($SelectedUser)) {
 	$_POST['ShowFieldHelp'] = $MyRow['showfieldhelp'];
 	$_POST['Blocked'] = $MyRow['blocked'];
 	$_POST['Theme'] = $MyRow['theme'];
+	$_POST['FontSize'] = $MyRow['fontsize'];
 	$_POST['UserLanguage'] = $MyRow['language'];
 	$_POST['PDFLanguage'] = $MyRow['pdflanguage'];
 	$_POST['Department'] = $MyRow['department'];
@@ -559,11 +570,22 @@ if (!isset($_POST['Email'])) {
 if (!isset($_POST['Timeout'])) {
 	$_POST['Timeout']=10;
 }
+if (!isset($_POST['DisplayRecordsMax'])) {
+	$_POST['DisplayRecordsMax'] = $_SESSION['DisplayRecordsMax'] ?? $_SESSION['DefaultDisplayRecordsMax'] ?? 0;
+}
+if (!isset($_POST['FontSize'])) {
+	$_POST['FontSize'] = $_SESSION['ScreenFontSize'] ?? 1;
+}
 echo '<field>
 		<label for="Password">' . __('Password') . ':</label>
 		<input id="password" type="password" name="Password" ' . (!isset($SelectedUser) ? 'required="required"' : '') . ' size="22" maxlength="20" value="" placeholder="' . __('At least') . ' ' . (isset($_SESSION['PasswordMinLenght']) ? $_SESSION['PasswordMinLenght'] : 5) . ' ' . __('characters') . '" title="" />
 		<fieldhelp>' . __('Passwords must be at least') . ' ' . (isset($_SESSION['PasswordMinLenght']) ? $_SESSION['PasswordMinLenght'] : 5) . ' ' . __('characters long and cannot contain the user id. A mix of upper and lower case and some non-alphanumeric characters are recommended.') . '</fieldhelp>
         <img class="eye" id="eye" alt="" src="', $RootPath, '/css/eye.png" title="' . __('Show Password') . '" />
+	</field>';
+
+echo '<field>
+		<label for="DisplayRecordsMax">' . __('Maximum Number of Records to Display') . ':</label>
+		<input class="integer" maxlength="3" name="DisplayRecordsMax" required="required" size="3" title="' . __('The input must be positive integer') . '" type="text" value="' . $_POST['DisplayRecordsMax'] . '" />
 	</field>';
 echo '<field>
 		<label for="RealName">' . __('Full Name') . ':</label>
@@ -753,6 +775,36 @@ foreach($ThemeDirectories as $ThemeName) {
 }
 
 echo '</select>
+	</field>';
+
+echo '<field>
+		<label for="FontSize">' . __('Display Font') . '</label>
+		<select name="FontSize">';
+	switch ($_POST['FontSize']) {
+	case 0:
+		echo '<option selected value="0">' . __('Small') . '</option>
+			<option value="1">' . __('Medium') . '</option>
+			<option value="2">' . __('Large') . '</option>';
+		break;
+	case 1:
+		echo '<option value="0">' . __('Small') . '</option>
+			<option selected value="1">' . __('Medium') . '</option>
+			<option value="2">' . __('Large') . '</option>';
+		break;
+	case 2:
+		echo '<option value="0">' . __('Small') . '</option>
+			<option value="1">' . __('Medium') . '</option>
+			<option selected value="2">' . __('Large') . '</option>';
+		break;
+	default:
+		echo '<option value="0">' . __('Small') . '</option>
+			<option value="1">' . __('Medium') . '</option>
+			<option value="2">' . __('Large') . '</option>';
+		break;
+}
+
+echo '</select>
+		<fieldhelp>' . __('Select the size of the screen font') . '</fieldhelp>
 	</field>';
 
 echo '<field>
